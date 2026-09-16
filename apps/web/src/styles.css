@@ -1252,3 +1252,30 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 @media (max-width: 700px) { .blog-post { grid-template-columns: 1fr; } }
 .feed-item figcaption .feed-date { font-size: .82em; font-weight: 700; }
 .feed-item figcaption strong { font-size: 1.02em; line-height: 1.3; }
+
+/* ---------- Grounded activity recommendations -------------------------------- */
+
+.rec-panel { display: grid; gap: 14px; }
+.origin-badge { align-self: start; font-size: .78em; font-weight: 700; padding: 5px 12px;
+  border-radius: var(--radius-pill); white-space: nowrap; }
+.origin-badge.live { background: var(--mint); color: var(--mint-ink); }
+.origin-badge.cached { background: var(--cream); color: var(--cream-ink); }
+:root[data-contrast='high'] .origin-badge { border: 2px solid var(--line); }
+.rec-controls { align-items: end; gap: 14px; }
+.rec-controls select { min-height: 48px; border: 2px solid var(--line); border-radius: 12px;
+  padding: 0 12px; background: var(--surface); color: inherit; font-family: inherit; font-size: 1em; }
+
+.rec-draft { display: grid; gap: 10px; padding: 20px; border-radius: var(--radius);
+  border: 2px solid var(--brand-soft); background: var(--surface-2); }
+.rec-draft h4 { margin: 0; font-size: 1.2em; }
+.rec-warning { padding: 10px 14px; font-size: .9em; margin: 0; }
+.rec-why { margin: 0; line-height: 1.55; max-width: 62ch; }
+.rec-steps { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+.rec-sources summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
+.rec-sources ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 12px; }
+.rec-sources li { padding: 12px 14px; border-radius: 12px; background: var(--surface);
+  border-left: 4px solid var(--brand); display: grid; gap: 4px; justify-items: start; }
+.rec-sources li p { margin: 0; font-size: .88em; line-height: 1.45; }
+.rec-path { font-size: .82em; margin: 10px 0 0; font-family: ui-monospace, monospace; }
+.rec-actions { gap: 10px; margin-top: 4px; }
+.rec-decided h4 { margin: 0 0 8px; }

@@ -5,6 +5,7 @@ Accessible check-ins for K-12 students with IEPs and 504 plans, teacher-approved
 - Product requirements: [docs/PRD.md](docs/PRD.md)
 - Tech stack: [docs/TECH_STACK.md](docs/TECH_STACK.md)
 - Learner model: [docs/LEARNER_MODEL.md](docs/LEARNER_MODEL.md)
+- Going live on AWS: [docs/AWS.md](docs/AWS.md)
 
 ## Run it locally
 
@@ -67,6 +68,13 @@ Open http://localhost:5173. The API runs on port 8010. Sign in with a demo accou
   a public folder.
   Who sees what, and what a district would need before this ships, is in
   [docs/PRIVACY_POSTURE.md](docs/PRIVACY_POSTURE.md).
+- Grounded activity recommendations: on a learner's page the teacher drafts an at-home activity
+  built only from an approved corpus (`corpus/manifest.json` — standards, misconception guidance,
+  accessibility notes, reviewed templates, each with tier, citation and reviewer). The draft
+  arrives with its sources and the path the pipeline took, and nothing reaches the family until
+  the teacher approves it. Runs on cached drafts with no AWS; `DEMO_OFFLINE=0` plus credentials
+  makes it a live Bedrock Converse call with tool-use for structured output and an optional
+  guardrail. See [docs/AWS.md](docs/AWS.md).
 - Messages: a corner panel on the parent and teacher views. A parent can only reach their child's teacher; a teacher can only reach families in their own class. The server decides the pairing, not the client.
 - Faces: each seeded learner has a portrait (`apps/web/public/faces/`, credits and a caveat in
   `CREDITS.md` there) with an illustrated fallback in `components/Avatar.tsx` for anyone without

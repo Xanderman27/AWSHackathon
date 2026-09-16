@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { api } from '../api'
 import Avatar, { type AvatarSpec } from '../components/Avatar'
+import RecommendationPanel from '../components/RecommendationPanel'
 
 interface Skill {
   skill_id: string; skill_name: string; subject: string; standard_id: string
@@ -121,6 +122,9 @@ export default function TeacherLearner() {
           </div>
         )}
       </section>
+
+      <RecommendationPanel studentId={student.id}
+        skills={mastery.map((m) => ({ skill_id: m.skill_id, skill_name: m.skill_name }))} />
 
       {groups.length > 0 && (
         <section className="card">
