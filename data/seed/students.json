@@ -1,14 +1,174 @@
 [
-  {"id": "student-01", "display_name": "Sam", "grade": 4, "class_id": "class-4a", "has_goal_link": true},
-  {"id": "student-02", "display_name": "Ava", "grade": 4, "class_id": "class-4a", "has_goal_link": false},
-  {"id": "student-03", "display_name": "Leo", "grade": 4, "class_id": "class-4a", "has_goal_link": true},
-  {"id": "student-04", "display_name": "Mia", "grade": 4, "class_id": "class-4a", "has_goal_link": false},
-  {"id": "student-05", "display_name": "Noah", "grade": 4, "class_id": "class-4a", "has_goal_link": false},
-  {"id": "student-06", "display_name": "Zoe", "grade": 4, "class_id": "class-4a", "has_goal_link": true},
-  {"id": "student-07", "display_name": "Eli", "grade": 4, "class_id": "class-4a", "has_goal_link": false},
-  {"id": "student-08", "display_name": "Ivy", "grade": 4, "class_id": "class-4a", "has_goal_link": false},
-  {"id": "student-09", "display_name": "Kai", "grade": 4, "class_id": "class-4a", "has_goal_link": true},
-  {"id": "student-10", "display_name": "Ruby", "grade": 4, "class_id": "class-4a", "has_goal_link": false},
-  {"id": "student-11", "display_name": "Owen", "grade": 4, "class_id": "class-4a", "has_goal_link": false},
-  {"id": "student-12", "display_name": "Lily", "grade": 4, "class_id": "class-4a", "has_goal_link": true}
+  {
+    "id": "student-01",
+    "display_name": "Sam",
+    "grade": 4,
+    "class_id": "class-4a",
+    "has_goal_link": true,
+    "photo": "/faces/student-01.jpg",
+    "avatar": {
+      "skin": 0,
+      "hair": "bob",
+      "hair_color": 1,
+      "shirt": 0,
+      "glasses": true
+    }
+  },
+  {
+    "id": "student-02",
+    "display_name": "Ava",
+    "grade": 4,
+    "class_id": "class-4a",
+    "has_goal_link": false,
+    "photo": "/faces/student-02.jpg",
+    "avatar": {
+      "skin": 2,
+      "hair": "curly",
+      "hair_color": 1,
+      "shirt": 4
+    }
+  },
+  {
+    "id": "student-03",
+    "display_name": "Leo",
+    "grade": 4,
+    "class_id": "class-4a",
+    "has_goal_link": true,
+    "photo": "/faces/student-03.jpg",
+    "avatar": {
+      "skin": 1,
+      "hair": "short",
+      "hair_color": 2,
+      "shirt": 1
+    }
+  },
+  {
+    "id": "student-04",
+    "display_name": "Mia",
+    "grade": 4,
+    "class_id": "class-4a",
+    "has_goal_link": false,
+    "photo": "/faces/student-04.jpg",
+    "avatar": {
+      "skin": 4,
+      "hair": "coily",
+      "hair_color": 0,
+      "shirt": 2
+    }
+  },
+  {
+    "id": "student-05",
+    "display_name": "Noah",
+    "grade": 4,
+    "class_id": "class-4a",
+    "has_goal_link": false,
+    "photo": "/faces/student-05.jpg",
+    "avatar": {
+      "skin": 0,
+      "hair": "short",
+      "hair_color": 4,
+      "shirt": 5,
+      "freckles": true
+    }
+  },
+  {
+    "id": "student-06",
+    "display_name": "Zoe",
+    "grade": 4,
+    "class_id": "class-4a",
+    "has_goal_link": true,
+    "photo": "/faces/student-06.jpg",
+    "avatar": {
+      "skin": 3,
+      "hair": "braids",
+      "hair_color": 0,
+      "shirt": 3
+    }
+  },
+  {
+    "id": "student-07",
+    "display_name": "Eli",
+    "grade": 4,
+    "class_id": "class-4a",
+    "has_goal_link": false,
+    "photo": "/faces/student-07.jpg",
+    "avatar": {
+      "skin": 5,
+      "hair": "buzz",
+      "hair_color": 0,
+      "shirt": 1
+    }
+  },
+  {
+    "id": "student-08",
+    "display_name": "Ivy",
+    "grade": 4,
+    "class_id": "class-4a",
+    "has_goal_link": false,
+    "photo": "/faces/student-08.jpg",
+    "avatar": {
+      "skin": 2,
+      "hair": "curly",
+      "hair_color": 5,
+      "shirt": 2,
+      "freckles": true
+    }
+  },
+  {
+    "id": "student-09",
+    "display_name": "Kai",
+    "grade": 4,
+    "class_id": "class-4a",
+    "has_goal_link": true,
+    "photo": "/faces/student-09.jpg",
+    "avatar": {
+      "skin": 3,
+      "hair": "short",
+      "hair_color": 0,
+      "shirt": 0
+    }
+  },
+  {
+    "id": "student-10",
+    "display_name": "Ruby",
+    "grade": 4,
+    "class_id": "class-4a",
+    "has_goal_link": false,
+    "photo": "/faces/student-10.jpg",
+    "avatar": {
+      "skin": 1,
+      "hair": "ponytail",
+      "hair_color": 5,
+      "shirt": 4
+    }
+  },
+  {
+    "id": "student-11",
+    "display_name": "Owen",
+    "grade": 4,
+    "class_id": "class-4a",
+    "has_goal_link": false,
+    "photo": "/faces/student-11.jpg",
+    "avatar": {
+      "skin": 0,
+      "hair": "wavy",
+      "hair_color": 3,
+      "shirt": 5,
+      "glasses": true
+    }
+  },
+  {
+    "id": "student-12",
+    "display_name": "Lily",
+    "grade": 4,
+    "class_id": "class-4a",
+    "has_goal_link": true,
+    "photo": "/faces/student-12.jpg",
+    "avatar": {
+      "skin": 2,
+      "hair": "long",
+      "hair_color": 1,
+      "shirt": 3
+    }
+  }
 ]

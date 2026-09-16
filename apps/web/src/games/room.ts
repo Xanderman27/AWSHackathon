@@ -3,8 +3,24 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { api, getSession } from '../api'
+import type { AvatarSpec } from '../components/Avatar'
 
-export interface Participant { id: string; name: string; color: string }
+export interface Participant {
+  id: string
+  name: string
+  color: string
+  photo?: string | null
+  avatar?: AvatarSpec | null
+}
+
+/** One seat in a group: the learner, whether or not they are currently in the room. */
+export interface Member {
+  id: string
+  display_name: string
+  photo?: string | null
+  avatar?: AvatarSpec | null
+  is_you: boolean
+}
 
 export interface RoomSnapshot<S> {
   type: 'state'
@@ -38,7 +54,8 @@ export interface GroupActivity {
   glyph: string
   tone: string
   group_name: string
-  teammates: { id: string; display_name: string }[]
+  members: Member[]
+  teammates: Member[]
   member_count: number
   instructions: string
 }
@@ -48,7 +65,9 @@ export interface ActivityMeta {
   title: string
   glyph: string
   groupName: string | null
-  teammates: string[]
+  /** Every seat in the group, you included, so absent teammates still get a face. */
+  members: Member[]
+  teammates: Member[]
   memberCount: number
   instructions: string
   solo: boolean
@@ -84,7 +103,7 @@ export function useActivity(gameId: string, activityId: string): Resolved {
           }
           setResolved({
             meta: {
-              title: spec.title, glyph: spec.glyph, groupName: null, teammates: [],
+              title: spec.title, glyph: spec.glyph, groupName: null, members: [], teammates: [],
               memberCount: 1, instructions: spec.instructions, solo: true,
             },
             roomId: `solo:${gameId}`,
@@ -108,7 +127,8 @@ export function useActivity(gameId: string, activityId: string): Resolved {
             title: assigned.title,
             glyph: assigned.glyph,
             groupName: assigned.group_name,
-            teammates: assigned.teammates.map((teammate) => teammate.display_name),
+            members: assigned.members,
+            teammates: assigned.teammates,
             memberCount: assigned.member_count,
             instructions: assigned.instructions,
             solo: false,

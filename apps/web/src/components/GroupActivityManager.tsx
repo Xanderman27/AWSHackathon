@@ -1,8 +1,15 @@
 import { useEffect, useMemo, useState } from 'react'
 import { api } from '../api'
+import Avatar, { type AvatarSpec } from './Avatar'
 import type { GameSpec } from '../games/room'
 
-interface Student { id: string; display_name: string; evidence_count: number }
+interface Student {
+  id: string
+  display_name: string
+  evidence_count: number
+  photo?: string | null
+  avatar?: AvatarSpec | null
+}
 interface RecommendedGroup { id: string; name: string; member_ids: string[]; rationale: string }
 
 interface Recommendation {
@@ -166,12 +173,18 @@ export default function GroupActivityManager() {
                   <span className="visually-hidden">Name for group {index + 1}</span>
                   <input value={group.name} maxLength={40} onChange={(event) => renameGroup(index, event.target.value)} />
                 </label>
-                <div className="draft-members">
-                  {group.member_ids.map((studentId) => (
-                    <span className="chip sky" key={studentId}>{recommendation.student_names[studentId]}</span>
-                  ))}
-                  {group.member_ids.length === 0 && <span className="muted">No learners assigned</span>}
-                </div>
+                <ul className="draft-members">
+                  {group.member_ids.map((studentId) => {
+                    const learner = recommendation.students.find((s) => s.id === studentId)
+                    return (
+                      <li key={studentId}>
+                        <Avatar photo={learner?.photo} spec={learner?.avatar} size={38} />
+                        <span>{recommendation.student_names[studentId]}</span>
+                      </li>
+                    )
+                  })}
+                  {group.member_ids.length === 0 && <li className="muted">No learners assigned</li>}
+                </ul>
                 <p>{group.rationale}</p>
                 <span className={`group-size ${group.member_ids.length > 0 && group.member_ids.length < minGroup ? 'warn' : ''}`}>
                   {group.member_ids.length} learner{group.member_ids.length === 1 ? '' : 's'} · {minGroup}–{maxGroup} needed
@@ -201,7 +214,10 @@ export default function GroupActivityManager() {
                 <tbody>
                   {recommendation.students.map((student) => (
                     <tr key={student.id}>
-                      <td><span className="avatar" aria-hidden="true">{student.display_name[0]}</span>{student.display_name}</td>
+                      <td className="learner-cell">
+                        <Avatar photo={student.photo} spec={student.avatar} size={36} className="avatar-img" />
+                        {student.display_name}
+                      </td>
                       <td>
                         {!recommendation.uses_evidence
                           ? <span className="muted">None · free play</span>

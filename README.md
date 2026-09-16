@@ -48,6 +48,10 @@ Open http://localhost:5173. The API runs on port 8010. Sign in with a demo accou
 - Teacher dashboard: class counts, classwide statistics with per-subject averages, learner table with band and confidence, per-student item evidence with route reasons.
 - Parent view: a Duolingo-profile-style page for the linked child — statistics, calculated achievements, group activities, mastery gauge and outcomes, teacher-approved next steps, and a rights library in a popup.
 - Messages: a corner panel on the parent and teacher views. A parent can only reach their child's teacher; a teacher can only reach families in their own class. The server decides the pairing, not the client.
+- Faces: each seeded learner has a portrait (`apps/web/public/faces/`, credits and a caveat in
+  `CREDITS.md` there) with an illustrated fallback in `components/Avatar.tsx` for anyone without
+  one. A team activity leads with its teammates' faces, and the ring around a face is the same
+  colour as the squares that person edited on the shared board.
 - Collaborative activities: six shared-room games over one WebSocket endpoint. A teacher picks an activity, reviews the suggested groups, moves anyone, and publishes; only then does a learner see it, and never the reason they were grouped. Every board is live for the whole group, and each square is tinted with the colour of the teammate who last touched it.
 
 | Activity | What the group does | Grouped by |

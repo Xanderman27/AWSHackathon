@@ -61,6 +61,8 @@ class Participant:
     id: str
     name: str
     color: str
+    photo: str | None = None
+    avatar: dict[str, Any] | None = None
 
 
 @dataclass
@@ -82,7 +84,8 @@ class Room:
             "revision": self.revision,
             "state": self.state,
             "participants": [
-                {"id": person.id, "name": person.name, "color": person.color}
+                {"id": person.id, "name": person.name, "color": person.color,
+                 "photo": person.photo, "avatar": person.avatar}
                 for person in self.participants.values()
             ],
         }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../api'
+import Avatar from '../components/Avatar'
 import type { GameSpec, GroupActivity } from '../games/room'
 
 // Games are free play: no score is sent to the teacher, there is no timer, and a learner can
@@ -25,15 +26,18 @@ export default function StudentGames() {
   return (
     <div className="stack">
       <div>
-        <h2 className="section-title">Group activities</h2>
-        <p className="muted helper">Activities your teacher picked for you and your teammates.</p>
+        <h2 className="section-title">Play together</h2>
+        <p className="muted helper">
+          Your teacher put you in a team. Everyone uses their own screen, and you all work on the
+          same thing at the same time.
+        </p>
       </div>
       {error && <div className="feedback try" role="alert">{error}</div>}
       {activities === null && !error && <div className="card"><p style={{ margin: 0 }}>Finding your activities…</p></div>}
       {activities?.length === 0 && (
         <div className="card group-empty">
           <span aria-hidden="true">🎒</span>
-          <div><h3>No group activities right now</h3><p className="muted">Your teacher will add one here when it is ready.</p></div>
+          <div><h3>No team activities right now</h3><p className="muted">Your teacher will put you in a team here when one is ready.</p></div>
         </div>
       )}
       {activities && activities.length > 0 && (
@@ -42,16 +46,30 @@ export default function StudentGames() {
             <article className={`card group-activity-card tinted-${activity.tone} pop`} key={activity.id}>
               <div className="group-activity-art" aria-hidden="true">{activity.glyph}</div>
               <div>
-                <span className="chip mint">Ready to join</span>
+                <span className="chip mint">Team activity</span>
                 <h3>{activity.title}</h3>
                 <p>{activity.instructions}</p>
               </div>
+
               <div className="assigned-team">
                 <strong>{activity.group_name}</strong>
-                <span>With {activity.teammates.map((teammate) => teammate.display_name).join(' and ')}</span>
+                {/* Faces first: the point of the card is that other children are waiting. */}
+                <ul className="team-strip">
+                  {activity.members.map((member) => (
+                    <li key={member.id} className={member.is_you ? 'you' : ''}>
+                      <Avatar photo={member.photo} spec={member.avatar} size={46}
+                        name={member.is_you ? `${member.display_name}, you` : member.display_name} />
+                      <span>{member.is_you ? 'You' : member.display_name}</span>
+                    </li>
+                  ))}
+                </ul>
+                <span className="team-line">
+                  You and {activity.teammates.length} teammate{activity.teammates.length === 1 ? '' : 's'}
+                </span>
               </div>
+
               <Link className="btn btn-primary btn-lg group-join" to={`/student/games/${activity.game_id}/${activity.id}`}>
-                Join activity <span aria-hidden="true">→</span>
+                Join your team <span aria-hidden="true">→</span>
               </Link>
             </article>
           ))}

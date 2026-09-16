@@ -115,7 +115,12 @@ def test_student_sees_only_their_published_group_activity():
         )
         assert response.status_code == 200
         assert [row["id"] for row in response.json()] == ["assigned"]
-        assert response.json()[0]["teammates"] == [{"id": "student-02", "display_name": "Ava"}]
+        row = response.json()[0]
+        assert [mate["display_name"] for mate in row["teammates"]] == ["Ava"]
+        # The whole group comes back, so the screen can show a seat for a teammate who has
+        # not joined yet, and mark which one is the learner looking at it.
+        assert [(m["display_name"], m["is_you"]) for m in row["members"]] == [("Sam", True), ("Ava", False)]
+        assert row["members"][0]["photo"] == "/faces/student-01.jpg"
 
 
 def test_the_grouping_rationale_never_reaches_a_student():

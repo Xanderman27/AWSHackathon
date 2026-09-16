@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { api, getSession } from '../api'
+import Avatar from '../components/Avatar'
+import type { AvatarSpec } from '../components/Avatar'
 import MessagesWidget from '../components/MessagesWidget'
 import GroupActivityManager from '../components/GroupActivityManager'
 import RoleGate from './RoleGate'
@@ -8,7 +10,8 @@ import { BoltIcon, FlagIcon, StarIcon, TeamIcon } from '../components/PathArt'
 interface Row { student_id: string; display_name: string; has_goal_link: boolean; skill_name: string; band: string; estimate: number; confidence: string; evidence_count: number }
 interface SubjectStat { subject: string; learners: number; avg: number }
 interface ClassStats { checkins: number; quests_done: number; stars: number; hints: number; active_learners: number; avg_estimate: number | null; subjects: SubjectStat[] }
-interface Summary { class_id: string; students: { id: string; display_name: string }[]; mastery: Row[]; counts: { needs_more_evidence: number; ready_for_extension: number }; class_stats: ClassStats }
+interface Learner { id: string; display_name: string; photo?: string | null; avatar?: AvatarSpec | null }
+interface Summary { class_id: string; students: Learner[]; mastery: Row[]; counts: { needs_more_evidence: number; ready_for_extension: number }; class_stats: ClassStats }
 interface Evidence { student_id: string; evidence: { at: string; prompt: string; difficulty: number; correct: boolean; hint_used: boolean; route_reason?: string | null }[] }
 
 const BAND_TONE: Record<string, string> = { 'Building foundations': 'cream', Practicing: 'sky', 'Ready for extension': 'mint' }
@@ -27,6 +30,7 @@ export default function TeacherDashboard() {
   if (!data) return <p>Loading…</p>
 
   const without = data.students.filter((s) => !data.mastery.some((m) => m.student_id === s.id))
+  const face = (id: string) => data.students.find((s) => s.id === id)
   const openName = open && data.students.find((s) => s.id === open.student_id)?.display_name
 
   return (
@@ -73,7 +77,11 @@ export default function TeacherDashboard() {
           <tbody>
             {data.mastery.map((m) => (
               <tr key={m.student_id + m.skill_name}>
-                <td><span className="avatar" aria-hidden="true">{m.display_name[0]}</span>{m.display_name} {m.has_goal_link && <span className="chip" title="Has a linked goal (teacher-only)" style={{ marginLeft: 6 }}>goal</span>}</td>
+                <td className="learner-cell">
+                  <Avatar photo={face(m.student_id)?.photo} spec={face(m.student_id)?.avatar} size={36} className="avatar-img" />
+                  {m.display_name}
+                  {m.has_goal_link && <span className="chip" title="Has a linked goal (teacher-only)" style={{ marginLeft: 6 }}>goal</span>}
+                </td>
                 <td className="muted">{m.skill_name}</td>
                 <td><span className={`chip ${BAND_TONE[m.band]}`}>{m.band}</span></td>
                 <td><span className="bar" aria-hidden="true"><i style={{ width: `${Math.round(m.estimate * 100)}%` }} /></span> <span className="muted">{m.estimate.toFixed(2)}</span></td>
@@ -83,7 +91,12 @@ export default function TeacherDashboard() {
               </tr>
             ))}
             {without.map((s) => (
-              <tr key={s.id}><td><span className="avatar" aria-hidden="true">{s.display_name[0]}</span>{s.display_name}</td><td colSpan={5} className="muted">No quest completed yet</td><td></td></tr>
+              <tr key={s.id}>
+                <td className="learner-cell">
+                  <Avatar photo={s.photo} spec={s.avatar} size={36} className="avatar-img" />{s.display_name}
+                </td>
+                <td colSpan={5} className="muted">No quest completed yet</td><td></td>
+              </tr>
             ))}
           </tbody>
         </table>

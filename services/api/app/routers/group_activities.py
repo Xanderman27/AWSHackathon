@@ -121,6 +121,8 @@ def _recommendation(actor: Actor, game_id: str) -> dict:
             {
                 "id": student["id"],
                 "display_name": student["display_name"],
+                "photo": student.get("photo"),
+                "avatar": student.get("avatar"),
                 "evidence_count": counts[student["id"]],
             }
             for student in students
@@ -229,6 +231,16 @@ def student_group_activities(actor: Actor = Depends(require_role("student"))):
         spec = games.spec(activity["game_id"])
         if spec is None:
             continue
+        members = [
+            {
+                "id": student_id,
+                "display_name": students[student_id]["display_name"],
+                "photo": students[student_id].get("photo"),
+                "avatar": students[student_id].get("avatar"),
+                "is_you": student_id == actor.user_id,
+            }
+            for student_id in activity["member_ids"] if student_id in students
+        ]
         assigned.append({
             "id": activity["id"],
             "game_id": activity["game_id"],
@@ -236,11 +248,8 @@ def student_group_activities(actor: Actor = Depends(require_role("student"))):
             "glyph": spec.glyph,
             "tone": spec.tone,
             "group_name": activity["group_name"],
-            "teammates": [
-                {"id": student_id, "display_name": students[student_id]["display_name"]}
-                for student_id in activity["member_ids"]
-                if student_id != actor.user_id and student_id in students
-            ],
+            "members": members,
+            "teammates": [member for member in members if not member["is_you"]],
             "member_count": len(activity["member_ids"]),
             # The teacher's reason for the grouping stays with the teacher (PRD §12).
             "instructions": spec.instructions,

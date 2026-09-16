@@ -937,3 +937,51 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .sbar-val { font-size: .85em; color: var(--muted); font-weight: 600; white-space: nowrap; }
 :root[data-contrast='high'] .ach-badge { box-shadow: none; border: 2px solid var(--line); }
 :root[data-contrast='high'] .profile-avatar { background: var(--brand); color: var(--brand-ink); box-shadow: none; }
+
+/* ---------- Faces -----------------------------------------------------------
+   A group activity is other children, and initials in a box never said that. Photos
+   are round and always paired with the name in text, so nothing depends on
+   recognising a face. */
+
+.face { display: block; flex: 0 0 auto; border-radius: 50%; background: var(--surface-2); }
+.face.photo { object-fit: cover; }
+:root[data-contrast='high'] .face { outline: 2px solid var(--line); outline-offset: -2px; }
+
+/* Faces inside a table cell sit on the text baseline row. */
+.learner-cell { white-space: nowrap; }
+.learner-cell .face { display: inline-block; vertical-align: middle; margin-right: 10px; }
+
+/* The team roster on an activity screen: every seat, present or not. */
+.team-bar { padding: 18px 20px; display: grid; gap: 12px; }
+.team-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.team-head h3 { margin: 0; }
+.team-faces { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 18px; }
+.teammate { display: grid; justify-items: center; gap: 2px; width: 84px; text-align: center; }
+.teammate strong { font-size: .88em; line-height: 1.25; }
+.teammate small { color: var(--muted); font-size: .76em; }
+.teammate-face { position: relative; display: block; }
+/* The ring is the player colour the boards already use, so the face and the squares
+   that person edited read as the same person. */
+.teammate-face .face { box-shadow: 0 0 0 3px var(--surface), 0 0 0 6px var(--player-color); }
+.teammate-dot { position: absolute; right: -2px; bottom: -2px; width: 15px; height: 15px; border-radius: 50%;
+  background: var(--zone-green); border: 3px solid var(--surface); }
+.teammate.away .face { filter: grayscale(1); opacity: .5; }
+.teammate.away .teammate-dot { background: var(--line); }
+.teammate.away strong { color: var(--muted); font-weight: 600; }
+
+/* The strip of faces on a Games-tab card. */
+.team-strip { list-style: none; margin: 8px 0 4px; padding: 0; display: flex; flex-wrap: wrap; gap: 12px; }
+.team-strip li { display: grid; justify-items: center; gap: 3px; font-size: .78em; font-weight: 600; }
+.team-strip .face { box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 18%, transparent); }
+.team-strip li.you .face { box-shadow: 0 0 0 3px currentColor; }
+.team-line { font-size: .88em; font-weight: 700; }
+
+/* Faces in the teacher's draft groups. */
+.draft-members { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.draft-members li { display: flex; align-items: center; gap: 7px; font-weight: 600; font-size: .88em;
+  background: var(--surface-2); border-radius: var(--radius-pill); padding: 4px 12px 4px 4px; }
+
+@media (max-width: 560px) {
+  .teammate { width: 70px; }
+  .team-faces { gap: 12px; }
+}

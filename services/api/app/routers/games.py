@@ -95,7 +95,10 @@ async def activity_socket(
             return
 
         color = existing.color if existing else PLAYER_COLORS[len(room.participants) % len(PLAYER_COLORS)]
-        room.participants[student_id] = Participant(student_id, student["display_name"], color)
+        room.participants[student_id] = Participant(
+            student_id, student["display_name"], color,
+            photo=student.get("photo"), avatar=student.get("avatar"),
+        )
         room.connections[student_id] = websocket
 
     await websocket.accept()

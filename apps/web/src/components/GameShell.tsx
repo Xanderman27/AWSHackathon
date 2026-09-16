@@ -1,8 +1,12 @@
-// The frame every collaborative activity sits in: who is here, whether changes are live,
-// and one way back out. Each game only has to draw its own board.
+// The frame every collaborative activity sits in: who is in your group, who is here right
+// now, and one way back out. Each game only has to draw its own board.
+//
+// The roster shows every seat in the group, not only the people currently connected, so a
+// child can see they are working with Kai and Leo and Zoe before any of them have arrived.
 
 import { type CSSProperties, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import Avatar from './Avatar'
 import type { ActivityMeta, Connection, Participant } from '../games/room'
 
 interface Props {
@@ -14,6 +18,12 @@ interface Props {
   studentId: string
   tip?: string
   children: ReactNode
+}
+
+function names(list: { display_name: string }[]) {
+  const all = list.map((person) => person.display_name)
+  if (all.length <= 1) return all.join('')
+  return `${all.slice(0, -1).join(', ')} and ${all[all.length - 1]}`
 }
 
 export default function GameShell({ meta, participants, connection, error, ready, studentId, tip, children }: Props) {
@@ -35,6 +45,10 @@ export default function GameShell({ meta, participants, connection, error, ready
     )
   }
 
+  const here = new Set(participants.map((person) => person.id))
+  const colorOf = (id: string) => participants.find((person) => person.id === id)?.color
+  const presentCount = meta.members.filter((member) => here.has(member.id)).length
+
   return (
     <div className="beat-page stack">
       <div className="beat-studio-head">
@@ -42,32 +56,43 @@ export default function GameShell({ meta, participants, connection, error, ready
           <span className="eyebrow">{meta.glyph} {meta.groupName ?? 'On your own'}</span>
           <h2>{meta.title}</h2>
           <p className="muted">
-            {meta.solo
-              ? 'Playing on your own. Nothing here is graded.'
-              : `With ${meta.teammates.join(' and ')}`}
+            {meta.solo ? 'Playing on your own. Nothing here is graded.' : `You are working with ${names(meta.teammates)}.`}
           </p>
         </div>
         <Link className="btn" to="/student/games">← Back to activities</Link>
       </div>
 
-      <p className="card game-instructions">{meta.instructions}</p>
-
       {!meta.solo && (
-        <div className="collaborator-bar">
-          <div className="row" aria-label="Teammates in this activity">
-            {participants.map((person) => (
-              <span className="collaborator" key={person.id} style={{ '--player-color': person.color } as CSSProperties}>
-                <i aria-hidden="true" />{person.name}{person.id === studentId ? ' (you)' : ''}
-              </span>
-            ))}
-            <span className="muted">{participants.length} of {meta.memberCount} here</span>
+        <section className="card team-bar" aria-labelledby="team-title">
+          <div className="team-head">
+            <h3 id="team-title">Your team</h3>
+            <span className={`live-status ${connection}`} role="status">
+              <i aria-hidden="true" />
+              {connection === 'live'
+                ? `${presentCount} of ${meta.members.length} here · changes are live`
+                : connection === 'connecting' ? 'Connecting' : 'Connection lost'}
+            </span>
           </div>
-          <span className={`live-status ${connection}`} role="status">
-            <i aria-hidden="true" />
-            {connection === 'live' ? 'Changes are live' : connection === 'connecting' ? 'Connecting' : 'Connection lost'}
-          </span>
-        </div>
+          <ul className="team-faces">
+            {meta.members.map((member) => {
+              const present = here.has(member.id)
+              return (
+                <li key={member.id} className={`teammate ${present ? 'here' : 'away'}`}
+                  style={{ '--player-color': colorOf(member.id) ?? 'var(--line)' } as CSSProperties}>
+                  <span className="teammate-face">
+                    <Avatar photo={member.photo} spec={member.avatar} size={56} />
+                    <i className="teammate-dot" aria-hidden="true" />
+                  </span>
+                  <strong>{member.display_name}{member.id === studentId ? ' (you)' : ''}</strong>
+                  <small>{present ? 'here now' : 'not here yet'}</small>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
       )}
+
+      <p className="card game-instructions">{meta.instructions}</p>
 
       {connection === 'lost' && (
         <div className="feedback try" role="alert">The activity lost its connection. Go back and join again.</div>
