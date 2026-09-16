@@ -10,10 +10,10 @@ from __future__ import annotations
 from types import ModuleType
 from typing import Optional
 
-from . import beat, detectives, fractions, memory, shapes, sorting
+from . import beat, checkers, detectives, fractions, geography, memory, shapes, sorting
 from .base import GameSpec
 
-MODULES: tuple[ModuleType, ...] = (beat, fractions, detectives, memory, sorting, shapes)
+MODULES: tuple[ModuleType, ...] = (beat, fractions, detectives, memory, sorting, shapes, checkers, geography)
 
 BY_ID: dict[str, ModuleType] = {module.GAME.id: module for module in MODULES}
 
