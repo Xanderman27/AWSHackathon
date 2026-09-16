@@ -1,4 +1,4 @@
-// Quizzes tab: only what the teacher has assigned (PRD FR-02). Free practice lives on My path.
+// Quizzes tab: only what the teacher has assigned (PRD FR-02). Free practice lives on My Path.
 
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'

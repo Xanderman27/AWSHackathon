@@ -15,7 +15,7 @@ export default function StudentLayout() {
           <p className="muted" style={{ margin: 0 }}>What would you like to do today?</p>
         </div>
         <nav className="tabs big" aria-label="Student sections">
-          <NavLink to="/student" end>🗺️ My path</NavLink>
+          <NavLink to="/student" end>🗺️ My Path</NavLink>
           <NavLink to="/student/quests">🌟 Quizzes</NavLink>
           <NavLink to="/student/games">🎲 Games</NavLink>
         </nav>

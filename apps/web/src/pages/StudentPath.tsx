@@ -65,7 +65,7 @@ export default function StudentPath() {
 
   return (
     <div className="stack">
-      <h2 className="section-title" style={{ margin: 0 }}>My path</h2>
+      <h2 className="section-title" style={{ margin: 0 }}>My Path</h2>
 
       <div className="path-layout">
         <nav className="subject-rail" aria-label="Subjects">
