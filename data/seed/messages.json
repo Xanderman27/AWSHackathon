@@ -1,0 +1,27 @@
+[
+  {
+    "id": "msg-seed0001",
+    "thread_id": "thr-seed0001",
+    "sender_id": "teacher-01",
+    "sender_role": "teacher",
+    "sender_name": "Ms. Rivera",
+    "body": "Hi! Sam has been working hard on equivalent fractions this week. Pictures are clicking; the written form is still tricky. I sent home a fraction strip activity.",
+    "at": "2026-09-15T16:10:00+00:00",
+    "read_by": [
+      "teacher-01",
+      "parent-01"
+    ]
+  },
+  {
+    "id": "msg-seed0002",
+    "thread_id": "thr-seed0001",
+    "sender_id": "parent-01",
+    "sender_role": "parent",
+    "sender_name": "Jordan Bell",
+    "body": "Thank you. We tried the strips last night and it went well. Should we keep going with those this week?",
+    "at": "2026-09-15T19:42:00+00:00",
+    "read_by": [
+      "parent-01"
+    ]
+  }
+]

@@ -15,7 +15,8 @@ SEED = ROOT / "data" / "seed"
 STATE = ROOT / "data" / "state"
 
 COLLECTIONS = ["skills", "items", "students", "links", "attempts", "mastery", "audit",
-               "recommendations", "conference_slots", "conference_requests"]
+               "recommendations", "conference_slots", "conference_requests",
+               "teachers", "parents", "message_threads", "messages"]
 
 
 class LocalStore:

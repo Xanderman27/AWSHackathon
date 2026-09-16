@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { api } from '../api'
 import { MasteryGauge, OutcomeTrack } from '../components/MasteryGauge'
-import ConferenceScheduler from './ConferenceScheduler'
 
 interface Child { id: string; display_name: string; grade: number }
 interface NextStep {
@@ -113,8 +112,6 @@ export default function ParentProgress() {
           </div>
         )}
       </div>
-
-      <ConferenceScheduler studentId={student.id} />
     </div>
   )
 }

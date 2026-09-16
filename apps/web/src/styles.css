@@ -422,3 +422,55 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .res-more-body p { margin: 0 0 8px; }
 .res-dialog-head { display: flex; align-items: flex-start; gap: 12px; }
 .res-dialog-head .tool { flex: 0 0 auto; border-color: var(--line); }
+
+/* ---- Messages widget ---- */
+.msg-launcher { position: fixed; right: 20px; bottom: 20px; z-index: 40; background: var(--brand);
+  color: var(--brand-ink); border-color: var(--brand); font-size: 1em; padding: .7em 1.4em;
+  box-shadow: 0 8px 24px rgba(40,105,221,.34); }
+.msg-launcher:hover { background: var(--brand-deep); border-color: var(--brand-deep); }
+.msg-badge { background: var(--surface); color: var(--brand-deep); border-radius: 999px; min-width: 22px;
+  height: 22px; display: inline-grid; place-items: center; font-size: .78em; font-weight: 700; padding: 0 6px; }
+.msg-panel { position: fixed; right: 20px; bottom: 84px; z-index: 41; width: min(380px, calc(100vw - 40px));
+  height: min(560px, calc(100vh - 120px)); background: var(--surface); border: 1.5px solid var(--line);
+  border-radius: var(--radius-xl); box-shadow: 0 24px 60px rgba(11,18,28,.24); display: flex; flex-direction: column;
+  overflow: hidden; }
+.msg-head { display: flex; align-items: center; gap: 8px; padding: 14px 14px 12px; border-bottom: 1.5px solid var(--line); }
+.msg-head h2 { margin: 0; font-size: 1.1em; flex: 1; min-width: 0; }
+.msg-head h2:focus { outline: none; }
+.msg-head .tool { border-color: transparent; min-width: 40px; min-height: 40px; }
+.msg-body { flex: 1; overflow: auto; padding: 12px 14px; }
+.msg-foot { padding: 12px 14px; border-top: 1.5px solid var(--line); }
+.msg-foot .btn-primary { width: 100%; justify-content: center; }
+.msg-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.msg-item { position: relative; display: grid; gap: 2px; width: 100%; text-align: left; padding: 12px 30px 12px 14px;
+  border-radius: var(--radius); background: var(--surface-2); border-color: transparent; min-height: 0; }
+.msg-item:hover { border-color: var(--brand); }
+.msg-item-top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.msg-when { font-size: .78em; color: var(--muted); font-weight: 500; flex: 0 0 auto; }
+.msg-subject { font-size: .92em; font-weight: 600; }
+.msg-preview { font-size: .85em; color: var(--muted); font-weight: 500; overflow: hidden;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.msg-dot { position: absolute; right: 12px; top: 14px; width: 10px; height: 10px; border-radius: 50%; background: var(--brand); }
+.msg-form { display: grid; gap: 12px; align-content: start; }
+.msg-to { margin: 0; font-size: .95em; }
+.msg-field { display: grid; gap: 4px; font-size: .88em; font-weight: 600; }
+.msg-field input, .msg-field select, .msg-field textarea, .msg-compose textarea {
+  font: inherit; font-weight: 500; padding: 10px 12px; border-radius: 12px; border: 1.5px solid var(--line);
+  background: var(--surface); color: var(--ink); width: 100%; min-height: 44px; }
+.msg-field textarea { resize: vertical; }
+.msg-thread { display: flex; flex-direction: column; gap: 10px; }
+.msg-thread-sub { margin: 0; padding: 8px 14px 0; font-size: .85em; color: var(--muted); font-weight: 600; }
+.bubble { max-width: 85%; padding: 10px 14px; border-radius: 16px; display: grid; gap: 2px; }
+.bubble p { margin: 0; font-size: .95em; }
+.bubble.mine { align-self: flex-end; background: var(--brand); color: var(--brand-ink); border-bottom-right-radius: 5px; }
+.bubble.theirs { align-self: flex-start; background: var(--surface-2); border: 1.5px solid var(--line); border-bottom-left-radius: 5px; }
+.bubble-who { font-size: .76em; font-weight: 700; opacity: .8; }
+.bubble-when { font-size: .72em; opacity: .7; justify-self: end; }
+.msg-compose { display: flex; gap: 8px; align-items: flex-end; }
+.msg-compose textarea { resize: none; }
+.msg-compose .btn-primary { width: auto; flex: 0 0 auto; }
+:root[data-contrast='high'] .msg-item { border-color: var(--line); }
+@media (max-width: 520px) {
+  .msg-panel { right: 10px; left: 10px; width: auto; bottom: 78px; }
+  .msg-launcher { right: 12px; bottom: 12px; }
+}

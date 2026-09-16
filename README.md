@@ -40,7 +40,8 @@ Open http://localhost:5173. The API runs on port 8010. Pick a role on the home p
 - Dori appears beside the question and delivers the hint in a speech bubble.
 - Accessibility bar: read-aloud (browser speech engine as a stand-in for Polly), high contrast, three text sizes, reduced motion, keyboard focus.
 - Teacher dashboard: class counts in neutral language, learner table with band and confidence, per-student item evidence with route reasons.
-- Parent view: linked children only, plain-language "what we practiced," authorization enforced at the API.
+- Parent view: linked children only, a child-only mastery gauge, teacher-approved next steps, and a rights library that opens in a popup.
+- Messages: a corner panel on the parent and teacher views. A parent can only reach their child's teacher; a teacher can only reach families in their own class. The server decides the pairing, not the client.
 
 ## Layout
 

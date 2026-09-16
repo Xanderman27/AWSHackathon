@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { getSession } from '../api'
+import MessagesWidget from '../components/MessagesWidget'
 import RoleGate from './RoleGate'
 
 export default function ParentLayout() {
@@ -18,6 +19,7 @@ export default function ParentLayout() {
         </nav>
       </div>
       <Outlet />
+      <MessagesWidget />
     </div>
   )
 }

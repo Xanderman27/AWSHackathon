@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { api, getSession } from '../api'
+import MessagesWidget from '../components/MessagesWidget'
 import RoleGate from './RoleGate'
 
 interface Row { student_id: string; display_name: string; has_goal_link: boolean; skill_name: string; band: string; estimate: number; confidence: string; evidence_count: number }
@@ -44,11 +45,12 @@ export default function TeacherDashboard() {
       <div className="card">
         <div className="row between" style={{ marginBottom: 8 }}><h2 style={{ margin: 0 }}>Learners</h2><span className="muted">Neutral language by design. No rankings.</span></div>
         <table>
-          <thead><tr><th>Learner</th><th>Where they are</th><th>Estimate</th><th>Confidence</th><th>Evidence</th><th></th></tr></thead>
+          <thead><tr><th>Learner</th><th>Skill</th><th>Where they are</th><th>Estimate</th><th>Confidence</th><th>Evidence</th><th></th></tr></thead>
           <tbody>
             {data.mastery.map((m) => (
               <tr key={m.student_id + m.skill_name}>
                 <td><span className="avatar" aria-hidden="true">{m.display_name[0]}</span>{m.display_name} {m.has_goal_link && <span className="chip" title="Has a linked goal (teacher-only)" style={{ marginLeft: 6 }}>goal</span>}</td>
+                <td className="muted">{m.skill_name}</td>
                 <td><span className={`chip ${BAND_TONE[m.band]}`}>{m.band}</span></td>
                 <td><span className="bar" aria-hidden="true"><i style={{ width: `${Math.round(m.estimate * 100)}%` }} /></span> <span className="muted">{m.estimate.toFixed(2)}</span></td>
                 <td><span className={`chip ${CONF_TONE[m.confidence]}`}>{m.confidence}</span></td>
@@ -57,7 +59,7 @@ export default function TeacherDashboard() {
               </tr>
             ))}
             {without.map((s) => (
-              <tr key={s.id}><td><span className="avatar" aria-hidden="true">{s.display_name[0]}</span>{s.display_name}</td><td colSpan={4} className="muted">No quest completed yet</td><td></td></tr>
+              <tr key={s.id}><td><span className="avatar" aria-hidden="true">{s.display_name[0]}</span>{s.display_name}</td><td colSpan={5} className="muted">No quest completed yet</td><td></td></tr>
             ))}
           </tbody>
         </table>
@@ -78,6 +80,8 @@ export default function TeacherDashboard() {
           )}
         </div>
       )}
+
+      <MessagesWidget />
 
       <div className="card" style={{ background: 'var(--surface-2)' }}>
         <strong>How this works.</strong> <span className="muted">After every answer we update one number per skill: how likely it is that this learner knows it. Items are calibrated so the model knows which questions are hard, and the next question is the one that tells us the most without being discouraging. Nothing here diagnoses, grades, or places a student.</span>
