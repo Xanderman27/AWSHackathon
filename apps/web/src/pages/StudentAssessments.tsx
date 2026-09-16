@@ -49,7 +49,7 @@ export default function StudentAssessments() {
           })}
         </div>
       )}
-      <p className="muted helper">Take your time. You can ask Dori for a hint on any question.</p>
+      <p className="muted helper">Take your time. You can ask Capy for a hint on any question.</p>
     </div>
   )
 }

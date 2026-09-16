@@ -954,3 +954,94 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .confirm-dialog::backdrop { background: rgba(11,18,28,.45); }
 :root[data-contrast='high'] .pick[aria-pressed='true'] { background: var(--brand); color: var(--brand-ink); }
 :root[data-contrast='high'] .sbar-track.stacked i { color: #000; }
+
+/* ================= Capy the capybara ================= */
+/* Fills come from gradients set as SVG attributes; CSS carries strokes, motion, and the
+   high-contrast overrides (CSS fill beats the gradient attribute, so HC still wins). */
+.capy-svg { display: block; overflow: visible; filter: drop-shadow(0 5px 8px rgba(96, 64, 32, 0.18)); }
+.capy-svg g { transform-box: fill-box; }
+.cp-fur, .cp-head, .cp-foot { stroke: #7c5433; }
+.cp-eyearc { fill: none; stroke: #33241a; stroke-linecap: round; }
+.cp-stroke { fill: none; stroke: #6d4a2a; stroke-linecap: round; }
+.cp-grass { fill: none; stroke: #4ec276; stroke-linecap: round; }
+.cp-blush { opacity: 0.55; }
+.cp-eyes { transform-origin: center; animation: cpBlink 5.2s ease-in-out infinite; }
+.cp-ear { transform-origin: center; animation: cpEar 6s ease-in-out infinite; }
+.cp-grassg { transform-origin: 100% 0%; animation: cpGrassEat 6s ease-in-out infinite; }
+.cp-mouthg { animation: cpChew 6s ease-in-out infinite; }
+@keyframes cpBlink { 0%, 91%, 100% { transform: scaleY(1); } 94% { transform: scaleY(0.12); } }
+@keyframes cpEar { 0%, 86%, 100% { transform: rotate(0deg); } 90% { transform: rotate(-10deg); } 94% { transform: rotate(4deg); } }
+@keyframes cpGrassEat {
+  0%, 40% { transform: rotate(0deg) scale(1); opacity: 1; }
+  60% { transform: rotate(-12deg) scale(0.82); opacity: 1; }
+  80% { transform: rotate(-18deg) scale(0.5); opacity: 1; }
+  86% { opacity: 0; transform: rotate(-18deg) scale(0.4); }
+  92% { opacity: 0; transform: rotate(0deg) scale(1); }
+  100% { opacity: 1; transform: rotate(0deg) scale(1); }
+}
+@keyframes cpChew {
+  0%, 52%, 100% { transform: translateY(0); }
+  58%, 70%, 82% { transform: translateY(1.8px); }
+  64%, 76%, 88% { transform: translateY(0); }
+}
+:root[data-motion='reduced'] .cp-eyes, :root[data-motion='reduced'] .cp-ear,
+:root[data-motion='reduced'] .cp-grassg, :root[data-motion='reduced'] .cp-mouthg { animation: none !important; }
+@media (prefers-reduced-motion: reduce) { .cp-eyes, .cp-ear, .cp-grassg, .cp-mouthg { animation: none !important; } }
+:root[data-contrast='high'] .capy-svg { filter: none; }
+:root[data-contrast='high'] .cp-fur, :root[data-contrast='high'] .cp-head, :root[data-contrast='high'] .cp-foot { fill: #000; stroke: var(--line); }
+:root[data-contrast='high'] .cp-earin { fill: var(--line); }
+:root[data-contrast='high'] .cp-muzzle { fill: #fff; }
+:root[data-contrast='high'] .cp-eye { fill: #fff; }
+:root[data-contrast='high'] .cp-hi, :root[data-contrast='high'] .cp-nose, :root[data-contrast='high'] .cp-mouthfill { fill: #000; }
+:root[data-contrast='high'] .cp-stroke { stroke: #000; }
+:root[data-contrast='high'] .cp-eyearc { stroke: #fff; }
+:root[data-contrast='high'] .cp-blush, :root[data-contrast='high'] .cp-shadow, :root[data-contrast='high'] .cp-sheen { display: none; }
+:root[data-contrast='high'] .cp-grass { stroke: var(--brand); }
+:root[data-contrast='high'] .cp-grassleaf { fill: var(--brand); }
+
+/* ================= Landing hero ================= */
+.land { gap: 22px; }
+.land-hero { flex: 1; display: grid; grid-template-columns: 1.05fr 1fr; align-items: center; gap: 40px; padding: 8px 20px 0; }
+.land-stage { position: relative; display: flex; align-items: center; justify-content: center; min-height: 480px; }
+.land-blob { position: absolute; left: 50%; top: 50%; width: 500px; height: 500px; transform: translate(-50%, -50%);
+  border-radius: 48% 52% 55% 45% / 50% 46% 54% 50%; background: #eaf9df; animation: landBlob 9s ease-in-out infinite; }
+.land-capy { position: relative; }
+.land-capy .capy-svg { width: min(380px, 34vw); height: auto; }
+.land-drift { position: absolute; animation: landDrift 5.5s ease-in-out infinite; filter: drop-shadow(0 4px 0 rgba(11,18,28,.1)); }
+.land-drift.da { left: -60px; top: 26px; }
+.land-drift.db { right: -70px; top: 92px; animation-duration: 6.5s; animation-delay: 1.2s; }
+.land-drift.dc { left: -96px; bottom: 44px; animation-duration: 7s; animation-delay: 2.1s; }
+@keyframes landDrift { 0%, 100% { transform: translate(0, 0) rotate(-5deg); } 50% { transform: translate(7px, -14px) rotate(6deg); } }
+@keyframes landBlob { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.06); } }
+.land-right { display: flex; flex-direction: column; gap: 20px; max-width: 560px; }
+.land-h1 { margin: 0; font-size: clamp(34px, 4.2vw, 54px); line-height: 1.08; letter-spacing: -1.5px; font-weight: 800; }
+.land-ctas { display: flex; flex-direction: column; gap: 14px; width: min(390px, 100%); margin-top: 4px; }
+.land-cta { min-height: 58px; border-radius: 18px; font-size: 17px; justify-content: center;
+  text-transform: uppercase; letter-spacing: 0.06em; }
+.land-alt { min-height: 58px; border-radius: 18px; font-size: 15px; font-weight: 800; justify-content: center;
+  text-transform: uppercase; letter-spacing: 0.06em; background: var(--surface); border: 2px solid var(--line);
+  box-shadow: 0 5px 0 var(--line); color: var(--duo-blue); }
+.land-alt:hover { border-color: var(--duo-blue); transform: none; }
+.land-alt:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--line); }
+.land-pills { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.land-pill { display: inline-flex; align-items: center; gap: 9px; padding: 11px 20px; border: 2px solid var(--surface-2);
+  box-shadow: 0 4px 0 var(--surface-2); border-radius: 999px; font-weight: 700; font-size: 15px; color: #444c56;
+  border-color: #eef0f3; box-shadow: 0 4px 0 #eef0f3; background: var(--surface); }
+.pill-dot { width: 14px; height: 14px; border-radius: 5px; display: inline-block; }
+.land-foot { text-align: center; font-size: 13px; font-weight: 600; color: var(--muted); margin: 0 0 4px; }
+.land-foot a { color: var(--muted); text-decoration: none; }
+.land-foot a:hover { color: var(--brand); text-decoration: underline; }
+.login-dialog { border: 2px solid var(--line); border-bottom-width: 4px; border-radius: var(--radius-xl);
+  padding: 26px 28px; width: min(430px, calc(100vw - 32px)); background: var(--surface); color: var(--ink); }
+.login-dialog::backdrop { background: rgba(11, 18, 28, 0.45); }
+@media (max-width: 900px) {
+  .land-hero { grid-template-columns: 1fr; gap: 16px; }
+  .land-stage { min-height: 320px; }
+  .land-capy .capy-svg { width: min(260px, 62vw); }
+  .land-right { align-items: center; text-align: center; margin: 0 auto; }
+  .land-drift.da { left: -34px; } .land-drift.db { right: -36px; } .land-drift.dc { left: -50px; bottom: 20px; }
+}
+:root[data-motion='reduced'] .land-blob, :root[data-motion='reduced'] .land-drift { animation: none !important; }
+@media (prefers-reduced-motion: reduce) { .land-blob, .land-drift { animation: none !important; } }
+:root[data-contrast='high'] .land-blob { display: none; }
+:root[data-contrast='high'] .land-pill { border-color: var(--line); box-shadow: none; color: var(--ink); }

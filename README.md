@@ -1,6 +1,6 @@
 # Dori
 
-Accessible check-ins for K-12 students with IEPs and 504 plans, teacher-approved next steps, and plain-language progress for families. Dori is the bear who guides the learner.
+Accessible check-ins for K-12 students with IEPs and 504 plans, teacher-approved next steps, and plain-language progress for families. Capy the capybara guides the learner.
 
 - Product requirements: [docs/PRD.md](docs/PRD.md)
 - Tech stack: [docs/TECH_STACK.md](docs/TECH_STACK.md)
@@ -39,7 +39,7 @@ Open http://localhost:5173. The API runs on port 8010. Sign in with a demo accou
 
 ## What works today
 
-- Landing page: a simple Duolingo-style login. Students use the login their teacher set; teachers and parents have their own.
+- Landing page: a Duolingo-style hero with Capy waving; both buttons open the login dialog. Students use the login their teacher set; teachers and parents have their own.
 - Student portal: a Duolingo-style practice path (3D step nodes per skill, earned from the same mastery estimate the teacher sees, never shown as a number), plus Quests (assigned adaptive assessments) and Games (collaborative activities and free play) tabs.
 - Student quest: adaptive item selection, prerequisite routing, resume, reading passages that are not read aloud so the item still measures reading.
 - One play/pause button per question that highlights each word as it is spoken, and light confetti on a correct answer.

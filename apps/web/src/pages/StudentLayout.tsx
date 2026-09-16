@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { getSession } from '../api'
-import Bear from '../components/Bear'
+import Capy from '../components/Capy'
 import RoleGate from './RoleGate'
 
 export default function StudentLayout() {
@@ -9,7 +9,7 @@ export default function StudentLayout() {
   return (
     <div className="page student-theme">
       <div className="student-head">
-        <Bear size={84} mood="wave" float />
+        <Capy size={90} mood="happy" float />
         <div>
           <h1 style={{ marginBottom: 2 }}>Hi Sam!</h1>
           <p className="muted" style={{ margin: 0 }}>What would you like to do today?</p>

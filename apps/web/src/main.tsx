@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Link, Route, Routes, useNavigate } from 'react-router-dom'
 import { PrefsProvider } from './a11y'
 import { getSession, setSession } from './api'
+import { DoriLogo } from './components/Logo'
 import Home from './pages/Home'
 import StudentLayout from './pages/StudentLayout'
 import StudentAssessments from './pages/StudentAssessments'
@@ -27,7 +28,7 @@ function Shell() {
     <div className="shell">
       <a href="#main" className="visually-hidden">Skip to main content</a>
       <header className="topbar">
-        <Link to="/" className="brand"><span className="dot" aria-hidden="true" />Dori</Link>
+        <Link to="/" className="brand"><DoriLogo size={34} />Dori</Link>
         {session && (
           <div className="row" style={{ gap: 10 }}>
             <span className="muted" style={{ fontWeight: 600, fontSize: '.92em' }}>{session.name ?? session.userId}</span>

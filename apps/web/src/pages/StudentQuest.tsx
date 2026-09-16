@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { api, getSession, type AnswerOut, type NextItem, type Skill } from '../api'
 import { QuestTools } from '../a11y'
-import Bear from '../components/Bear'
+import Capy from '../components/Capy'
 import Confetti from '../components/Confetti'
 import { buildScript, SpokenText, useNarrator } from '../components/speech'
 import RoleGate from './RoleGate'
@@ -95,7 +95,7 @@ export default function StudentQuest() {
       <div className="page center student-theme">
         <Confetti burst={burst} />
         <div className="card celebrate">
-          <Bear size={120} mood="cheer" float />
+          <Capy size={126} mood="cheer" float />
           <h1 style={{ marginTop: 12 }}>You did it!</h1>
           <p style={{ fontSize: '1.2em' }}>{next.summary}</p>
           <button type="button" className="btn-primary btn-lg" onClick={leave}>Back to quests</button>
@@ -135,7 +135,7 @@ export default function StudentQuest() {
             )}
 
             <div className="ask">
-              <Bear size={76} mood="happy" />
+              <Capy size={78} mood="happy" />
               <p className="prompt" id="prompt">
                 <SpokenText tokens={script.tokens} region="prompt" charIndex={narrator.charIndex} playing={playing} />
               </p>
@@ -156,7 +156,7 @@ export default function StudentQuest() {
             )}
             {narrator.available && item.passage && !item.passage_read_aloud_allowed && (
               <p className="muted read-note" style={{ textAlign: 'center' }}>
-                This one is a reading quest, so the story stays for your eyes. Dori will read the
+                This one is a reading quest, so the story stays for your eyes. Capy will read the
                 question and the answers.
               </p>
             )}
@@ -173,8 +173,8 @@ export default function StudentQuest() {
 
             {hintShown && (
               <div className="hint-row" role="status">
-                <Bear size={68} mood="think" />
-                <div className="hint-bubble"><strong>Dori says:</strong> {item.hint}</div>
+                <Capy size={72} mood="think" />
+                <div className="hint-bubble"><strong>Capy says:</strong> {item.hint}</div>
               </div>
             )}
 
@@ -184,7 +184,7 @@ export default function StudentQuest() {
               </button>
               {!hintShown && (
                 <button type="button" className="btn-ghost" onClick={() => setHintShown(true)}>
-                  🐻 Ask Dori for a hint
+                  <Capy size={26} mood="think" /> Ask Capy for a hint
                 </button>
               )}
             </div>
@@ -194,7 +194,7 @@ export default function StudentQuest() {
         {phase === 'feedback' && result && (
           <div className="stack">
             <div className={`feedback ${result.correct ? 'good' : 'try'}`} role="status">
-              <Bear size={64} mood={result.correct ? 'cheer' : 'happy'} />
+              <Capy size={68} mood={result.correct ? 'cheer' : 'happy'} />
               <span>{result.feedback}</span>
             </div>
             <div>
