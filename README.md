@@ -4,15 +4,52 @@ Accessible check-ins for elementary students with IEPs and 504 plans, teacher-ap
 
 - Product requirements: [docs/PRD.md](docs/PRD.md)
 - Tech stack: [docs/TECH_STACK.md](docs/TECH_STACK.md)
-- Learner model explained: [docs/LEARNER_MODEL.md](docs/LEARNER_MODEL.md)
+- Learner model: [docs/LEARNER_MODEL.md](docs/LEARNER_MODEL.md)
 
-## Layout (planned)
+## Run it locally
+
+Requires Node 20+ and Python 3.12+.
+
+```bash
+# API (first time: create the venv and install)
+cd services/api
+python -m venv .venv
+.venv/Scripts/python -m pip install -r requirements.txt     # macOS/Linux: .venv/bin/python
+.venv/Scripts/python -m uvicorn app.main:app --port 8000 --reload
+```
+
+```bash
+# Web (second terminal)
+cd apps/web
+npm install
+npm run dev
+```
+
+Open http://localhost:5173. Pick a role on the home page; the demo uses synthetic accounts (Sam is `student-01`, the teacher owns class 4A, `parent-01` is linked to Sam).
+
+- `python scripts/build_items.py` regenerates the item bank from the authored list.
+- `POST http://localhost:8000/demo/reset` restores the seeded state.
+- Tests: `cd services/api && .venv/Scripts/python -m pytest`.
+
+## What works today
+
+- Student quest: adaptive item selection, hints, encouraging feedback, prerequisite routing after two easy misses, resume.
+- Accessibility bar: read-aloud (browser speech engine as a stand-in for Polly), high contrast, three text sizes, reduced motion, keyboard focus.
+- Teacher dashboard: class counts in neutral language, learner table with band and confidence, per-student item evidence with route reasons.
+- Parent view: linked children only, plain-language "what we practiced," authorization enforced at the API.
+
+## Layout
 
 ```
-apps/web        React + Vite + TypeScript front end (student, teacher, parent routes)
-services/api    FastAPI service: mastery model, cohorts, authorization, Bedrock, storage
-corpus/         Curated knowledge-base documents with metadata sidecars and source manifest
-data/           Synthetic classroom, item bank, hints, scripted demo paths
-scripts/        Setup, ingestion, Polly pre-generation, demo reset
-docs/           PRD and design notes
+apps/web          React + Vite + TypeScript (student, teacher, parent routes)
+services/api      FastAPI: mastery model, selection, authorization, local JSON storage
+  app/mastery     Layer 1 BKT (item-aware) and Layer 2 adaptive selection
+data/seed         Skills, items, students, links, seeded mastery
+data/state        Runtime state (gitignored; reset copies seed over it)
+scripts           build_items.py; fit_*.py and simulate.py to come
+docs              PRD, tech stack, learner model
 ```
+
+## Next
+
+Simulator and offline fits (IRT, BKT, pattern classifier), knowledge-base corpus and LangGraph recommendation graph on Bedrock, goal links, cohorts, conference scheduling, Polly audio.

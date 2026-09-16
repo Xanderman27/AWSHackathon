@@ -1,0 +1,32 @@
+[
+  {
+    "id": "fraction_equivalence",
+    "subject": "math",
+    "name": "Equivalent fractions",
+    "child_name": "finding fractions that are the same amount",
+    "standard_framework": "CCSS",
+    "standard_id": "4.NF.A.1",
+    "grade": 4,
+    "prerequisites": ["fraction_parts"]
+  },
+  {
+    "id": "fraction_parts",
+    "subject": "math",
+    "name": "Fractions as parts of a whole",
+    "child_name": "naming parts of a whole",
+    "standard_framework": "CCSS",
+    "standard_id": "3.NF.A.1",
+    "grade": 3,
+    "prerequisites": []
+  },
+  {
+    "id": "main_idea",
+    "subject": "reading",
+    "name": "Main idea and supporting details",
+    "child_name": "finding the big idea in a story",
+    "standard_framework": "CCSS",
+    "standard_id": "RI.4.2",
+    "grade": 4,
+    "prerequisites": []
+  }
+]

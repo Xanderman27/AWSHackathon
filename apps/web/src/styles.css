@@ -1,0 +1,80 @@
+/* Design tokens. Contrast and scale are switched by attributes on <html> (see a11y.tsx). */
+:root {
+  --bg: #fbf7ef;
+  --surface: #ffffff;
+  --ink: #2b2a33;
+  --muted: #5d5b6a;
+  --brand: #2f7d6d;
+  --brand-ink: #ffffff;
+  --accent: #f4a259;
+  --ok: #3a8f5c;
+  --line: #e3ddd0;
+  --focus: #1f5eff;
+  --radius: 18px;
+  --step: 1rem;
+  --motion: 180ms;
+  font-family: 'Segoe UI', 'Nunito', system-ui, sans-serif;
+  color-scheme: light;
+}
+:root[data-contrast='high'] {
+  --bg: #000000;
+  --surface: #000000;
+  --ink: #ffffff;
+  --muted: #ffffff;
+  --brand: #ffff00;
+  --brand-ink: #000000;
+  --accent: #ffff00;
+  --ok: #00ff88;
+  --line: #ffffff;
+  --focus: #00e5ff;
+}
+:root[data-scale='2'] { --step: 1.25rem; }
+:root[data-scale='3'] { --step: 1.55rem; }
+:root[data-motion='reduced'] { --motion: 0ms; }
+@media (prefers-reduced-motion: reduce) { :root { --motion: 0ms; } }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); font-size: var(--step); line-height: 1.5; }
+body { min-height: 100vh; }
+a { color: var(--brand); }
+h1, h2, h3 { line-height: 1.2; margin: 0 0 0.5em; }
+
+:focus-visible { outline: 4px solid var(--focus); outline-offset: 3px; border-radius: 8px; }
+
+button, .btn {
+  font: inherit; min-height: 48px; min-width: 48px; padding: 0.6em 1.1em;
+  border-radius: var(--radius); border: 2px solid var(--line); background: var(--surface); color: var(--ink);
+  cursor: pointer; transition: transform var(--motion), background var(--motion);
+}
+button:hover { transform: translateY(-1px); }
+button[aria-pressed='true'], .btn-primary { background: var(--brand); color: var(--brand-ink); border-color: var(--brand); }
+
+.shell { max-width: 960px; margin: 0 auto; padding: 16px; }
+.topbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; padding: 8px 0 16px; }
+.brand { font-weight: 800; font-size: 1.15em; color: var(--brand); text-decoration: none; }
+.a11y-bar { display: flex; flex-wrap: wrap; gap: 8px; }
+.seg { display: inline-flex; gap: 4px; }
+
+.card { background: var(--surface); border: 2px solid var(--line); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+.muted { color: var(--muted); }
+.stack { display: grid; gap: 12px; }
+.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+/* Student quest */
+.quest-progress { font-weight: 700; color: var(--muted); }
+.prompt { font-size: 1.35em; font-weight: 700; margin: 8px 0 16px; }
+.choices { display: grid; gap: 12px; }
+.choice { text-align: left; font-size: 1.1em; padding: 16px 20px; min-height: 64px; }
+.choice[aria-pressed='true'] { border-color: var(--brand); }
+.feedback { font-size: 1.2em; font-weight: 700; padding: 16px; border-radius: var(--radius); background: var(--bg); border: 2px dashed var(--line); }
+.guide { display: flex; gap: 12px; align-items: center; }
+.guide .face { font-size: 2.6em; }
+.celebrate { text-align: center; font-size: 1.3em; }
+
+/* Teacher */
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); }
+.pill { display: inline-block; padding: 2px 10px; border-radius: 999px; border: 2px solid var(--line); font-size: 0.9em; }
+.stat { font-size: 1.6em; font-weight: 800; }
+
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }

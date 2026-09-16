@@ -1,0 +1,5 @@
+[
+  {"parent_id": "parent-01", "student_id": "student-01"},
+  {"parent_id": "parent-02", "student_id": "student-02"},
+  {"parent_id": "parent-03", "student_id": "student-03"}
+]
