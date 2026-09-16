@@ -4,7 +4,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { login } from '../api'
+import { getSession, login } from '../api'
 import Capy from '../components/Capy'
 import { BookIcon, FlagIcon, StarIcon } from '../components/PathArt'
 
@@ -26,6 +26,7 @@ const SUBJECTS = [
 
 export default function Home() {
   const nav = useNavigate()
+  const session = getSession()
   const dialogRef = useRef<HTMLDialogElement>(null)
   const userRef = useRef<HTMLInputElement>(null)
   const [username, setUsername] = useState('')
@@ -34,6 +35,12 @@ export default function Home() {
   const [err, setErr] = useState<string | null>(null)
 
   useEffect(() => () => dialogRef.current?.close(), [])
+
+  // Someone already signed in has no business on the login page: send them home. The header's
+  // "Log out" and the hero's "Log in" can then never show at the same time.
+  useEffect(() => {
+    if (session) nav(`/${session.role}`, { replace: true })
+  }, [session, nav])
 
   function openLogin() {
     setErr(null)
@@ -57,6 +64,8 @@ export default function Home() {
       setBusy(false)
     }
   }
+
+  if (session) return null
 
   return (
     <div className="page land">
