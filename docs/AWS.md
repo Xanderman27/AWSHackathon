@@ -28,24 +28,27 @@ export AWS_SESSION_TOKEN=...        # Workshop Studio issues short-lived keys
 export AWS_REGION=us-east-1
 ```
 
-Check it: `GET /teacher/ai/status` as a teacher. `offline` stays `true` until step 3.
-
-## Step 2 — confirm the model id
+## Step 2 — run the pre-flight
 
 ```bash
-aws bedrock list-foundation-models --region "$AWS_REGION" \
-  --query "modelSummaries[?contains(modelId,'anthropic')].modelId" --output table
+services/api/.venv/bin/python scripts/check_aws.py
 ```
 
-Workshop Studio accounts differ, which is why the id is configuration and not a constant:
+One command answers all three questions that decide whether the live path works on stage:
+are we authenticated, which Claude models this account actually exposes, and whether a real
+Converse response parses the way the pipeline expects. No AWS CLI needed — boto3 lists the
+models. It never prints a secret, and it names the fix for each failure.
+
+Workshop Studio accounts differ, which is why the model id is configuration and not a
+constant. If the pre-flight lists an id other than the default:
 
 ```bash
-export BEDROCK_MODEL_ID=<the id from that list>
+export BEDROCK_MODEL_ID=<the id it listed>     # use the us.… inference profile if there is one
 ```
-
-If the account uses inference profiles, use the profile id (usually `us.anthropic.…`).
 
 ## Step 3 — turn it on
+
+Only once the pre-flight is green:
 
 ```bash
 export DEMO_OFFLINE=0
