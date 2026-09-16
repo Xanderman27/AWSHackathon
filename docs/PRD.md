@@ -27,6 +27,7 @@ v0.1 was a solid adaptive-assessment PRD, but it had drifted away from the origi
 | Standards | Concrete standard IDs for the demo (CCSS 4.NF.A.1 and RI.4.2) and a `standard_framework` metadata field so state frameworks can be added later. |
 | Technology | Streamlit flagged as a conflict with the accessibility promise; recommended split is a React front end plus a Python FastAPI service. Knowledge Base provisioning fallback, Polly pre-generation, structured output via tool use, and model selection added. |
 | Delivery | Added a cut line (what to drop first if time runs out) and day-by-day build order. |
+| Child-friendly and accessible | New product principle, a student-experience definition in §13, FR-08a and FR-08b, and acceptance criteria for reading level, feedback tone, motion, target size, and WCAG 2.2 AA on every screen. |
 | Data model | Added ParentStudentLink, ClassAssignment, GoalLink, ConferenceSlot, ActivityOutcome, AccessibilityPreference, ItemHint. |
 | Users | Removed the administrator role. Roster and corpus setup are operational tasks done with scripts in the MVP. |
 | Corpus and activities | Knowledge base restricted to tiered trusted sources (standards, district guidelines, federally funded guidance, teacher-reviewed templates) with provenance metadata and an ingestion gate. Activity generation is template-first: retrieve an approved template, fill it from retrieved ideas, verify every field is grounded. |
@@ -56,10 +57,11 @@ Make every short learning check-in feel safe and playful, give teachers a clear,
 1. **Strengths before deficits.** Describe what a learner understands and what to practice next; never label a child as low, behind, or incapable.
 2. **Teacher authority.** AI proposes; educators approve, edit, or reject. The teacher spends the most time with the student and understands them best.
 3. **Explainability.** Every recommendation, cohort, and parent summary identifies the assessment evidence and learning objective behind it.
-4. **Accessible by default.** Read-aloud, high contrast, adjustable type, keyboard and switch access, large targets, and plain language are core functionality, not settings.
-5. **Privacy by design.** Collect the least data needed, isolate records by role, keep IEP documents and diagnoses out of the system, and use only synthetic student data in the hackathon.
-6. **No permanent tracks.** Cohorts are temporary, activity-specific, revisable, and hidden from parents and other students.
-7. **Continuity.** The parent relationship persists across the whole K–12 span even as teachers change, so a family never starts from zero.
+4. **Accessible by default.** Read-aloud, high contrast, adjustable type, keyboard and switch access, large targets, and plain language are core functionality, not settings. Every screen, including teacher and parent views, must meet WCAG 2.2 Level AA.
+5. **Child-friendly by design.** The student experience is built for elementary-age children: warm, calm, and encouraging, with short sentences, friendly visuals, one task at a time, and nothing that shames, rushes, or confuses. A child should be able to use it without an adult explaining it.
+6. **Privacy by design.** Collect the least data needed, isolate records by role, keep IEP documents and diagnoses out of the system, and use only synthetic student data in the hackathon.
+7. **No permanent tracks.** Cohorts are temporary, activity-specific, revisable, and hidden from parents and other students.
+8. **Continuity.** The parent relationship persists across the whole K–12 span even as teachers change, so a family never starts from zero.
 
 ## 3. Problem statement
 
@@ -217,6 +219,8 @@ Priority definitions: **P0** is required for the judged demo; **P1** is valuable
 | FR-06 | P0 | Provide read-aloud, high-contrast mode, font-size control, and reduced motion throughout the student flow, persisted per student. |
 | FR-07 | P0 | Honor per-item accommodation rules (for example, whether the reading passage itself may be read aloud) so read-aloud does not silently change what a reading item measures. |
 | FR-08 | P0 | Show encouraging feedback and avoid rankings, deficit labels, countdowns, and public scores. |
+| FR-08a | P0 | Keep all student-facing text at or below a Grade 3 reading level, in a warm and calm visual style, with one task per screen, no failure animations, and no ads, external links, or content not assigned by the teacher. |
+| FR-08b | P0 | Meet WCAG 2.2 Level AA on every screen, verified with an automated checker and one keyboard-only walkthrough before the demo. |
 | FR-09 | P0 | Show teachers class completion, skill distribution, and individual progress with item-level evidence, hint use, confidence, and trend. |
 | FR-10 | P0 | Retrieve approved curriculum, misconception, accessibility, and activity-template sources with metadata filters, then generate activity details from that retrieved context. |
 | FR-11 | P0 | Require explicit teacher approval before a generated recommendation is published. |
@@ -505,6 +509,28 @@ Minimum evidence threshold; "insufficient evidence" state; teacher-facing explan
 
 ### Student experience
 
+The student website must be child-friendly and accessible. Both are requirements, not styling choices, and both are checked in the acceptance criteria (§21).
+
+Child-friendly means:
+
+- Language at or below a Grade 3 reading level, in short sentences, with no jargon, no sarcasm, and no adult framing such as "assessment" or "mastery." The child sees "quest," "try," and "practice."
+- Warm, friendly visuals: a consistent guide character, rounded shapes, generous whitespace, a calm palette, and illustrations with alt text. Nothing flashing, loud, or cluttered.
+- One task per screen, one clear action per screen, and a visible "where am I" indicator such as "Question 3 of 6" without a countdown.
+- Encouragement that names the effort ("You looked at both pictures carefully") rather than the outcome, and a gentle response to a wrong answer with no red X, buzzer, or failure animation.
+- No ads, no external links, no chat with strangers, no leaderboards, no streaks, and no content the child did not receive from their teacher.
+- A child can start, pause, and finish a quest without an adult explaining the screen.
+
+Accessible means every control on the student screens works with:
+
+- Read-aloud for every question, choice, hint, and feedback, with play, pause, replay, and stop.
+- High-contrast mode and type scaling that keep the layout usable.
+- Keyboard only, with a visible focus ring and a single-key "next" flow that also serves switch-access devices.
+- Screen readers, with labels on every interactive element and an `aria-live` region for feedback.
+- Reduced motion, honored automatically and also togglable.
+- Large targets (at least 48 by 48 pixels) with generous spacing, so a child with limited motor control can hit them.
+
+Required components:
+
 - Playful quest framing with a guide character; one task per screen.
 - Visible read-aloud, contrast, type-size, and reduced-motion controls.
 - Hint button with a friendly, non-judgmental label.
@@ -684,8 +710,17 @@ Student completion and voluntary re-engagement; teacher time from assessment to 
 - Given evidence is contradictory or sparse, when the assessment ends, then confidence is labeled low and no definitive recommendation is made.
 - Given a student closes the quiz mid-way, when they return, then they resume at the same item.
 
+### Child-friendliness
+
+- Given any student-facing screen, when its text is checked with a readability tool, then it scores at or below a Grade 3 reading level and contains none of the words "assessment," "mastery," "score," "fail," or "wrong."
+- Given a wrong answer, when feedback is shown, then it contains no red X, buzzer, shake, or failure animation, and it offers a next step.
+- Given the guide character and illustrations, when the page loads, then nothing flashes, auto-plays, or moves unless the child triggers it.
+- Given a student-facing screen, when a team member who has not seen it before uses it, then they can start, pause, and finish a quest without instructions.
+- Given every student-facing tap target, when measured, then it is at least 48 by 48 pixels with at least 8 pixels of spacing.
+
 ### Accessibility
 
+- Given any screen in the product, when checked with an automated tool such as axe, then it reports no WCAG 2.2 Level AA violations.
 - Given read-aloud is enabled, when a new item loads, then the student can play, pause, and replay the question and choices.
 - Given a reading item whose passage is marked not-read-aloud, when read-aloud is enabled, then the question and choices are read but the passage is not, and the interface says why in plain language.
 - Given high-contrast mode or a larger font is selected, when the student continues the quiz, then the preference persists and the layout remains usable.
@@ -789,7 +824,8 @@ Never cut: accessibility controls, teacher approval gate, parent isolation test,
 | Generated content is inaccurate | Ground in approved sources, validate structured output, show citations, require teacher approval. |
 | Assessment appears diagnostic | Formative language, visible uncertainty, explicit prohibitions, "how this works" panel. |
 | Child data is exposed | Synthetic data only, minimal model context, data-layer authorization, direct-object access tests. |
-| Accessibility is cosmetic | React front end with real focus management; controls in the primary demo path; test keyboard, scaling, contrast, and audio before visual polish. |
+| Accessibility is cosmetic | React front end with real focus management; controls in the primary demo path; axe check and keyboard walkthrough before visual polish. |
+| Student screens feel adult or clinical | Grade 3 reading-level check on all student text, a guide character and calm palette, and a fresh-eyes usability pass by a team member before the demo. |
 | Read-aloud invalidates reading items | Per-item accommodation rules; demo one item that shows the rule working. |
 | Knowledge Base provisioning stalls | Local embedding index behind the same interface; start provisioning first thing on day 1. |
 | Bedrock latency or failure breaks the demo | Preloaded item bank, deterministic scoring, cached drafts under `DEMO_OFFLINE`, transparent fallback. |
