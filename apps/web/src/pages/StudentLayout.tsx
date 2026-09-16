@@ -16,7 +16,7 @@ export default function StudentLayout() {
         </div>
         <nav className="tabs big" aria-label="Student sections">
           <NavLink to="/student" end>🗺️ My path</NavLink>
-          <NavLink to="/student/quests">🌟 Quests</NavLink>
+          <NavLink to="/student/quests">🌟 Quizzes</NavLink>
           <NavLink to="/student/games">🎲 Games</NavLink>
         </nav>
       </div>

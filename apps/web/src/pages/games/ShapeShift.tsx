@@ -118,7 +118,7 @@ export default function ShapeShift() {
                       return (
                         <button type="button" key={id} disabled={!live}
                           className={`board-cell filled ${piece.tone}`}
-                          aria-label={`Piece ${mark}, the ${piece.name}, covers row ${row + 1}, column ${col + 1}${piece.by ? `, placed by ${editorName(people, piece.by) || 'a teammate'}` : ''}. Take it back out.`}
+                          aria-label={`Piece ${mark}, the ${piece.name}, covers row ${row + 1}, column ${col + 1}${piece.by ? `, placed by ${editorName(people, piece.by) || 'a classmate'}` : ''}. Take it back out.`}
                           onClick={() => send({ type: 'lift', piece: piece.id })}>
                           <span className="cell-mark" aria-hidden="true">{mark}</span>
                         </button>

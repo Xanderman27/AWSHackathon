@@ -46,7 +46,7 @@ export default function StudentGames() {
             <article className={`card group-activity-card tinted-${activity.tone} pop`} key={activity.id}>
               <div className="group-activity-art" aria-hidden="true">{activity.glyph}</div>
               <div>
-                <span className="chip mint">Team activity</span>
+                <span className="chip team-chip">Team activity</span>
                 <h3>{activity.title}</h3>
                 <p>{activity.instructions}</p>
               </div>
@@ -64,7 +64,7 @@ export default function StudentGames() {
                   ))}
                 </ul>
                 <span className="team-line">
-                  You and {activity.teammates.length} teammate{activity.teammates.length === 1 ? '' : 's'}
+                  You and {activity.teammates.length} classmate{activity.teammates.length === 1 ? '' : 's'}
                 </span>
               </div>
 
