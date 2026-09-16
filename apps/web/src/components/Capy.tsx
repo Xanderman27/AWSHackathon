@@ -78,6 +78,7 @@ export default function Capy({ mood = 'happy', size = 72, float = false, classNa
         <g className={m === 'happy' ? 'cp-grassg' : ''}>
           <path className="cp-grass" d="M110 121 q-4 16 -14 24" strokeWidth="5" />
           <path className="cp-grassleaf" d="M96 145 q-8 -2 -10 -9 q9 -2 12 4 z" fill="url(#cpgLeaf)" />
+          <path className="cp-grassleaf" d="M104 133 q10 1 13 9 q-11 2 -15 -5 z" fill="url(#cpgLeaf)" />
         </g>
       )}
     </svg>
