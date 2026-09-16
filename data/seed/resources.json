@@ -1,0 +1,353 @@
+[
+  {
+    "id": "what-is-an-iep",
+    "category": "Special education",
+    "title": "What an IEP is",
+    "summary": "An Individualized Education Program is a written plan for a child who qualifies for special education. You are a member of the team that writes it.",
+    "source_org": "U.S. Department of Education, Office of Special Education Programs",
+    "source_name": "IDEA: Individualized Education Program (IEP)",
+    "source_url": "https://sites.ed.gov/idea/regs/b/d/300.320",
+    "citation": "34 CFR §300.320",
+    "reading_minutes": 4,
+    "key_points": [
+      "Every child found eligible for special education under IDEA must have a written IEP.",
+      "You are a required member of the IEP team, and the school must try to schedule meetings at a time and place you can make.",
+      "The IEP is reviewed at least once a year, and you can ask for a meeting sooner if something is not working."
+    ],
+    "sections": [
+      {
+        "heading": "Who it is for",
+        "paragraphs": [
+          "The Individuals with Disabilities Education Act, usually called IDEA, is the federal law that covers special education. A child is covered if an evaluation finds they have a disability listed in the law and that, because of it, they need special education and related services.",
+          "Not every child with a disability needs an IEP. Some children get support through a Section 504 plan instead, which is a different law with a broader definition of disability."
+        ]
+      },
+      {
+        "heading": "What has to be in it",
+        "paragraphs": [
+          "Federal rules list what an IEP must contain. The most important parts for most families are:"
+        ],
+        "list": [
+          "A description of how your child is doing right now, in school work and in daily activities.",
+          "Measurable annual goals, so everyone can tell whether progress is happening.",
+          "How progress toward those goals will be measured, and when you will get progress reports.",
+          "The special education, related services, and supports the school will provide, including when they start, how often, where, and for how long.",
+          "An explanation of any time your child will not be in class with children who do not have disabilities.",
+          "Any accommodations your child needs for state or district testing.",
+          "Starting no later than the first IEP in effect when your child turns 16, a plan for life after high school."
+        ]
+      },
+      {
+        "heading": "Who is at the table",
+        "paragraphs": [
+          "The team includes you, at least one of your child's general education teachers if your child is in general education at all, at least one special education teacher, someone who can speak for the school district and commit its resources, and someone who can explain what evaluation results mean. You may bring anyone who has knowledge or special expertise about your child. Your child can attend when it is appropriate.",
+          "The school has to take steps to make sure you can participate, including notifying you early enough and scheduling at a time and place you both agree on."
+        ]
+      },
+      {
+        "heading": "How often it changes",
+        "paragraphs": [
+          "The team reviews the IEP at least once a year to check whether the annual goals are being met. You do not have to wait for that meeting. If something is not working, you can ask in writing for the team to meet.",
+          "Your child is also re-evaluated at least every three years, unless you and the school agree it is not needed."
+        ]
+      },
+      {
+        "heading": "How this app fits in",
+        "paragraphs": [
+          "This app is not part of the IEP process and does not change your child's IEP. It gives your child's teacher evidence from short practice check-ins that can support the conversation. Decisions about eligibility, services, and placement happen in the IEP meeting, with you there."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "what-is-a-504-plan",
+    "category": "Special education",
+    "title": "What a Section 504 plan is",
+    "summary": "Section 504 is a civil rights law. A 504 plan removes barriers so a child with a disability can learn alongside everyone else.",
+    "source_org": "U.S. Department of Education, Office for Civil Rights",
+    "source_name": "Protecting Students With Disabilities: Frequently Asked Questions",
+    "source_url": "https://www.ed.gov/laws-and-policy/civil-rights-laws/disability-discrimination/protecting-students-with-disabilities",
+    "citation": "Section 504 of the Rehabilitation Act of 1973; 34 CFR Part 104",
+    "reading_minutes": 3,
+    "key_points": [
+      "Section 504 covers any school that receives federal money, which is nearly all public schools.",
+      "Its definition of disability is broader than IDEA's, so a child who does not qualify for an IEP may still qualify for a 504 plan.",
+      "A 504 plan usually provides accommodations, such as extra time or a different way to show what a child knows."
+    ],
+    "sections": [
+      {
+        "heading": "The basic idea",
+        "paragraphs": [
+          "Section 504 of the Rehabilitation Act of 1973 is a civil rights law, not a special education funding law. It says a school that gets federal money cannot discriminate against a student because of a disability, and has to provide what that student needs to get an education comparable to other students."
+        ]
+      },
+      {
+        "heading": "Who qualifies",
+        "paragraphs": [
+          "A student qualifies if they have a physical or mental impairment that substantially limits one or more major life activities, such as learning, reading, concentrating, communicating, walking, seeing, or hearing.",
+          "This is broader than IDEA. A child with asthma, diabetes, severe allergies, ADHD, or anxiety might not need specially designed instruction through an IEP, but may still need accommodations through a 504 plan."
+        ]
+      },
+      {
+        "heading": "How it differs from an IEP",
+        "paragraphs": [
+          "An IEP provides specially designed instruction, measurable goals, and related services, and comes with the detailed procedures in IDEA. A 504 plan usually focuses on accommodations and access rather than changed instruction, and its procedures are shorter.",
+          "Both are written plans. Both require the school to evaluate before deciding. A child has one or the other, not both."
+        ]
+      },
+      {
+        "heading": "What to do if you think your child needs one",
+        "paragraphs": [
+          "Ask the school in writing for a Section 504 evaluation and keep a copy of your request with the date. If the school refuses, ask for that decision in writing along with the reason.",
+          "If you believe your child has been discriminated against because of a disability, you can file a complaint with the Office for Civil Rights at the U.S. Department of Education."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "progress-reports",
+    "category": "Progress and goals",
+    "title": "Progress reports and how progress is measured",
+    "summary": "Your child's IEP has to say how progress toward each annual goal will be measured and when you will be told about it.",
+    "source_org": "U.S. Department of Education, Office of Special Education Programs",
+    "source_name": "IDEA: Content of the IEP",
+    "source_url": "https://sites.ed.gov/idea/regs/b/d/300.320",
+    "citation": "34 CFR §300.320(a)(3)",
+    "reading_minutes": 3,
+    "key_points": [
+      "The IEP must state how progress will be measured and when periodic reports will be given to you.",
+      "Report card grades are not the same thing as IEP progress reports.",
+      "You can ask what the measurement actually is, and ask to see the underlying evidence."
+    ],
+    "sections": [
+      {
+        "heading": "What the law requires",
+        "paragraphs": [
+          "For each measurable annual goal, the IEP has to describe how your child's progress toward that goal will be measured, and when you will receive periodic reports on that progress. Many schools send them at the same time as report cards, but the schedule is written in the IEP, so check what yours says."
+        ]
+      },
+      {
+        "heading": "Why a report card is not enough",
+        "paragraphs": [
+          "A report card grade covers a whole subject over a marking period. An IEP goal is usually narrower, such as identifying equivalent fractions with models, or reading a grade-level passage and naming the main idea.",
+          "A child can pass a subject while making little progress on a specific IEP goal, or struggle with a subject grade while making real progress on the goal. That is why the two reports are separate."
+        ]
+      },
+      {
+        "heading": "Good questions to ask",
+        "paragraphs": [
+          "These questions usually move a conference forward:"
+        ],
+        "list": [
+          "What exactly are you measuring for this goal, and how often?",
+          "Can you show me the work or data the rating is based on?",
+          "Is my child on track to meet this goal by the annual review date?",
+          "If not, what changes when the answer is no?",
+          "What can we practice at home that supports this goal?"
+        ]
+      },
+      {
+        "heading": "How this app fits in",
+        "paragraphs": [
+          "The progress you see in this app comes from short practice check-ins your child completes, plus what the teacher approves. It is one source of evidence a teacher can bring to a conference. It is not the official IEP progress report, and it does not replace it."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "your-childs-records",
+    "category": "Privacy and records",
+    "title": "Your right to see your child's school records",
+    "summary": "Under FERPA you can inspect your child's education records, ask for corrections, and control most sharing of them.",
+    "source_org": "U.S. Department of Education, Student Privacy Policy Office",
+    "source_name": "Family Educational Rights and Privacy Act (FERPA)",
+    "source_url": "https://studentprivacy.ed.gov/",
+    "citation": "20 U.S.C. §1232g; 34 CFR Part 99",
+    "reading_minutes": 4,
+    "key_points": [
+      "The school must let you inspect and review your child's education records within 45 days of your request.",
+      "If you believe something in the record is inaccurate or misleading, you can ask for it to be changed, and ask for a hearing if the school says no.",
+      "Rights transfer to your child when they turn 18 or start school beyond high school."
+    ],
+    "sections": [
+      {
+        "heading": "What you can see",
+        "paragraphs": [
+          "Education records are the records the school keeps that are directly related to your child. That includes evaluations, IEP documents, discipline records, attendance, and most correspondence in the file.",
+          "The school has to respond within 45 days of your request. Schools are not always required to hand you copies, but if not getting copies would effectively stop you from reviewing the records, for example because of distance, they have to provide them."
+        ]
+      },
+      {
+        "heading": "Asking for a correction",
+        "paragraphs": [
+          "If you think something in the record is inaccurate, misleading, or violates your child's privacy rights, you can ask the school in writing to amend it. If the school refuses, it must tell you and offer you a hearing. If the hearing also goes against you, you have the right to put a written statement in the record giving your side, and that statement stays with the record."
+        ]
+      },
+      {
+        "heading": "Who else can see the records",
+        "paragraphs": [
+          "Generally the school needs your written consent before sharing personally identifiable information from the records. FERPA lists exceptions where consent is not required, including school officials with a legitimate educational interest, another school where your child is enrolling, certain audits and evaluations, and health or safety emergencies.",
+          "Schools may also share limited directory information, such as a name or photo, unless you opt out. Schools must tell you each year what they treat as directory information and how to opt out."
+        ]
+      },
+      {
+        "heading": "If something goes wrong",
+        "paragraphs": [
+          "You can file a complaint with the Student Privacy Policy Office at the U.S. Department of Education. Keep dated copies of your requests and the school's responses."
+        ]
+      },
+      {
+        "heading": "How this app fits in",
+        "paragraphs": [
+          "Everything in this demonstration uses made-up student information. In a real deployment, the records this app creates would be education records covered by FERPA, and the district would control who can see them."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "discipline-protections",
+    "category": "Discipline",
+    "title": "Discipline protections for students with disabilities",
+    "summary": "If your child has an IEP, there are limits on removals from school and a required meeting to decide whether the behavior was related to the disability.",
+    "source_org": "U.S. Department of Education, Office of Special Education and Rehabilitative Services",
+    "source_name": "IDEA: Authority of School Personnel (discipline)",
+    "source_url": "https://sites.ed.gov/idea/idea-files/dcl-implementation-of-idea-discipline-provisions",
+    "citation": "34 CFR §300.530",
+    "reading_minutes": 4,
+    "key_points": [
+      "A school may remove a child to another setting or suspend for up to 10 consecutive school days, the same as it would for a child without a disability.",
+      "Beyond that, within 10 school days of a decision to change placement, the team must hold a manifestation determination.",
+      "If the behavior was related to the disability, the child generally goes back to the same placement, and the team addresses the behavior."
+    ],
+    "sections": [
+      {
+        "heading": "The 10-day line",
+        "paragraphs": [
+          "School staff may remove a child with a disability for a code of conduct violation for up to 10 consecutive school days, to the same extent they would for any other child. Repeated shorter removals can add up to what the law treats as a change of placement, which triggers more protections."
+        ]
+      },
+      {
+        "heading": "The manifestation determination",
+        "paragraphs": [
+          "Within 10 school days of any decision to change a child's placement because of a code of conduct violation, the district, the parent, and the relevant members of the IEP team review the file and ask two questions:"
+        ],
+        "list": [
+          "Was the behavior caused by, or did it have a direct and substantial relationship to, the child's disability?",
+          "Was the behavior a direct result of the school failing to carry out the IEP?"
+        ]
+      },
+      {
+        "heading": "What happens next",
+        "paragraphs": [
+          "If the answer to either question is yes, the behavior is a manifestation of the disability. The team then addresses the behavior, usually with a functional behavioral assessment and a behavior intervention plan, and the child generally returns to the placement they came from, unless you and the school agree to a change.",
+          "If the answer to both is no, the school may apply the same discipline it would to any other child, but it still has to provide educational services so the child can keep working toward IEP goals.",
+          "There are special circumstances involving weapons, illegal drugs, or serious bodily injury where a school may move a child to an interim alternative educational setting for up to 45 school days regardless of the manifestation decision."
+        ]
+      },
+      {
+        "heading": "If you disagree",
+        "paragraphs": [
+          "You can appeal a disciplinary placement decision or a manifestation determination through an expedited due process hearing. Your procedural safeguards notice explains how."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "when-you-disagree",
+    "category": "Your rights",
+    "title": "When you disagree with the school",
+    "summary": "You have several options, from asking for written notice to requesting a hearing, and you can start with the least formal one.",
+    "source_org": "U.S. Department of Education, Office of Special Education Programs",
+    "source_name": "IDEA: Procedural Safeguards",
+    "source_url": "https://sites.ed.gov/idea/statuteregulations",
+    "citation": "34 CFR §§300.502–300.507",
+    "reading_minutes": 5,
+    "key_points": [
+      "The school must give you prior written notice before it proposes or refuses to change identification, evaluation, placement, or services.",
+      "If you disagree with the school's evaluation, you can ask for an independent educational evaluation at public expense.",
+      "Mediation, a state complaint, and a due process hearing are three different routes, and mediation is free and voluntary."
+    ],
+    "sections": [
+      {
+        "heading": "Start by getting it in writing",
+        "paragraphs": [
+          "Before the school proposes or refuses to start or change your child's identification, evaluation, placement, or the provision of a free appropriate public education, it must give you prior written notice. That notice has to explain what is being proposed or refused, why, and what other options the team considered and rejected.",
+          "Asking for prior written notice is a reasonable, low-conflict step. It often clarifies a disagreement on its own, because the school has to put its reasoning on paper."
+        ]
+      },
+      {
+        "heading": "If you disagree with an evaluation",
+        "paragraphs": [
+          "You have the right to an independent educational evaluation, an evaluation by a qualified examiner who does not work for the school. If you disagree with the school's evaluation and request one at public expense, the school must either pay for it or file for a due process hearing to show that its own evaluation was appropriate.",
+          "You can get an independent evaluation at your own expense at any time, and the team must consider the results."
+        ]
+      },
+      {
+        "heading": "Three formal routes",
+        "paragraphs": [
+          "These are separate options. You do not have to try them in order, though many families find mediation the least stressful place to start."
+        ],
+        "list": [
+          "Mediation: voluntary for both sides, free to you, confidential, and run by a trained neutral mediator. Either side can request it, and it cannot be used to delay your right to a hearing.",
+          "State complaint: a signed written complaint to your state education agency alleging that a requirement of IDEA was violated, generally within one year of the violation. The state investigates and must issue a written decision, usually within 60 days.",
+          "Due process hearing: a formal legal proceeding before an impartial hearing officer, generally filed within two years of when you knew or should have known about the problem. A resolution meeting comes first, and you may be represented by an attorney."
+        ]
+      },
+      {
+        "heading": "Free local help",
+        "paragraphs": [
+          "Every state has at least one Parent Training and Information Center funded under IDEA. They are not part of the school district, their help is free, and they can explain your options and sometimes attend meetings with you. You can find yours through the Center for Parent Information and Resources."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "getting-ready-for-a-meeting",
+    "category": "Progress and goals",
+    "title": "Getting ready for a meeting with the teacher",
+    "summary": "A short plan for a conference or IEP meeting: what to bring, what to ask, and what to do afterward.",
+    "source_org": "Center for Parent Information and Resources",
+    "source_name": "Find Your Parent Center",
+    "source_url": "https://www.parentcenterhub.org/find-your-center/",
+    "citation": "IDEA Part D parent training and information centers",
+    "reading_minutes": 3,
+    "key_points": [
+      "Write down your top two or three concerns before the meeting and lead with them.",
+      "You may bring anyone who knows your child, including a friend or a parent center advocate.",
+      "Ask for a written summary of what was decided, and who is doing what by when."
+    ],
+    "sections": [
+      {
+        "heading": "Before",
+        "paragraphs": [
+          "Pick your top two or three concerns and write them down. Meetings are short, and the first thing raised usually gets the most time.",
+          "Gather anything that shows what you see at home: work your child brought back, a note about how long homework takes, a pattern you have noticed on certain days.",
+          "If you are requesting something specific, put the request in writing before the meeting so it is on the record and the team can prepare."
+        ]
+      },
+      {
+        "heading": "During",
+        "paragraphs": [
+          "Start with your concerns rather than saving them for the end. Ask for plain language whenever an acronym or a score comes up, and ask what a number actually means for what your child can do.",
+          "If a decision is being made, ask what other options the team considered and why they were not chosen. That is information the school has to be able to explain anyway."
+        ]
+      },
+      {
+        "heading": "After",
+        "paragraphs": [
+          "Send a short email summarizing what you understood was decided, including who is doing what and by when. This is friendly, it takes two minutes, and it creates a shared record.",
+          "If you left feeling unsure about a decision, ask for prior written notice about it."
+        ]
+      },
+      {
+        "heading": "Questions that tend to work",
+        "list": [
+          "What is going well for my child right now?",
+          "What is the one thing you would most like to see change?",
+          "How will we know in six weeks whether this is working?",
+          "What should we do at home, and what should we not worry about?"
+        ]
+      }
+    ]
+  }
+]

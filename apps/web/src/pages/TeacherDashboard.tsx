@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { api, getSession } from '../api'
+import RoleGate from './RoleGate'
 
 interface Row { student_id: string; display_name: string; has_goal_link: boolean; skill_name: string; band: string; estimate: number; confidence: string; evidence_count: number }
 interface Summary { class_id: string; students: { id: string; display_name: string }[]; mastery: Row[]; counts: { needs_more_evidence: number; ready_for_extension: number } }
@@ -16,7 +17,7 @@ export default function TeacherDashboard() {
 
   useEffect(() => { api<Summary>('/teacher/class').then(setData).catch((e) => setErr(String(e))) }, [])
 
-  if (!session || session.role !== 'teacher') return <p>Please pick "I am a teacher" on the home page.</p>
+  if (!session || session.role !== 'teacher') return <RoleGate need="teacher" />
   if (err) return <p role="alert">{err}</p>
   if (!data) return <p>Loading…</p>
 
@@ -24,7 +25,7 @@ export default function TeacherDashboard() {
   const openName = open && data.students.find((s) => s.id === open.student_id)?.display_name
 
   return (
-    <div className="stack">
+    <div className="page">
       <div className="row between">
         <div>
           <span className="chip sky">Class 4A</span>
@@ -51,7 +52,7 @@ export default function TeacherDashboard() {
                 <td><span className={`chip ${BAND_TONE[m.band]}`}>{m.band}</span></td>
                 <td><span className="bar" aria-hidden="true"><i style={{ width: `${Math.round(m.estimate * 100)}%` }} /></span> <span className="muted">{m.estimate.toFixed(2)}</span></td>
                 <td><span className={`chip ${CONF_TONE[m.confidence]}`}>{m.confidence}</span></td>
-                <td>{m.evidence_count} items</td>
+                <td>{m.evidence_count} {m.evidence_count === 1 ? "item" : "items"}</td>
                 <td><button type="button" className="table-btn" onClick={() => api<Evidence>(`/teacher/students/${m.student_id}`).then(setOpen)}>Evidence</button></td>
               </tr>
             ))}

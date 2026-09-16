@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { api, getSession, type AnswerOut, type NextItem, type Skill } from '../api'
 import { usePrefs, useSpeech } from '../a11y'
+import RoleGate from './RoleGate'
 
 type Phase = 'pick' | 'question' | 'feedback' | 'done'
 const LETTERS = ['A', 'B', 'C', 'D']
@@ -27,7 +28,7 @@ export default function StudentQuest() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, next, prefs.readAloud])
 
-  if (!session || session.role !== 'student') return <p>Please pick "I am a student" on the home page.</p>
+  if (!session || session.role !== 'student') return <RoleGate need="student" />
   if (error) return <p role="alert">Something went wrong. {error}</p>
 
   async function start(skillId: string) {
@@ -50,7 +51,7 @@ export default function StudentQuest() {
 
   if (phase === 'pick') {
     return (
-      <div className="stack">
+      <div className="page center">
         <div className="guide">
           <span className="face" aria-hidden="true">🦉</span>
           <div><h1 style={{ marginBottom: 4 }}>Hi Sam!</h1><p className="muted" style={{ margin: 0 }}>Pick a quest. Take your time.</p></div>
@@ -70,12 +71,12 @@ export default function StudentQuest() {
 
   if (phase === 'done' && next) {
     return (
-      <div className="card celebrate">
+      <div className="page center"><div className="card celebrate">
         <div className="big" aria-hidden="true">🎉</div>
         <h1>You did it!</h1>
         <p style={{ fontSize: '1.2em' }}>{next.summary}</p>
         <button type="button" className="btn-primary btn-lg" onClick={() => setPhase('pick')}>Back to quests</button>
-      </div>
+      </div></div>
     )
   }
 
@@ -84,7 +85,7 @@ export default function StudentQuest() {
   const pos = next!.position, total = next!.total
 
   return (
-    <div className="card">
+    <div className="page center"><div className="card">
       <div className="quest-head">
         <div className="progress" role="img" aria-label={`Question ${pos} of ${total}`}>
           {Array.from({ length: total }, (_, i) => <i key={i} className={i + 1 < pos ? 'done' : i + 1 === pos ? 'now' : ''} />)}
@@ -127,7 +128,7 @@ export default function StudentQuest() {
           <div><button type="button" className="btn-primary btn-lg" onClick={goOn}>{result.next.completed ? 'Finish' : 'Next question'}</button></div>
         </div>
       )}
-    </div>
+    </div></div>
   )
 }
 

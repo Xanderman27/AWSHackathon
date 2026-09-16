@@ -5,12 +5,15 @@ import { AccessibilityBar, PrefsProvider } from './a11y'
 import Home from './pages/Home'
 import StudentQuest from './pages/StudentQuest'
 import TeacherDashboard from './pages/TeacherDashboard'
-import ParentView from './pages/ParentView'
+import ParentLayout from './pages/ParentLayout'
+import ParentProgress from './pages/ParentProgress'
+import { ResourceDocument, ResourceList } from './pages/Resources'
 import './styles.css'
 
 function Shell() {
   return (
     <div className="shell">
+      <a href="#main" className="visually-hidden">Skip to main content</a>
       <header className="topbar">
         <Link to="/" className="brand"><span className="dot" aria-hidden="true" />Learning Quest</Link>
         <AccessibilityBar />
@@ -20,9 +23,17 @@ function Shell() {
           <Route path="/" element={<Home />} />
           <Route path="/student" element={<StudentQuest />} />
           <Route path="/teacher" element={<TeacherDashboard />} />
-          <Route path="/parent" element={<ParentView />} />
+          <Route path="/parent" element={<ParentLayout />}>
+            <Route index element={<ParentProgress />} />
+            <Route path="resources" element={<ResourceList />} />
+            <Route path="resources/:id" element={<ResourceDocument />} />
+          </Route>
         </Routes>
       </main>
+      <footer className="site-foot">
+        <span>This tool supports learning. It does not make eligibility, placement, or IEP decisions.</span>
+        <span>Synthetic demo data</span>
+      </footer>
     </div>
   )
 }

@@ -14,7 +14,8 @@ ROOT = Path(__file__).resolve().parents[3]
 SEED = ROOT / "data" / "seed"
 STATE = ROOT / "data" / "state"
 
-COLLECTIONS = ["skills", "items", "students", "links", "attempts", "mastery", "audit"]
+COLLECTIONS = ["skills", "items", "students", "links", "attempts", "mastery", "audit",
+               "recommendations", "conference_slots", "conference_requests"]
 
 
 class LocalStore:
@@ -33,6 +34,13 @@ class LocalStore:
 
     def read(self, name: str) -> list[dict[str, Any]]:
         return json.loads(self._path(name).read_text(encoding="utf-8"))
+
+    def read_seed(self, name: str) -> list[dict[str, Any]]:
+        """Read static content that is never mutated (e.g. the resources library)."""
+        return json.loads((SEED / f"{name}.json").read_text(encoding="utf-8"))
+
+    def write_all(self, name: str, rows: list[dict[str, Any]]) -> None:
+        self._write(name, rows)
 
     def _write(self, name: str, rows: list[dict[str, Any]]) -> None:
         self._path(name).write_text(json.dumps(rows, indent=2), encoding="utf-8")

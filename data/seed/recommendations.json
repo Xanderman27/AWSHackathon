@@ -1,0 +1,85 @@
+[
+  {
+    "id": "rec-01",
+    "student_id": "student-01",
+    "skill_id": "fraction_equivalence",
+    "audience": "family",
+    "status": "approved",
+    "title": "Fraction strips at the kitchen table",
+    "why": "Sam can match fractions when they are pictures. This helps connect the picture to the numbers that go with it.",
+    "minutes": 15,
+    "materials": ["Strips of paper", "Scissors", "A marker"],
+    "steps": [
+      "Cut four paper strips the same length.",
+      "Leave the first one whole. Fold the others into 2, 4, and 8 equal parts and mark the folds.",
+      "Line up the strips. Ask: how many of the small parts cover the same space as one half?",
+      "Write the pair you find together, like 1/2 = 4/8."
+    ],
+    "approved_by": "Ms. Rivera",
+    "approved_on": "2026-09-15"
+  },
+  {
+    "id": "rec-02",
+    "student_id": "student-01",
+    "skill_id": "fraction_equivalence",
+    "audience": "family",
+    "status": "approved",
+    "title": "Halves and quarters while you cook",
+    "why": "Everyday measuring gives Sam a reason to use the same idea outside of schoolwork.",
+    "minutes": 10,
+    "materials": ["Measuring cups"],
+    "steps": [
+      "Ask Sam to fill the 1/2 cup, then find how many 1/4 cups fill the same amount.",
+      "Say the sentence out loud together: two quarters make one half.",
+      "Try it once more with 1/3 and 1/6 if you have those cups."
+    ],
+    "approved_by": "Ms. Rivera",
+    "approved_on": "2026-09-15"
+  },
+  {
+    "id": "rec-03",
+    "student_id": "student-01",
+    "skill_id": "fraction_equivalence",
+    "audience": "teacher",
+    "status": "approved",
+    "title": "Small-group number line placement",
+    "why": "Classroom activity. Not shown to families.",
+    "minutes": 20,
+    "materials": ["Number line floor tape", "Fraction cards"],
+    "steps": ["Place cards on the shared number line and defend the placement."],
+    "approved_by": "Ms. Rivera",
+    "approved_on": "2026-09-15"
+  },
+  {
+    "id": "rec-04",
+    "student_id": "student-02",
+    "skill_id": "fraction_equivalence",
+    "audience": "family",
+    "status": "approved",
+    "title": "Fraction war with playing cards",
+    "why": "Ava is ready to stretch. Comparing fractions with different bottoms keeps it interesting.",
+    "minutes": 15,
+    "materials": ["A deck of cards"],
+    "steps": [
+      "Each player flips two cards and makes a fraction.",
+      "The larger fraction wins the round.",
+      "If they look close, draw a quick picture to check."
+    ],
+    "approved_by": "Ms. Rivera",
+    "approved_on": "2026-09-15"
+  },
+  {
+    "id": "rec-05",
+    "student_id": "student-03",
+    "skill_id": "fraction_equivalence",
+    "audience": "family",
+    "status": "draft",
+    "title": "Draft activity not yet approved",
+    "why": "Should never appear in a family view.",
+    "minutes": 10,
+    "materials": [],
+    "steps": [],
+    "approved_by": null,
+    "approved_on": null
+  }
+]

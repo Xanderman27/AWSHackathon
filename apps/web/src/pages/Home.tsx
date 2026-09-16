@@ -10,7 +10,7 @@ const ROLES: { role: Role; userId: string; label: string; blurb: string; emoji: 
 export default function Home() {
   const nav = useNavigate()
   return (
-    <div className="stack">
+    <div className="page center">
       <section className="hero">
         <div>
           <h1>Learning that <span className="underline">listens</span> to every kid.</h1>
@@ -32,7 +32,6 @@ export default function Home() {
           <div className="tile" style={{ background: 'var(--cream)' }}>📖</div>
         </div>
       </section>
-      <p className="muted" style={{ fontSize: '0.9em' }}>Synthetic demo accounts. This tool supports learning. It does not make eligibility, placement, or IEP decisions.</p>
     </div>
   )
 }
