@@ -8,7 +8,7 @@ This document expands §17 of the PRD into concrete choices, versions, and the r
 |---|---|---|
 | Front end | React 18, Vite, TypeScript, React Router, plain CSS with custom properties | Full control over focus, ARIA, and layout, which the accessibility promise depends on. Vite gives instant reloads for a two-day build. |
 | API | Python 3.12, FastAPI, Pydantic v2, Uvicorn | Python keeps all AI work in one language. Pydantic models double as the JSON schemas the front end validates against. |
-| Learner model | Pure Python module, no ML library | Bayesian Knowledge Tracing is four parameters and one update formula. Pure functions are testable and explainable to a teacher. |
+| Learner model | NumPy, SciPy, `girth` (IRT), `pyBKT` (BKT fitting), scikit-learn (pattern classifier); offline fits write artifacts to S3, inference in-process | Standard educational-measurement methods that fit on small data, run in milliseconds, and stay explainable. See LEARNER_MODEL.md. |
 | Cohorts | Pure Python module | Deterministic sort-and-cut with rotation penalties. Auditable, no clustering library. |
 | Generative AI | Amazon Bedrock Converse API via `boto3`, Anthropic Claude model | Converse gives one interface across models, supports tool use for structured output, and integrates Guardrails in the same call. |
 | Retrieval | Amazon Bedrock Knowledge Bases over S3, with a local fallback | Managed chunking, embedding, and metadata filtering. The fallback keeps the demo alive if provisioning stalls. |
@@ -20,7 +20,7 @@ This document expands §17 of the PRD into concrete choices, versions, and the r
 | Hosting | Local for the judged demo; AWS Amplify Hosting (front end) and AWS App Runner (API) if time allows | Reliability over cloud points. A recorded backup video is required either way. |
 | Observability | Amazon CloudWatch via structured JSON logs | Audit events and model latency without extra infrastructure. |
 | Delivery and config | Amazon S3 with presigned URLs; AWS Systems Manager Parameter Store | Audio and corpus served straight from S3, no CDN; one source of truth for service IDs across four machines. |
-| Agent orchestration | LangGraph with `langchain-aws` (ChatBedrockConverse, Knowledge Bases retriever); Amazon Bedrock AgentCore Runtime for hosting if deployed | Graph-shaped pipelines with explicit retry and fallback edges; AgentCore hosts LangGraph agents without rewriting them. |
+| Agent orchestration | LangGraph with `langchain-aws` (ChatBedrockConverse, Knowledge Bases retriever), hosted on Amazon Bedrock AgentCore Runtime with AgentCore Observability | Graph-shaped pipelines with explicit retry and fallback edges; AgentCore hosts LangGraph agents without rewriting them. In-process fallback kept behind `DEMO_OFFLINE`. |
 | Corpus ingestion | Amazon Textract for district PDFs | Turns Tier 2 teaching guidelines into clean text for the knowledge base. |
 | Testing | pytest for the API, Vitest for the front end, Playwright for one keyboard-only smoke test | The keyboard test is the accessibility acceptance criterion in code form. |
 
@@ -43,21 +43,26 @@ This document expands §17 of the PRD into concrete choices, versions, and the r
 
 ## Learner model
 
-- BKT per skill with the PRD §9.1 defaults. One function: `update(state, correct, hint_used) -> state`. One selector: `next_item(state, bank, seen) -> item`.
-- Confidence is computed from evidence count and agreement, not stored separately.
-- Unit tests cover the scripted demo path for "Sam" so the adaptive route is reproducible on every run.
+Five layers; full design in [LEARNER_MODEL.md](LEARNER_MODEL.md). Offline layers fit on a simulated response log and write artifacts to S3; online layers run in-process in FastAPI so the two-second next-item target holds.
 
-### Why there is no ML library in the inference path
+| Layer | Library | Runs |
+|---|---|---|
+| 0. Item calibration (IRT 2PL) | `girth`, SciPy fallback | Offline script `scripts/fit_irt.py` |
+| 1. Knowledge state (BKT, item-aware) | `pyBKT` for fitting, NumPy EM fallback; NumPy for the online update | Fit offline `scripts/fit_bkt.py`; update online |
+| 2. Item selection (adaptive testing) | NumPy | Online, per answer |
+| 3. Pattern recognition | `scikit-learn`, `joblib` | Fit offline `scripts/fit_pattern.py`; score online at attempt end |
+| 4. Outcome learning (Thompson sampling) | NumPy | Online, at recommendation time |
+| Simulator | NumPy | Offline `scripts/simulate.py` |
 
-BKT inference is a closed-form Bayes update with four parameters. There is nothing to train at demo time, so scikit-learn, PyTorch, or SageMaker would add a dependency without adding a capability, and a teacher-readable formula is part of the explainability requirement.
+Design rules:
 
-ML tooling enters in three places:
+- **Right-sized methods.** IRT, BKT, logistic regression, and a Beta bandit are the standard tools for these four problems in educational measurement. They fit on hundreds of records, run in milliseconds, and every one has a teacher-readable explanation. Deep knowledge tracing is on the roadmap for when a district has real longitudinal data.
+- **Artifacts, not services.** Fitted parameters are JSON or joblib files in `s3://<bucket>/models/`. The API loads them at startup and uses defaults if any is missing. No model server, no cold start, nothing to fail on stage.
+- **Simulated data, stated plainly.** All fits run on the simulator's log. The pipeline is real; the numbers are placeholders until a district supplies logs under a data agreement.
+- **SageMaker if time allows.** The three fit scripts can run as one Amazon SageMaker Processing job reading the log from S3 and writing artifacts back, which is the production shape. Local execution is the demo default.
+- **Verifiable inputs.** The Layer 3 feature vector is committed to the repository so anyone can confirm that no demographic, disability, or behavior data reaches the model.
 
-1. **Parameter calibration (optional, `scripts/calibrate_bkt.py`).** Uses `pyBKT` to fit `p_learn`, `p_guess`, and `p_slip` per skill from a response log by expectation-maximization. Runs on the synthetic log for the demo so the pipeline exists; the "how this works" panel can show default versus fitted values. On real data this is how the model improves per district.
-2. **Embeddings.** Retrieval uses Amazon Titan Text Embeddings through Bedrock. That is a trained model in the loop.
-3. **Generation.** Claude through Bedrock.
-
-The outcome-learning loop in PRD §27 (ranking activities by demonstrated effectiveness) is the first place a trained, district-specific model would be justified. See "Roadmap services" below.
+Unit tests cover the scripted demo path for "Sam" so the adaptive route is reproducible on every run.
 
 ## Generative AI on Bedrock
 
@@ -79,7 +84,7 @@ Two workflows in the product are graph-shaped: they have branches, retries, and 
 
 **What stays outside LangGraph:** the mastery model, the cohort algorithm, authorization, and audit logging. These are deterministic and must not depend on a model or an agent loop. The graphs call them as plain functions.
 
-**Hosting:** run in-process inside FastAPI for the demo. If there is time after day 2's core path, deploy the two graphs to Amazon Bedrock AgentCore Runtime, which hosts LangGraph agents as-is with session isolation, identity, and tracing, and call them from the API by ARN. This is additive; the local path stays as the fallback.
+**Hosting: Amazon Bedrock AgentCore.** Both graphs are deployed to AgentCore Runtime and invoked from the API by ARN. AgentCore hosts LangGraph agents as-is with session isolation, and AgentCore Observability provides traces that are linked from the recommendation's audit record. AgentCore Gateway is used if time allows to expose `list_available_slots` and `create_conference_request` as managed tools for the scheduling graph; otherwise they are plain LangGraph tools calling the API. The graphs are built and tested locally first, and the API keeps an in-process execution path behind `DEMO_OFFLINE=1` so a deployment problem cannot take down the demo.
 
 **Alternative considered:** AWS Strands Agents, the AWS-native agent SDK. It is simpler for single-agent tool loops but less explicit about branching and retries. LangGraph fits the recommendation pipeline better and the team asked for it.
 
@@ -113,6 +118,7 @@ The Workshop Studio account exposes most of the AWS catalog. Each service below 
 | Amazon S3 (direct) | Serve pre-generated Polly audio through short-lived presigned URLs issued by the API; hold the corpus and metadata sidecars | Keeps the stack to one storage service. For a demo audience in one region, S3 latency is well under the one-second playback target, and the browser caches each MP3 after first play. Presigned URLs keep the bucket private without a CDN. |
 | AWS Systems Manager Parameter Store | Hold the Bedrock model ID, Guardrail ID, Knowledge Base ID, bucket names | Four people will each have their own environment. One parameter path per setting means no hard-coded IDs and no `.env` files passed around in chat. |
 | Amazon Textract | Convert Tier 2 district curriculum PDFs to text during corpus ingestion | District teaching guidelines usually arrive as scanned or layout-heavy PDFs. Textract turns them into clean text for chunking, which is the difference between a trusted corpus and a demo corpus. |
+| Amazon Bedrock AgentCore | Runtime hosts the LangGraph recommendation and scheduling graphs; Observability traces every run; Gateway (P1) exposes scheduling tools | Managed agent hosting without rewriting the graphs. Built locally first, deployed on day 2 morning, with the in-process path kept as fallback. |
 | AWS IAM | Least-privilege role for the API: Bedrock invoke, KB retrieve, Polly synthesize, S3 read/write on one bucket, DynamoDB on one table | Required anyway; documenting it up front avoids a wildcard policy on demo day. |
 
 ### Use if time allows (P1)
@@ -121,14 +127,13 @@ The Workshop Studio account exposes most of the AWS catalog. Each service below 
 |---|---|---|
 | Amazon Cognito | Authentication and role claims | Already P1 in the PRD. Amplify wires it in with little code. |
 | Amazon Translate | Parent-facing summaries in the family's language | Already P1. One API call per summary, English source retained. |
-| Amazon Bedrock AgentCore Runtime | Host the LangGraph recommendation graph and the scheduling assistant as managed agents | AgentCore runs agents written in LangGraph (and other frameworks) without rewriting them, with session isolation and observability built in. Only worth it once the graphs work locally; local execution inside FastAPI is the demo default. |
 | Amazon Comprehend | PII detection on free-text fields parents and teachers type (conference agenda, observation notes) before storage | Guardrails covers model calls; Comprehend covers text that never reaches a model but still lands in the database. |
 
 ### Roadmap services (post-hackathon)
 
 | Service | Use | Why later |
 |---|---|---|
-| Amazon SageMaker | Train and host the outcome-ranking model for the learning loop; run BKT calibration at district scale | Needs real outcome data and governance first. |
+| Amazon SageMaker | Run the IRT, BKT, and pattern-classifier fits as a Processing job at district scale; later train deep knowledge tracing | P1 for the hackathon as a single Processing job wrapping the fit scripts; real value arrives with real data. |
 | Amazon Personalize | Alternative to a custom model for ranking activity templates per learner evidence pattern | Managed recommender; makes sense once there are thousands of outcomes. |
 | Amazon Transcribe | Spoken answers for students who cannot use a pointer or keyboard | Real accessibility value, pairs with AAC support in PRD FR-30. Needs careful design so speech recognition errors do not become mastery errors. |
 | Amazon SES and Amazon EventBridge | Conference status notifications by email, scheduled progress digests to families | PRD keeps external email out of scope until a district privacy review. |

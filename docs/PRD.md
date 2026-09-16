@@ -22,7 +22,7 @@ v0.1 was a solid adaptive-assessment PRD, but it had drifted away from the origi
 | Original idea items restored | Hints during assessment (pre-authored, logged), AAC/switch-access considerations, adaptive at-home practice, "which activities worked" outcome capture as the seed for the future ML loop, inclusion cohorts (students with and without disabilities). |
 | Parent side | Added conference agenda, plain-language rights and resources library (P1), and family-language translation (P1). |
 | Teacher side | Added quest assignment (was implied, never specified), activity-outcome capture, and observation evidence. |
-| Learner model | Bayesian Knowledge Tracing chosen with concrete parameters, thresholds, and confidence rules. |
+| Learner model | Five-layer architecture: IRT item calibration, item-aware BKT with fitted parameters, adaptive item selection, a pattern classifier, and an outcome bandit, all fitted on a simulated log. |
 | Cohorts | Deterministic algorithm specified for both modes. |
 | Standards | Concrete standard IDs for the demo (CCSS 4.NF.A.1 and RI.4.2) and a `standard_framework` metadata field so state frameworks can be added later. |
 | Technology | Streamlit flagged as a conflict with the accessibility promise; recommended split is a React front end plus a Python FastAPI service. Knowledge Base provisioning fallback, Polly pre-generation, structured output via tool use, and model selection added. |
@@ -244,59 +244,64 @@ Priority definitions: **P0** is required for the judged demo; **P1** is valuable
 
 ## 9. Adaptive assessment and learner model
 
-### 9.1 Model choice
+### 9.1 Architecture
 
-Use **Bayesian Knowledge Tracing (BKT)** per skill. It is explainable, needs no training data, updates in constant time, and its parameters read as plain English to a teacher. A language model never scores answers or computes mastery.
+The learner model is five layers. Offline layers are fitted on a synthetic response log; online layers run in the API per answer. Full design, formulas, and a worked example are in `docs/LEARNER_MODEL.md`.
 
-Per-skill parameters (initial values for the demo; teacher-visible in the "how this works" panel):
+| Layer | Problem | Method | Runs |
+|---|---|---|---|
+| 0. Item calibration | Author-assigned difficulty is a guess | Two-parameter IRT (difficulty and discrimination per item), fitted with `girth` | Offline |
+| 1. Knowledge state | Probability a student knows a skill | Bayesian Knowledge Tracing, item-aware variant (KT-IDEM) using Layer 0 parameters; skill parameters fitted with `pyBKT` | Fit offline, update online |
+| 2. Item selection | Which question tells us the most without discouraging | Computerized adaptive testing: maximum Fisher information at the current ability, with an expected-success floor and exposure control | Online |
+| 3. Pattern recognition | Name the response pattern for the activity generator | scikit-learn classifier over correctness by difficulty, misconception-tagged distractors, hints, and routing, labeled from a teacher-reviewed taxonomy | Fit offline, score online |
+| 4. Outcome learning | Which activity templates help which learners | Thompson-sampling bandit over approved templates per (skill, pattern), updated from teacher outcomes | Online |
 
-| Parameter | Meaning | Default |
+A language model never scores answers, computes mastery, or selects items. Artifacts from offline layers are JSON or joblib files in S3; the API loads them at startup and falls back to defaults if any is missing, so the quiz never depends on a fit having run.
+
+### 9.2 Simulator and training data
+
+An IRT-based learner simulator generates every response log the offline layers fit on. Each simulated learner has latent ability per skill, a learning rate, a pattern label that biases distractor choice, and a hint propensity. The 12 demo students are drawn with fixed seeds so the demo path is reproducible. A larger simulated population (about 500 learners, 6 sessions each) provides fitting data. The team states plainly that all fitted parameters come from simulated data; the demonstration is that the pipeline runs end to end.
+
+### 9.3 Thresholds, confidence, and routing
+
+| Mastery estimate | Interpretation shown to teacher | Behavior |
 |---|---|---|
-| p_init | Probability the student already knows the skill before evidence | 0.30 |
-| p_learn | Probability of learning the skill after each opportunity | 0.15 |
-| p_guess | Probability of a correct answer without knowing (4-choice items) | 0.20 |
-| p_slip | Probability of a wrong answer while knowing | 0.10 |
+| below 0.40 | "Building foundations" | Route to prerequisite items after two consecutive misses in the easy band |
+| 0.40–0.80 | "Practicing" | Stay on skill; Layer 2 picks the most informative item above the success floor |
+| above 0.80 | "Ready for extension" | Raise difficulty or offer an extension item, with medium or higher confidence |
 
-Modifiers: a correct answer after a hint is treated as weaker evidence (p_guess raised to 0.35 for that update). Response time is logged but never used to adjust mastery in the MVP, because timing penalizes exactly the students the product serves.
+Confidence combines evidence count, agreement of the mastery trajectory, and Layer 3's pattern probability. Fewer than three relevant answers or a pattern probability below threshold is **low**; six or more consistent answers with a confident pattern is **high**; otherwise **medium**. Low confidence blocks definitive recommendations and cohort placement and asks for one more short quest.
 
-### 9.2 Thresholds and confidence
+Routing rules are explicit and teacher-readable, not learned. Response time is logged but never used. A correct answer after a hint uses a raised guess probability for that update so it moves the estimate less.
 
-| Mastery estimate | Interpretation shown to teacher | Selection behavior |
-|---|---|---|
-| below 0.40 | "Building foundations" | Route to prerequisite items if two consecutive misses |
-| 0.40–0.80 | "Practicing" | Stay on skill, target items near the estimate |
-| above 0.80 | "Ready for extension" | Raise difficulty or offer extension item |
+### 9.4 Item metadata and selection policy
 
-Confidence is a function of evidence count and agreement: fewer than 3 relevant items is **low**; 3–5 is **medium**; 6 or more with consistent results is **high**. Contradictory patterns (alternating correct and incorrect at the same difficulty) cap confidence at medium and trigger one more item.
-
-### 9.3 Item metadata and selection policy
-
-Each item includes grade range, subject, standard framework and standard ID, skill and prerequisite skill, difficulty (1–5), correct answer and scoring rule, permitted accessibility formats (including whether the passage may be read aloud), one pre-authored hint, a teacher-reviewed explanation, and approval status.
+Each item includes grade range, subject, standard framework and standard ID, skill and prerequisite skill, author difficulty (1–5) and, after calibration, IRT difficulty and discrimination, correct answer and scoring rule, misconception tag per distractor, permitted accessibility formats (including whether the passage may be read aloud), one pre-authored hint, a teacher-reviewed explanation, and approval status.
 
 Selection policy:
 
 1. Keep the student within the teacher-assigned objective.
-2. Choose the unseen approved item whose difficulty is closest to the current estimate mapped onto the 1–5 scale, targeting roughly 70 percent expected success.
-3. If two consecutive incorrect responses occur below difficulty 2, route to the prerequisite skill and record the route reason for the teacher.
+2. Choose the unseen approved item with the highest information at the current ability estimate, subject to an expected-success floor of 0.60.
+3. If two consecutive incorrect responses occur in the easy band, route to the prerequisite skill and record the route reason for the teacher.
 4. If mastery exceeds 0.80 with medium or high confidence, raise difficulty or move to an extension item.
 5. If evidence is sparse or contradictory, present another item and display low confidence.
-6. Never use disability category, goal links, race, sex, socioeconomic status, behavior, or discipline data to select difficulty.
+6. Never use disability category, goal links, race, sex, socioeconomic status, behavior, or discipline data to select difficulty. The Layer 3 feature vector is committed to the repository so this can be verified.
 
-Demo determinism: the item bank and seed are fixed, so the scripted learner produces the same path every run.
-
-### 9.4 Goal links
+### 9.5 Goal links
 
 A goal link is a teacher-owned record: `{student_id, label, skill_ids[], parent_visible, created_by, created_at}`. The label is free text written by the teacher. The product never ingests the IEP document, never suggests goal wording, and never sends labels to a model. Goal links exist so evidence can be summarized in the language the family already knows from their IEP meeting.
 
-### 9.5 How the MVP demonstrates ML and AI
+### 9.6 How the MVP demonstrates ML and AI
 
-- **Learner modeling:** BKT updates after every interaction and drives the adaptive path.
+- **Statistical learner modeling:** IRT item calibration, BKT knowledge tracing with fitted parameters, and adaptive item selection drive the quiz.
+- **Supervised learning:** a classifier names the response pattern that grounds the activity request.
+- **Online learning:** a bandit learns from teacher outcomes which templates help.
 - **Generative AI:** Amazon Bedrock generates activity details and plain-language explanations from grounded, approved source material.
 - **Retrieval:** Curriculum standards and activity structures are retrieved from an Amazon Bedrock Knowledge Base with metadata filters.
+- **Agents:** LangGraph graphs hosted on Amazon Bedrock AgentCore orchestrate recommendation and scheduling with explicit fallbacks and human approval.
 - **Human-in-the-loop:** Teachers approve all generated recommendations and cohorts and record outcomes.
-- **Learning loop (roadmap):** Outcome capture is the training signal for a future model that ranks activities by demonstrated effectiveness.
 
-Describe this as an adaptive learner model plus grounded generative AI, not as a clinically validated diagnostic model.
+Describe this as an explainable, statistically grounded learner model plus grounded generative AI, fitted on simulated data, not as a clinically validated diagnostic model.
 
 ## 10. Retrieval-augmented generation workflow
 
@@ -799,7 +804,7 @@ Never cut: accessibility controls, teacher approval gate, parent isolation test,
 | Demo grade and topics | Grade 4; equivalent fractions (4.NF.A.1); main idea and details (RI.4.2). |
 | Visual theme | Warm "learning quest" with animal or nature guides; no babyish language. |
 | Cohort size | Three students. |
-| Mastery model | BKT with the §9.1 defaults. |
+| Learner model | Five-layer architecture in §9.1 and docs/LEARNER_MODEL.md; all fits on simulated data. |
 | Bedrock model | Claude Sonnet 5 via Converse; Haiku 4.5 as latency fallback; whichever the Workshop Studio account exposes. |
 | Vector store | OpenSearch Serverless if it provisions in under 30 minutes; otherwise S3 Vectors or the local fallback. |
 | Authentication | Synthetic role accounts first; Cognito only after the full flow works. |
