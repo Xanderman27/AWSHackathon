@@ -19,7 +19,8 @@ This document expands §17 of the PRD into concrete choices, versions, and the r
 | Auth (P1) | Amazon Cognito | Real role claims once the flow works. Until then, a header-based synthetic role switch. |
 | Hosting | Local for the judged demo; AWS Amplify Hosting (front end) and AWS App Runner (API) if time allows | Reliability over cloud points. A recorded backup video is required either way. |
 | Observability | Amazon CloudWatch via structured JSON logs | Audit events and model latency without extra infrastructure. |
-| Delivery and config | Amazon CloudFront over S3; AWS Systems Manager Parameter Store | Instant audio playback; one source of truth for service IDs across four machines. |
+| Delivery and config | Amazon S3 with presigned URLs; AWS Systems Manager Parameter Store | Audio and corpus served straight from S3, no CDN; one source of truth for service IDs across four machines. |
+| Agent orchestration | LangGraph with `langchain-aws` (ChatBedrockConverse, Knowledge Bases retriever); Amazon Bedrock AgentCore Runtime for hosting if deployed | Graph-shaped pipelines with explicit retry and fallback edges; AgentCore hosts LangGraph agents without rewriting them. |
 | Corpus ingestion | Amazon Textract for district PDFs | Turns Tier 2 teaching guidelines into clean text for the knowledge base. |
 | Testing | pytest for the API, Vitest for the front end, Playwright for one keyboard-only smoke test | The keyboard test is the accessibility acceptance criterion in code form. |
 
@@ -66,6 +67,24 @@ The outcome-learning loop in PRD §27 (ranking activities by demonstrated effect
 - **Guardrails:** created once with the console or CLI, referenced by ID in every Converse call. The guardrail result is stored with the recommendation.
 - **Prompt hygiene:** the request contains the retrieved chunks, the template, and the minimal pseudonymous mastery summary from PRD §10. Nothing else.
 
+## Agent orchestration with LangGraph
+
+Two workflows in the product are graph-shaped: they have branches, retries, and fallbacks that the PRD specifies explicitly. Writing them as LangGraph state graphs makes those edges visible in code and in a diagram, which is also what a judge wants to see.
+
+**Packages:** `langgraph`, `langchain-aws` (provides `ChatBedrockConverse` for the model, `AmazonKnowledgeBasesRetriever` for the knowledge base, and Guardrails configuration on the model call), `langchain-core`.
+
+**Graph 1: recommendation pipeline** (PRD §11). Nodes: `retrieve_template`, `retrieve_ideas`, `fill_template`, `verify_grounding`, `present`. Edges: no template found goes to `no_source_fallback`; validation failure loops once back to `fill_template` then to `template_fallback`; ungrounded fields go to `flag_for_review`. State is a typed dict holding the mastery summary, retrieved chunks, draft, and validation errors. The graph is compiled once at startup and invoked per request from the FastAPI route.
+
+**Graph 2: scheduling assistant** (PRD §15, optional). A tool-calling loop with two tools, `list_available_slots` and `create_conference_request`, plus a `confirm_with_parent` interrupt node. LangGraph's human-in-the-loop interrupt is exactly the "explicit parent confirmation before creating the request" requirement.
+
+**What stays outside LangGraph:** the mastery model, the cohort algorithm, authorization, and audit logging. These are deterministic and must not depend on a model or an agent loop. The graphs call them as plain functions.
+
+**Hosting:** run in-process inside FastAPI for the demo. If there is time after day 2's core path, deploy the two graphs to Amazon Bedrock AgentCore Runtime, which hosts LangGraph agents as-is with session isolation, identity, and tracing, and call them from the API by ARN. This is additive; the local path stays as the fallback.
+
+**Alternative considered:** AWS Strands Agents, the AWS-native agent SDK. It is simpler for single-agent tool loops but less explicit about branching and retries. LangGraph fits the recommendation pipeline better and the team asked for it.
+
+**Tracing:** LangGraph emits structured run traces. Write them to CloudWatch through the existing JSON logger so the audit record for a recommendation includes the path the graph took.
+
 ## Retrieval
 
 - **Bedrock Knowledge Base** over an S3 bucket. Each document has a `<name>.metadata.json` sidecar with the retrieval and provenance fields from PRD §10. Queries use `retrieve` with a metadata filter on grade, subject, skill, document type, audience, and approval.
@@ -91,7 +110,7 @@ The Workshop Studio account exposes most of the AWS catalog. Each service below 
 
 | Service | Use | Why it earns its place |
 |---|---|---|
-| Amazon CloudFront | Serve pre-generated Polly audio and, if deployed, the static front end from S3 | Audio playback on the student screen must be instant; CloudFront in front of S3 makes cached MP3s load from an edge in milliseconds and avoids exposing the bucket. |
+| Amazon S3 (direct) | Serve pre-generated Polly audio through short-lived presigned URLs issued by the API; hold the corpus and metadata sidecars | Keeps the stack to one storage service. For a demo audience in one region, S3 latency is well under the one-second playback target, and the browser caches each MP3 after first play. Presigned URLs keep the bucket private without a CDN. |
 | AWS Systems Manager Parameter Store | Hold the Bedrock model ID, Guardrail ID, Knowledge Base ID, bucket names | Four people will each have their own environment. One parameter path per setting means no hard-coded IDs and no `.env` files passed around in chat. |
 | Amazon Textract | Convert Tier 2 district curriculum PDFs to text during corpus ingestion | District teaching guidelines usually arrive as scanned or layout-heavy PDFs. Textract turns them into clean text for chunking, which is the difference between a trusted corpus and a demo corpus. |
 | AWS IAM | Least-privilege role for the API: Bedrock invoke, KB retrieve, Polly synthesize, S3 read/write on one bucket, DynamoDB on one table | Required anyway; documenting it up front avoids a wildcard policy on demo day. |
@@ -102,7 +121,7 @@ The Workshop Studio account exposes most of the AWS catalog. Each service below 
 |---|---|---|
 | Amazon Cognito | Authentication and role claims | Already P1 in the PRD. Amplify wires it in with little code. |
 | Amazon Translate | Parent-facing summaries in the family's language | Already P1. One API call per summary, English source retained. |
-| Amazon Bedrock Agents | Run the conference-scheduling assistant as a managed agent with `list_available_slots` and `create_conference_request` as action-group tools | Replaces a hand-written tool-use loop with a managed one and gives judges a native AWS agent to look at. Only worth it if the manual scheduling flow is already done. |
+| Amazon Bedrock AgentCore Runtime | Host the LangGraph recommendation graph and the scheduling assistant as managed agents | AgentCore runs agents written in LangGraph (and other frameworks) without rewriting them, with session isolation and observability built in. Only worth it once the graphs work locally; local execution inside FastAPI is the demo default. |
 | Amazon Comprehend | PII detection on free-text fields parents and teachers type (conference agenda, observation notes) before storage | Guardrails covers model calls; Comprehend covers text that never reaches a model but still lands in the database. |
 
 ### Roadmap services (post-hackathon)
@@ -122,7 +141,9 @@ The Workshop Studio account exposes most of the AWS catalog. Each service below 
 |---|---|
 | Amazon QuickSight | Embedded dashboards are slow to set up and would replace the accessible React views with iframes. |
 | Amazon Kendra | Overlaps with Bedrock Knowledge Bases and costs more; metadata filtering in KB is sufficient. |
-| Amazon Lex | The student experience is not a chatbot, and the scheduling assistant is better served by Converse tool use or Bedrock Agents. |
+| Amazon Lex | The student experience is not a chatbot, and the scheduling assistant is better served by a LangGraph tool-use graph. |
+| Amazon Bedrock Agents (classic) | Overlaps with LangGraph; its action-group model would mean maintaining two agent definitions. AgentCore hosts the LangGraph version instead. |
+| Amazon CloudFront | Not needed for a single-region demo audience; S3 with presigned URLs meets the playback target. Revisit for production. |
 | AWS Lambda + API Gateway for the API | Works (FastAPI runs under Mangum), but App Runner runs the same container with no cold starts and less wiring. Keep as an alternative if App Runner is unavailable. |
 | Amazon Chime SDK | Virtual conference rooms are out of scope; scheduling is the problem, not the meeting. |
 
@@ -151,5 +172,5 @@ docs/                   PRD.md, TECH_STACK.md
 1. Confirm Bedrock model access and note the exact model IDs.
 2. Start Knowledge Base provisioning immediately; build the local index in parallel.
 3. Create the Guardrail and record its ID.
-4. Create the S3 bucket for corpus and audio, put a CloudFront distribution in front of the audio prefix, and store all IDs in Parameter Store under `/hackathon/`.
+4. Create the S3 bucket for corpus and audio (private, presigned URLs only) and store all IDs in Parameter Store under `/hackathon/`.
 5. Run `scripts/seed.py`, `scripts/pregenerate_audio.py`, and `scripts/reset_demo.py` once each to prove the offline path.

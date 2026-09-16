@@ -4,6 +4,7 @@ Accessible check-ins for elementary students with IEPs and 504 plans, teacher-ap
 
 - Product requirements: [docs/PRD.md](docs/PRD.md)
 - Tech stack: [docs/TECH_STACK.md](docs/TECH_STACK.md)
+- Learner model explained: [docs/LEARNER_MODEL.md](docs/LEARNER_MODEL.md)
 
 ## Layout (planned)
 
