@@ -37,10 +37,8 @@ export default function StudentQuest() {
   const script = useMemo(() => {
     if (!item) return { full: '', tokens: [] }
     // The letter is spoken but drawn as a badge, so it gets a region that is never rendered.
-    // A reading passage is only spoken when the item allows it: reading the text aloud would
-    // change what a reading-comprehension item measures (PRD FR-07).
     return buildScript([
-      ...(item.passage && item.passage_read_aloud_allowed ? [{ region: 'passage', text: item.passage }] : []),
+      ...(item.passage ? [{ region: 'passage', text: item.passage }] : []),
       { region: 'prompt', text: item.prompt },
       ...item.choices.flatMap((c, i) => [
         { region: `key${i}`, text: LETTERS[i] },
@@ -103,7 +101,7 @@ export default function StudentQuest() {
 
   if (phase === 'done' && next) {
     return (
-      <div className="page center student-theme">
+      <div className="page center student-theme quest-zoom">
         <Confetti burst={burst} />
         <div className="card celebrate">
           <Capy size={126} mood="cheer" float />
@@ -126,7 +124,7 @@ export default function StudentQuest() {
   const playing = narrator.state === 'playing'
 
   return (
-    <div className="page center student-theme">
+    <div className="page center student-theme quest-zoom">
       <Confetti burst={burst} />
       <div className="card quest-card-main">
         <div className="quest-head">
@@ -145,9 +143,7 @@ export default function StudentQuest() {
             {item.passage && (
               <div className="passage">
                 <h2 className="passage-title">Read this first</h2>
-                {item.passage_read_aloud_allowed
-                  ? <SpokenText tokens={script.tokens} region="passage" charIndex={narrator.charIndex} playing={playing} />
-                  : <p style={{ margin: 0 }}>{item.passage}</p>}
+                <SpokenText tokens={script.tokens} region="passage" charIndex={narrator.charIndex} playing={playing} />
               </div>
             )}
 
@@ -170,12 +166,6 @@ export default function StudentQuest() {
                 {playing && <span className="eq" aria-hidden="true"><i /><i /><i /></span>}
               </button>
               </div>
-            )}
-            {narrator.available && item.passage && !item.passage_read_aloud_allowed && (
-              <p className="muted read-note" style={{ textAlign: 'center' }}>
-                This one is a reading quiz, so the story stays for your eyes. Capy will read the
-                question and the answers.
-              </p>
             )}
 
             <div className="choices" role="group" aria-labelledby="prompt">

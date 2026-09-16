@@ -56,7 +56,12 @@
 
 * { box-sizing: border-box; }
 html { height: 100%; }
-html, body { margin: 0; background: var(--bg); color: var(--ink); font-size: var(--step); line-height: 1.55; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); line-height: 1.55; }
+/* Zoom lives inside the quiz only; the rest of the app never changes size. The slow
+   transition makes each zoom level glide instead of jump. */
+.quest-zoom { font-size: var(--step); transition: font-size .9s ease; }
+@media (prefers-reduced-motion: reduce) { .quest-zoom { transition: none; } }
+:root[data-motion='reduced'] .quest-zoom { transition: none; }
 body { min-height: 100%; -webkit-font-smoothing: antialiased; }
 #root { min-height: 100vh; display: flex; flex-direction: column; }
 a { color: var(--brand); }
@@ -507,7 +512,6 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .tool.zoom { gap: 6px; padding: 0 10px 0 8px; cursor: default; }
 .tool.zoom:hover { transform: none; }
 .zoom-ico { display: inline-flex; }
-.zoom-pct { font-size: .8em; font-weight: 700; min-width: 3.2em; text-align: right; color: var(--muted); }
 .tool.zoom input[type='range'] { width: 110px; accent-color: var(--brand); cursor: pointer; margin: 0; }
 .tool.zoom input[type='range']:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; border-radius: 6px; }
 
@@ -1053,8 +1057,7 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 :root[data-contrast='high'] .sbar-track.stacked i { color: #000; }
 
 /* ================= Capy the capybara ================= */
-/* Fills come from gradients set as SVG attributes; CSS carries strokes, motion, and the
-   high-contrast overrides (CSS fill beats the gradient attribute, so HC still wins). */
+/* Fills come from gradients set as SVG attributes; CSS carries strokes and motion. */
 .capy-svg { display: block; overflow: visible; filter: drop-shadow(0 5px 8px rgba(96, 64, 32, 0.18)); }
 .capy-svg g { transform-box: fill-box; }
 .cp-fur, .cp-head, .cp-foot { stroke: #7c5433; }
@@ -1084,17 +1087,9 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 :root[data-motion='reduced'] .cp-eyes, :root[data-motion='reduced'] .cp-ear,
 :root[data-motion='reduced'] .cp-grassg, :root[data-motion='reduced'] .cp-mouthg { animation: none !important; }
 @media (prefers-reduced-motion: reduce) { .cp-eyes, .cp-ear, .cp-grassg, .cp-mouthg { animation: none !important; } }
+/* High contrast leaves Capy alone: the mascot keeps its warm colors (a silhouette read as
+   scary), only the drop shadow goes so the edges stay crisp against the dark page. */
 :root[data-contrast='high'] .capy-svg { filter: none; }
-:root[data-contrast='high'] .cp-fur, :root[data-contrast='high'] .cp-head, :root[data-contrast='high'] .cp-foot { fill: #000; stroke: var(--line); }
-:root[data-contrast='high'] .cp-earin { fill: var(--line); }
-:root[data-contrast='high'] .cp-muzzle { fill: #fff; }
-:root[data-contrast='high'] .cp-eye { fill: #fff; }
-:root[data-contrast='high'] .cp-hi, :root[data-contrast='high'] .cp-nose, :root[data-contrast='high'] .cp-mouthfill { fill: #000; }
-:root[data-contrast='high'] .cp-stroke { stroke: #000; }
-:root[data-contrast='high'] .cp-eyearc { stroke: #fff; }
-:root[data-contrast='high'] .cp-blush, :root[data-contrast='high'] .cp-shadow, :root[data-contrast='high'] .cp-sheen { display: none; }
-:root[data-contrast='high'] .cp-grass { stroke: var(--brand); }
-:root[data-contrast='high'] .cp-grassleaf { fill: var(--brand); }
 
 /* ================= Landing hero ================= */
 .land { gap: 22px; }

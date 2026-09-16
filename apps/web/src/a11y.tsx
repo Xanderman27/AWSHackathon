@@ -26,7 +26,8 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
       const sys = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
       if (raw) {
         const saved = JSON.parse(raw) as Partial<Prefs>
-        return { ...DEFAULT, reducedMotion: sys, ...saved, zoom: clampZoom(saved.zoom ?? 1) }
+        // Motion has no in-app toggle any more; it always follows the system setting.
+        return { ...DEFAULT, ...saved, zoom: clampZoom(saved.zoom ?? 1), reducedMotion: sys }
       }
       return { ...DEFAULT, reducedMotion: sys }
     } catch {
@@ -64,18 +65,12 @@ const ZoomIcon = () => (
     <path d="M15.5 15.5 21 21M8 10.5h5M10.5 8v5" />
   </svg>
 )
-const MotionIcon = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-    <path d="M3 12c3-5 6-5 9 0s6 5 9 0" />
-    <path d="M5 5l14 14" />
-  </svg>
-)
-
 /** Icon-only display controls shown on the quest screen. */
 export function QuestTools() {
   const { prefs, set } = usePrefs()
   const high = prefs.contrast === 'high'
-  const pct = Math.round(prefs.zoom * 100)
+  const level = Math.round((prefs.zoom - ZOOM_MIN) / ZOOM_STEP) + 1
+  const levels = Math.round((ZOOM_MAX - ZOOM_MIN) / ZOOM_STEP) + 1
   return (
     <div className="tools" role="group" aria-label="Display settings">
       <button type="button" className="tool" aria-pressed={high} aria-label="High contrast" title="High contrast"
@@ -87,16 +82,10 @@ export function QuestTools() {
         <span className="zoom-ico"><ZoomIcon /></span>
         <input
           type="range" min={ZOOM_MIN} max={ZOOM_MAX} step={ZOOM_STEP} value={prefs.zoom}
-          aria-label="Zoom level" aria-valuetext={`${pct} percent`}
+          aria-label="Zoom level" aria-valuetext={`Level ${level} of ${levels}`}
           onChange={(e) => set({ zoom: clampZoom(parseFloat(e.target.value)) })}
         />
-        <span className="zoom-pct" aria-hidden="true">{pct}%</span>
       </div>
-
-      <button type="button" className="tool" aria-pressed={prefs.reducedMotion} aria-label="Less motion" title="Less motion"
-        onClick={() => set({ reducedMotion: !prefs.reducedMotion })}>
-        <MotionIcon />
-      </button>
     </div>
   )
 }
