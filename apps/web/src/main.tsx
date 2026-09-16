@@ -12,7 +12,7 @@ function Shell() {
   return (
     <div className="shell">
       <header className="topbar">
-        <Link to="/" className="brand">🌿 Learning Quest</Link>
+        <Link to="/" className="brand"><span className="dot" aria-hidden="true" />Learning Quest</Link>
         <AccessibilityBar />
       </header>
       <main id="main">

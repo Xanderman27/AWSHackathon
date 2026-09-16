@@ -19,25 +19,34 @@ export default function ParentView() {
 
   return (
     <div className="stack">
-      <h1>Your child's progress</h1>
+      <div>
+        <span className="chip cream">Family view</span>
+        <h1 style={{ marginTop: 10 }}>{progress ? `${progress.student.display_name}'s progress` : 'Your child'}</h1>
+        <p className="muted" style={{ margin: 0 }}>Grade {progress?.student.grade ?? ''} · what your child practiced and what comes next, in plain language.</p>
+      </div>
       {children.length > 1 && (
         <div className="row" role="group" aria-label="Choose a child">
           {children.map((c) => <button key={c.id} type="button" aria-pressed={progress?.student.id === c.id} onClick={() => api<Progress>(`/parent/children/${c.id}/progress`).then(setProgress)}>{c.display_name}</button>)}
         </div>
       )}
       {progress && (
-        <>
-          <div className="card">
+        <div className="grid-2">
+          <div className="card tinted-mint">
             <h2>What we practiced</h2>
-            {progress.what_we_practiced.length === 0 ? <p className="muted">{progress.student.display_name} has not started a quest yet.</p> : (
-              <ul>{progress.what_we_practiced.map((p, i) => <li key={i}>{p.practiced}</li>)}</ul>
+            {progress.what_we_practiced.length === 0 ? <p>{progress.student.display_name} has not started a quest yet.</p> : (
+              progress.what_we_practiced.map((p, i) => <p key={i} style={{ fontSize: '1.1em' }}>{p.practiced}</p>)
             )}
           </div>
-          <div className="card"><h2>What comes next</h2><p className="muted">Your child's teacher will add approved next steps here.</p></div>
-          <div className="card"><h2>Talk with the teacher</h2><p className="muted">Conference requests are coming in the next build.</p><button type="button" disabled>Request a time</button></div>
-        </>
+          <div className="card tinted-sky"><h2>What comes next</h2><p>Your child's teacher will add approved next steps here.</p></div>
+          <div className="card" style={{ gridColumn: '1 / -1' }}>
+            <div className="row between">
+              <div><h2 style={{ marginBottom: 4 }}>Talk with the teacher</h2><p className="muted" style={{ margin: 0 }}>Pick a time that works for you. The teacher confirms it.</p></div>
+              <button type="button" className="btn-primary" disabled>Request a time</button>
+            </div>
+          </div>
+        </div>
       )}
-      <p className="muted">This tool supports learning. It does not make eligibility, placement, or IEP decisions.</p>
+      <p className="muted" style={{ fontSize: '0.9em' }}>This tool supports learning. It does not make eligibility, placement, or IEP decisions.</p>
     </div>
   )
 }
