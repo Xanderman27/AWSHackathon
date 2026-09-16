@@ -1,6 +1,6 @@
-// The teacher's side of the family photo feed: pick a photo, say what it was, share it.
-// Everything here goes to every family in the class, so the panel says so plainly rather
-// than leaving the teacher to guess who will see it.
+// The class blog: the teacher writes a post with a photo, and it appears on the dashboard of
+// every family in the class. For most families this is the only picture of the school day
+// they get, so the composer is short on purpose — a photo, a headline, a sentence.
 
 import { useEffect, useRef, useState } from 'react'
 import { api, getSession } from '../api'
@@ -9,6 +9,7 @@ import ClassPhoto from './ClassPhoto'
 export interface ClassPhotoRow {
   id: string
   class_id: string
+  title: string
   caption: string
   taken_on: string
   uploaded_at: string
@@ -31,10 +32,12 @@ export function photoDate(row: ClassPhotoRow) {
 }
 
 export default function ClassPhotoManager() {
-  const [photos, setPhotos] = useState<ClassPhotoRow[] | null>(null)
+  const [posts, setPosts] = useState<ClassPhotoRow[] | null>(null)
+  const [title, setTitle] = useState('')
   const [caption, setCaption] = useState('')
   const [takenOn, setTakenOn] = useState(() => new Date().toISOString().slice(0, 10))
   const [file, setFile] = useState<File | null>(null)
+  const [preview, setPreview] = useState('')
   const [busy, setBusy] = useState(false)
   const [notice, setNotice] = useState('')
   const [error, setError] = useState('')
@@ -42,16 +45,30 @@ export default function ClassPhotoManager() {
 
   useEffect(() => {
     api<ClassPhotoRow[]>('/teacher/class-photos')
-      .then(setPhotos)
-      .catch(() => setError('Classroom photos could not load.'))
+      .then(setPosts)
+      .catch(() => setError('The class blog could not load.'))
   }, [])
 
-  async function share() {
+  // Show the teacher what they picked before it goes out to twelve families.
+  useEffect(() => {
+    if (!file) { setPreview(''); return }
+    const url = URL.createObjectURL(file)
+    setPreview(url)
+    return () => URL.revokeObjectURL(url)
+  }, [file])
+
+  function reset() {
+    setTitle(''); setCaption(''); setFile(null)
+    if (fileInput.current) fileInput.current.value = ''
+  }
+
+  async function publish() {
     if (!file) return
     setBusy(true); setError(''); setNotice('')
     try {
       const body = new FormData()
       body.append('file', file)
+      body.append('title', title)
       body.append('caption', caption)
       body.append('taken_on', takenOn)
       const session = getSession()
@@ -60,17 +77,16 @@ export default function ClassPhotoManager() {
         headers: session ? { 'X-Role': session.role, 'X-User-Id': session.userId } : undefined,
         body,
       })
-      if (!res.ok) throw new Error(await res.text())
+      if (!res.ok) throw new Error(String(res.status))
       const saved = (await res.json()) as ClassPhotoRow
-      setPhotos((current) => [saved, ...(current ?? [])])
-      setCaption(''); setFile(null)
-      if (fileInput.current) fileInput.current.value = ''
-      setNotice('Shared. Every family in your class can see it on their dashboard now.')
+      setPosts((current) => [saved, ...(current ?? [])])
+      reset()
+      setNotice('Posted. Every family in your class can see it on their dashboard now.')
     } catch (problem) {
       setError(
         String(problem).includes('413')
           ? `That photo is larger than ${MAX_MB} MB. Please choose a smaller one.`
-          : 'That photo could not be shared. Try a JPEG, PNG, or WebP image.',
+          : 'That post could not be published. Try a JPEG, PNG, or WebP image.',
       )
     } finally {
       setBusy(false)
@@ -81,70 +97,102 @@ export default function ClassPhotoManager() {
     setError(''); setNotice('')
     try {
       await api(`/teacher/class-photos/${id}`, { method: 'DELETE' })
-      setPhotos((current) => (current ?? []).filter((row) => row.id !== id))
+      setPosts((current) => (current ?? []).filter((row) => row.id !== id))
       setNotice('Removed. It no longer appears for any family.')
     } catch {
-      setError('That photo could not be removed.')
+      setError('That post could not be removed.')
     }
   }
 
   return (
-    <section className="card photo-manager" aria-labelledby="photo-manager-title">
-      <div className="row between">
+    <div className="stack">
+      <section className="card blog-composer" aria-labelledby="composer-title">
         <div>
           <span className="chip sky">Families</span>
-          <h2 id="photo-manager-title">Share a moment from class</h2>
+          <h2 id="composer-title">Write an update</h2>
           <p className="muted">
-            A photo and a sentence reach every family in your class. Most families see the app
-            between meetings and nothing else, so this is often the only picture of the day they get.
+            Most families see this app between meetings and nothing else. A photo and a sentence
+            is often the only picture of the day they get.
           </p>
         </div>
-        <span className="teacher-game-icon" aria-hidden="true">📸</span>
-      </div>
 
-      <div className="photo-upload">
-        <label className="photo-file">
-          <span>Photo</span>
-          <input ref={fileInput} type="file" accept="image/jpeg,image/png,image/webp,image/heic"
-            onChange={(event) => setFile(event.target.files?.[0] ?? null)} />
-        </label>
-        <label className="photo-caption">
-          <span>What was happening?</span>
-          <input value={caption} maxLength={280} placeholder="Fraction strips day — the teams found three ways to make one half."
-            onChange={(event) => setCaption(event.target.value)} />
-        </label>
-        <label className="photo-date">
-          <span>Date</span>
-          <input type="date" value={takenOn} onChange={(event) => setTakenOn(event.target.value)} />
-        </label>
-        <button type="button" className="btn-primary btn-lg" disabled={!file || busy} onClick={share}>
-          {busy ? 'Sharing…' : 'Share with families'}
-        </button>
-      </div>
+        <div className="composer-body">
+          <label className={`composer-drop ${preview ? 'has-photo' : ''}`}>
+            {preview
+              ? <img src={preview} alt="" className="composer-preview" />
+              : <span className="composer-drop-hint"><span aria-hidden="true">📷</span> Choose a photo</span>}
+            <span className="visually-hidden">Photo for this update</span>
+            <input ref={fileInput} type="file" accept="image/jpeg,image/png,image/webp,image/heic"
+              onChange={(event) => setFile(event.target.files?.[0] ?? null)} />
+          </label>
 
-      <p className="muted photo-audience">
-        <strong>Who sees this:</strong> every family in class 4A. Students never see it, and it is
-        not attached to any learner's progress.
-      </p>
-
-      {notice && <div className="feedback good" role="status">✓ {notice}</div>}
-      {error && <div className="feedback try" role="alert">{error}</div>}
-
-      {photos === null ? <p className="muted">Loading shared photos…</p> : (
-        <div className="photo-grid">
-          {photos.map((row) => (
-            <figure className="photo-tile" key={row.id}>
-              <ClassPhoto photoId={row.id} alt={row.caption || 'A moment from class'} />
-              <figcaption>
-                <strong>{photoDate(row)}</strong>
-                <span>{row.caption || 'No caption'}</span>
-                <button type="button" className="table-btn" onClick={() => remove(row.id)}>Remove</button>
-              </figcaption>
-            </figure>
-          ))}
-          {photos.length === 0 && <p className="muted">Nothing shared yet. The first photo goes a long way.</p>}
+          <div className="composer-fields">
+            <label className="msg-field">
+              <span>Headline</span>
+              <input value={title} maxLength={80} placeholder="Three ways to make one half"
+                onChange={(event) => setTitle(event.target.value)} />
+            </label>
+            <label className="msg-field">
+              <span>What happened?</span>
+              <textarea value={caption} maxLength={600} rows={4}
+                placeholder="The teams built the fraction wall together and found three rows that cover the same amount."
+                onChange={(event) => setCaption(event.target.value)} />
+            </label>
+            <div className="composer-actions">
+              <label className="msg-field composer-date">
+                <span>Date</span>
+                <input type="date" value={takenOn} onChange={(event) => setTakenOn(event.target.value)} />
+              </label>
+              <div className="row">
+                {file && <button type="button" onClick={reset} disabled={busy}>Discard</button>}
+                <button type="button" className="btn-primary btn-lg" disabled={!file || busy} onClick={publish}>
+                  {busy ? 'Posting…' : 'Post to families'}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-      )}
-    </section>
+
+        <p className="muted photo-audience">
+          <strong>Who sees this:</strong> every family in your class. Students never see it, and it is
+          not attached to any learner's progress.
+        </p>
+
+        {notice && <div className="feedback good" role="status">✓ {notice}</div>}
+        {error && <div className="feedback try" role="alert">{error}</div>}
+      </section>
+
+      <section aria-labelledby="posts-title">
+        <div className="row between" style={{ marginBottom: 12 }}>
+          <h2 id="posts-title" style={{ margin: 0 }}>Posted so far</h2>
+          {posts && <span className="muted">{posts.length} post{posts.length === 1 ? '' : 's'}</span>}
+        </div>
+
+        {posts === null ? <p className="muted">Loading the class blog…</p> : posts.length === 0 ? (
+          <div className="card"><p className="muted" style={{ margin: 0 }}>
+            Nothing posted yet. The first one goes a long way.
+          </p></div>
+        ) : (
+          <ol className="blog-list">
+            {posts.map((post) => (
+              <li key={post.id}>
+                <article className="card blog-post">
+                  <ClassPhoto photoId={post.id} alt={post.title || post.caption || 'A moment from class'} />
+                  <div className="blog-body">
+                    <p className="blog-date muted">{photoDate(post)}</p>
+                    {post.title && <h3>{post.title}</h3>}
+                    <p className="blog-caption">{post.caption || <span className="muted">No caption</span>}</p>
+                    <div className="row between blog-foot">
+                      <span className="muted">Posted by {post.uploaded_by_name}</span>
+                      <button type="button" className="table-btn" onClick={() => remove(post.id)}>Remove</button>
+                    </div>
+                  </div>
+                </article>
+              </li>
+            ))}
+          </ol>
+        )}
+      </section>
+    </div>
   )
 }

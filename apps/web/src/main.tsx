@@ -13,7 +13,9 @@ import GameRoute from './pages/games'
 import StudentQuest from './pages/StudentQuest'
 import TeacherLayout from './pages/TeacherLayout'
 import TeacherDashboard from './pages/TeacherDashboard'
+import TeacherLearner from './pages/TeacherLearner'
 import TeacherActivities from './pages/TeacherActivities'
+import TeacherUpdates from './pages/TeacherUpdates'
 import TeacherStats from './pages/TeacherStats'
 import ParentLayout from './pages/ParentLayout'
 import ParentProgress from './pages/ParentProgress'
@@ -64,7 +66,9 @@ function Shell() {
           <Route path="/student/quest/:skillId" element={<StudentQuest />} />
           <Route path="/teacher" element={<TeacherLayout />}>
             <Route index element={<TeacherDashboard />} />
+            <Route path="learners/:studentId" element={<TeacherLearner />} />
             <Route path="activities" element={<TeacherActivities />} />
+            <Route path="updates" element={<TeacherUpdates />} />
             <Route path="stats" element={<TeacherStats />} />
           </Route>
           <Route path="/parent" element={<ParentLayout />}>

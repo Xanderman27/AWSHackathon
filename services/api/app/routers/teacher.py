@@ -97,20 +97,84 @@ def class_summary(actor: Actor = Depends(require_role("teacher"))):
 
 @router.get("/students/{student_id}")
 def student_evidence(student_id: str, actor: Actor = Depends(require_role("teacher"))):
+    """Everything the learner's own page shows: who they are, where they are per skill, and
+    the item-level evidence behind it. One call, because a teacher opening a child wants the
+    whole picture, not three spinners."""
     require_student_access(actor, student_id)
+    student = next((s for s in store.read("students") if s["id"] == student_id), None)
+    if student is None:
+        raise HTTPException(404, "unknown learner")
+
     items = {i["id"]: i for i in store.read("items")}
+    skills = {s["id"]: s for s in store.read("skills")}
     attempts = [a for a in store.read("attempts") if a["student_id"] == student_id]
+
     evidence = []
+    questions = 0
+    hints = 0
+    quests_done = 0
     for a in attempts:
+        if a.get("completed"):
+            quests_done += 1
         for r in a["responses"]:
-            it = items[r["item_id"]]
+            it = items.get(r["item_id"], {})
+            questions += 1
+            if r.get("hint_used"):
+                hints += 1
             evidence.append({
-                "attempt_id": a["id"], "at": r["at"], "item_id": r["item_id"], "prompt": it["prompt"],
-                "difficulty": it["difficulty"], "correct": r["correct"], "hint_used": r["hint_used"],
+                "attempt_id": a["id"], "at": r["at"], "item_id": r["item_id"],
+                "prompt": it.get("prompt", ""), "difficulty": it.get("difficulty"),
+                "skill_name": skills.get(it.get("skill_id"), {}).get("name", ""),
+                "correct": r["correct"], "hint_used": r["hint_used"],
                 "route_reason": r.get("route_reason"),
             })
-    mastery = [m for m in store.read("mastery") if m["student_id"] == student_id]
-    return {"student_id": student_id, "mastery": mastery, "evidence": evidence}
+    evidence.sort(key=lambda row: row["at"], reverse=True)
+
+    mastery = []
+    for m in store.read("mastery"):
+        if m["student_id"] != student_id:
+            continue
+        skill = skills.get(m["skill_id"], {})
+        flags = [r["correct"] for a in attempts for r in a["responses"]
+                 if items.get(r["item_id"], {}).get("skill_id") == m["skill_id"]]
+        if len(flags) < m.get("evidence_count", 0):
+            flags = [True] * m["evidence_count"]
+        mastery.append({
+            "skill_id": m["skill_id"],
+            "skill_name": skill.get("name", m["skill_id"]),
+            "subject": skill.get("subject", ""),
+            "standard_id": skill.get("standard_id", ""),
+            "estimate": round(m["estimate"], 3),
+            "band": BAND_LABEL[bkt.band(m["estimate"])],
+            "confidence": bkt.confidence(m.get("history", []), flags),
+            "evidence_count": m.get("evidence_count", 0),
+            "history": [round(h, 3) for h in m.get("history", [])],
+        })
+    mastery.sort(key=lambda row: row["estimate"])
+
+    groups = [
+        {"id": g["id"], "title": g["title"], "group_name": g["group_name"],
+         "teammates": [
+             other["display_name"] for other in store.read("students")
+             if other["id"] in g["member_ids"] and other["id"] != student_id
+         ]}
+        for g in store.read("group_activities")
+        if g.get("status") == "published" and student_id in g.get("member_ids", [])
+    ]
+
+    return {
+        "student_id": student_id,
+        "student": {
+            "id": student["id"], "display_name": student["display_name"],
+            "grade": student.get("grade"), "has_goal_link": student.get("has_goal_link", False),
+            "photo": student.get("photo"), "avatar": student.get("avatar"),
+        },
+        "totals": {"questions": questions, "quests_done": quests_done, "hints": hints,
+                   "skills_with_evidence": len(mastery)},
+        "mastery": mastery,
+        "evidence": evidence,
+        "group_activities": groups,
+    }
 
 
 def _correct_flags(attempts, student_id, skill_id):

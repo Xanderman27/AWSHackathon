@@ -30,14 +30,15 @@ router = APIRouter(tags=["class photos"])
 # Formats a phone camera actually produces, and a cap that keeps the demo snappy.
 ALLOWED = {"image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp", "image/heic": ".heic"}
 MAX_BYTES = 8 * 1024 * 1024
-CAPTION_MAX = 280
+CAPTION_MAX = 600
+TITLE_MAX = 80
 
 
 def _visible(row: dict, fields: tuple[str, ...]) -> dict:
     return {key: row.get(key) for key in fields}
 
 
-PHOTO_FIELDS = ("id", "class_id", "caption", "taken_on", "uploaded_at", "uploaded_by_name")
+PHOTO_FIELDS = ("id", "class_id", "title", "caption", "taken_on", "uploaded_at", "uploaded_by_name")
 
 
 def _parent_class_ids(actor: Actor) -> set[str]:
@@ -60,6 +61,7 @@ def _readable_class_ids(actor: Actor) -> set[str]:
 @router.post("/teacher/class-photos", status_code=201)
 async def upload_photo(
     file: UploadFile = File(...),
+    title: str = Form(default=""),
     caption: str = Form(default=""),
     taken_on: str = Form(default=""),
     actor: Actor = Depends(require_role("teacher")),
@@ -82,6 +84,7 @@ async def upload_photo(
         "class_id": sorted(actor.class_ids)[0],
         "filename": stored,
         "content_type": file.content_type,
+        "title": title.strip()[:TITLE_MAX],
         "caption": caption.strip()[:CAPTION_MAX],
         "taken_on": taken_on.strip()[:10],
         "uploaded_by": actor.user_id,

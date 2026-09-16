@@ -8,7 +8,8 @@
     "taken_on": "2026-09-16",
     "uploaded_by": "teacher-01",
     "uploaded_by_name": "Ms. Rivera",
-    "uploaded_at": "2026-09-16T21:10:00+00:00"
+    "uploaded_at": "2026-09-16T21:10:00+00:00",
+    "title": "Three ways to make one half"
   },
   {
     "id": "photo-seed-02",
@@ -19,7 +20,8 @@
     "taken_on": "2026-09-14",
     "uploaded_by": "teacher-01",
     "uploaded_by_name": "Ms. Rivera",
-    "uploaded_at": "2026-09-14T16:40:00+00:00"
+    "uploaded_at": "2026-09-14T16:40:00+00:00",
+    "title": "Monday check-ins"
   },
   {
     "id": "photo-seed-03",
@@ -30,6 +32,7 @@
     "taken_on": "2026-09-11",
     "uploaded_by": "teacher-01",
     "uploaded_by_name": "Ms. Rivera",
-    "uploaded_at": "2026-09-11T20:05:00+00:00"
+    "uploaded_at": "2026-09-11T20:05:00+00:00",
+    "title": "Parachute Friday"
   }
 ]

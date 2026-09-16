@@ -52,11 +52,19 @@ Open http://localhost:5173. The API runs on port 8010. Sign in with a demo accou
 - One play/pause button per question that highlights each word as it is spoken, and light confetti on a correct answer.
 - Dori appears beside the question and delivers the hint in a speech bubble.
 - Accessibility bar: read-aloud (browser speech engine as a stand-in for Polly), high contrast, three text sizes, reduced motion, keyboard focus.
-- Teacher dashboard: class counts, classwide statistics with per-subject averages, learner table with band and confidence, per-student item evidence with route reasons.
+- Teacher dashboard, four tabs:
+  - **Learners** — class summary tiles, then a grid of learner cards (face, name, the skill they
+    are furthest from). Clicking one opens that learner's own page: totals, a card per skill with
+    band, mastery, confidence and a trend line, who they work with, and every answer they have
+    given, newest first.
+  - **Activities** — class code, quest assignment, and the collaborative-activity group builder.
+  - **Family updates** — the class blog (below).
+  - **Class statistics** — aggregate only, per-subject proficiency buckets.
 - Parent view: the classroom photo feed, "Who <child> works with" showing each team activity's
   teammates by name and face, and a Duolingo-profile-style page for the linked child — statistics, calculated achievements, group activities, mastery gauge and outcomes, teacher-approved next steps, and a rights library in a popup.
-- Classroom photos: a teacher shares a photo and a sentence, and it appears on the dashboard of
-  every family in that class. Image bytes go through an authorised route, not a public folder.
+- Class blog: the teacher writes an update — photo, headline, a sentence, a date — and it appears
+  on the dashboard of every family in that class. Image bytes go through an authorised route, not
+  a public folder.
   Who sees what, and what a district would need before this ships, is in
   [docs/PRIVACY_POSTURE.md](docs/PRIVACY_POSTURE.md).
 - Messages: a corner panel on the parent and teacher views. A parent can only reach their child's teacher; a teacher can only reach families in their own class. The server decides the pairing, not the client.
