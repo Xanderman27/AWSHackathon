@@ -25,6 +25,17 @@ const ROWS: Array<{ id: string; name: string }> = [
   { id: 'twelfths', name: 'Twelfths' },
 ]
 
+/** Numerator over a bar over a denominator. Decorative: callers supply the spoken text. */
+function Fraction({ num, den, size }: { num: number; den: number; size: 'lg' | 'sm' }) {
+  return (
+    <span className={`frac ${size}`} aria-hidden="true">
+      <span>{num}</span>
+      <i className="frac-bar" />
+      <span>{den}</span>
+    </span>
+  )
+}
+
 export default function FractionStrips() {
   const { gameId = 'fraction-strips', activityId = '' } = useParams()
   const { meta, roomId, error: metaError } = useActivity(gameId, activityId)
@@ -44,12 +55,17 @@ export default function FractionStrips() {
         <>
           <section className="card target-card" aria-live="polite">
             <Bear size={72} mood={wall.matched.length > 1 ? 'cheer' : 'happy'} />
-            <div>
+            <div className="target-main">
               <span className="chip sky">Target</span>
-              <h3 className="target-name">Cover {wall.target.label}</h3>
-              <p className="muted" style={{ margin: 0 }}>
-                That is {wall.target.words}. Shade other rows until they cover the very same amount.
-              </p>
+              <div className="target-line">
+                <Fraction num={wall.target.num} den={wall.target.den} size="lg" />
+                <div>
+                  <h3 className="target-name">Cover {wall.target.label}</h3>
+                  <p className="muted" style={{ margin: 0 }}>
+                    That is {wall.target.words}. Shade other rows until they cover the very same amount.
+                  </p>
+                </div>
+              </div>
             </div>
             <div className="target-found">
               <strong>{wall.matched.length}</strong>
@@ -75,7 +91,9 @@ export default function FractionStrips() {
                   <div className={`wall-row ${matched ? 'matched' : ''}`} key={row.id}>
                     <div className="wall-label">
                       <strong>{row.name}</strong>
-                      <small>{shaded} of {pieces.length}</small>
+                      {/* The strip below is a group labelled "<row>, N of M shaded", so the
+                          notation here is decorative and saying it twice would be noise. */}
+                      <Fraction num={shaded} den={pieces.length} size="sm" />
                     </div>
                     <div className="wall-strip" role="group" aria-label={`${row.name}, ${shaded} of ${pieces.length} shaded`}>
                       {pieces.map((on, index) => {

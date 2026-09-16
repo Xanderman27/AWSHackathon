@@ -615,17 +615,28 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .game-instructions { padding: 16px 20px; margin: 0; font-weight: 600; background: var(--surface-2); }
 
 /* Fraction Strips Together */
+/* Numerator over a bar over a denominator, built from a grid so it scales with font-size
+   and keeps the bar exactly as wide as the wider of the two numbers. */
+.frac { display: inline-grid; justify-items: center; line-height: 1; font-weight: 700;
+  font-variant-numeric: tabular-nums; vertical-align: middle; }
+.frac .frac-bar { display: block; width: 100%; min-width: 0.9em; height: 0.1em; margin: 0.1em 0;
+  background: currentColor; border-radius: 999px; }
+.frac.lg { font-size: 3.6em; letter-spacing: -0.02em; }
+.frac.sm { font-size: 1.25em; }
+
 .target-card { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
-.target-card > div:nth-child(2) { flex: 1; min-width: 220px; }
-.target-name { margin: 8px 0 4px; font-size: 1.5em; }
+.target-main { flex: 1; min-width: 260px; }
+.target-line { display: flex; gap: 20px; align-items: center; margin-top: 8px; }
+.target-name { margin: 0 0 4px; font-size: 1.5em; }
 .target-found { text-align: center; padding: 10px 20px; border-radius: var(--radius); background: var(--surface-2); }
 .target-found strong { display: block; font-size: 2.2em; line-height: 1; }
 .target-found span { font-size: .85em; color: var(--muted); font-weight: 600; }
 .wall-card { display: grid; gap: 14px; }
 .fraction-wall { display: grid; gap: 10px; }
-.wall-row { display: grid; grid-template-columns: 110px 1fr 28px; gap: 12px; align-items: center; }
-.wall-label strong { display: block; }
-.wall-label small { color: var(--muted); font-weight: 600; }
+.wall-row { display: grid; grid-template-columns: 148px 1fr 28px; gap: 12px; align-items: center; }
+.wall-label { display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+.wall-label strong { font-size: .95em; }
+.wall-row.matched .wall-label .frac { color: var(--zone-green); }
 .wall-strip { display: flex; gap: 3px; border: 2px solid var(--line); border-radius: 12px; padding: 3px; background: var(--surface-2); }
 .wall-piece { flex: 1; min-width: 0; min-height: 46px; padding: 0; border-radius: 8px; border: 2px dashed var(--line);
   background: var(--surface); }
@@ -635,7 +646,12 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .wall-mark { font-size: 1.5em; color: var(--zone-green); font-weight: 700; text-align: center; }
 .round-picker { display: grid; gap: 10px; }
 :root[data-contrast='high'] .wall-piece.on { background: var(--brand); border-color: var(--line); }
-@media (max-width: 700px) { .wall-row { grid-template-columns: 84px 1fr 24px; gap: 8px; } .wall-piece { min-height: 40px; } }
+@media (max-width: 700px) {
+  .wall-row { grid-template-columns: 112px 1fr 24px; gap: 8px; }
+  .wall-piece { min-height: 40px; }
+  .frac.lg { font-size: 2.8em; }
+  .target-line { gap: 14px; }
+}
 
 /* Story Detectives */
 .passage-card .passage-title { margin: 10px 0 8px; }
