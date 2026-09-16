@@ -51,6 +51,8 @@ export default function CheckersCorner() {
   const { meta, roomId, error: metaError } = useActivity(gameId, activityId)
   const { snapshot, connection, error, send, studentId } = useActivityRoom<CheckersState>(roomId)
   const [picked, setPicked] = useState<number | null>(null)
+  // A just-captured checker briefly lingers as a ghost that spins away.
+  const [poof, setPoof] = useState<{ index: number; seat: 0 | 1; key: number } | null>(null)
 
   const state = snapshot?.state ?? null
   const people = snapshot?.participants ?? []
@@ -65,6 +67,15 @@ export default function CheckersCorner() {
 
   // Dropping the piece when the board changes under you avoids stale highlights.
   useEffect(() => { setPicked(null) }, [snapshot?.revision && state?.turn]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const captured = state?.last?.captured
+    const landedPiece = state?.last ? state.board[state.last.to] : null
+    if (captured == null || !landedPiece) return
+    setPoof({ index: captured, seat: (1 - landedPiece.p) as 0 | 1, key: snapshot?.revision ?? 0 })
+    const timer = setTimeout(() => setPoof(null), 550)
+    return () => clearTimeout(timer)
+  }, [state?.last?.from, state?.last?.to, state?.last?.captured]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const hints = useMemo(() => (
     state && picked !== null && mySeat !== undefined ? targets(state.board, mySeat, picked) : []
@@ -139,7 +150,16 @@ export default function CheckersCorner() {
               {state.board.map((piece, index) => {
                 const isDark = dark(index)
                 const hinted = hints.includes(index)
-                const landed = state.last?.to === index
+                const last = state.last
+                const landed = last?.to === index
+                // The landing piece slides in from its old square (offsets are in piece widths;
+                // one square is 100/0.76 because the checker fills 76% of its cell).
+                const slide = landed && last
+                  ? {
+                      '--sdx': `${((last.from % SIZE) - (last.to % SIZE)) * (100 / 0.76)}%`,
+                      '--sdy': `${(Math.floor(last.from / SIZE) - Math.floor(last.to / SIZE)) * (100 / 0.76)}%`,
+                    } as CSSProperties
+                  : undefined
                 const label = piece
                   ? `${SEAT_NAME[piece.p]}${piece.k ? ' king' : ''} checker`
                   : hinted ? 'You can move here' : 'Empty square'
@@ -153,12 +173,17 @@ export default function CheckersCorner() {
                   >
                     {piece && (
                       <span
+                        key={landed && last ? `m${last.from}-${last.to}` : 'still'}
                         className={`checker seat-${piece.p} ${picked === index ? 'picked' : ''} ${landed ? 'landed' : ''} ${myTurn && piece.p === mySeat ? 'mine' : ''}`}
-                        style={{ '--seat-color': SEAT_COLOR[piece.p] } as CSSProperties}
+                        style={{ '--seat-color': SEAT_COLOR[piece.p], ...slide } as CSSProperties}
                         aria-hidden="true"
                       >
                         {piece.k && <em className="crown">👑</em>}
                       </span>
+                    )}
+                    {poof?.index === index && !piece && (
+                      <span key={`poof-${poof.key}`} className="checker ghost"
+                        style={{ '--seat-color': SEAT_COLOR[poof.seat] } as CSSProperties} aria-hidden="true" />
                     )}
                     {hinted && !piece && <span className="hint-dot" aria-hidden="true" />}
                   </button>
