@@ -1,0 +1,14 @@
+[
+  {
+    "id": "group-activity-beat-01",
+    "class_id": "class-4a",
+    "game_id": "beat-together",
+    "title": "Beat Together",
+    "group_name": "Blue Note Crew",
+    "member_ids": ["student-01", "student-04", "student-08"],
+    "rationale": "These learners have recent evidence on the same classroom objective. The teacher approved this temporary activity group.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-16T18:00:00+00:00"
+  }
+]

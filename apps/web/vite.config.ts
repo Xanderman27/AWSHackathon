@@ -5,6 +5,12 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
-    proxy: { '/api': { target: 'http://localhost:8010', rewrite: (p) => p.replace(/^\/api/, '') } },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8010',
+        rewrite: (p) => p.replace(/^\/api/, ''),
+        ws: true,
+      },
+    },
   },
 })

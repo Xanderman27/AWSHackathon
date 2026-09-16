@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { api, getSession } from '../api'
 import MessagesWidget from '../components/MessagesWidget'
+import GroupActivityManager from '../components/GroupActivityManager'
 import RoleGate from './RoleGate'
 
 interface Row { student_id: string; display_name: string; has_goal_link: boolean; skill_name: string; band: string; estimate: number; confidence: string; evidence_count: number }
@@ -81,6 +82,7 @@ export default function TeacherDashboard() {
         </div>
       )}
 
+      <GroupActivityManager />
       <MessagesWidget />
 
       <div className="card" style={{ background: 'var(--surface-2)' }}>
