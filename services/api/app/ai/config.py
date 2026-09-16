@@ -49,7 +49,7 @@ def _credentials_present() -> bool:
 def settings() -> Settings:
     return Settings(
         region=os.getenv("AWS_REGION", "us-east-1"),
-        model_id=os.getenv("BEDROCK_MODEL_ID", "us.anthropic.claude-sonnet-4-5-20250929-v1:0"),
+        model_id=os.getenv("BEDROCK_MODEL_ID", "us.anthropic.claude-sonnet-4-6"),
         guardrail_id=os.getenv("BEDROCK_GUARDRAIL_ID") or None,
         guardrail_version=os.getenv("BEDROCK_GUARDRAIL_VERSION", "DRAFT"),
         # No credentials means offline, whatever the flag says: a failed Converse call on

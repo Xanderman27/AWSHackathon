@@ -4,19 +4,52 @@
     {
       "name": "api",
       "runtimeExecutable": "services/api/.venv/bin/python",
-      "runtimeArgs": ["-m", "uvicorn", "app.main:app", "--port", "8010", "--reload", "--app-dir", "services/api"],
-      "port": 8010
+      "runtimeArgs": [
+        "-m",
+        "uvicorn",
+        "app.main:app",
+        "--port",
+        "8010",
+        "--reload",
+        "--app-dir",
+        "services/api"
+      ],
+      "port": 8010,
+      "env": {
+        "DEMO_OFFLINE": "0",
+        "BEDROCK_MODEL_ID": "us.anthropic.claude-sonnet-4-6",
+        "AWS_REGION": "us-east-1"
+      }
     },
     {
       "name": "api-windows",
       "runtimeExecutable": "services/api/.venv/Scripts/python.exe",
-      "runtimeArgs": ["-m", "uvicorn", "app.main:app", "--port", "8010", "--reload", "--app-dir", "services/api"],
-      "port": 8010
+      "runtimeArgs": [
+        "-m",
+        "uvicorn",
+        "app.main:app",
+        "--port",
+        "8010",
+        "--reload",
+        "--app-dir",
+        "services/api"
+      ],
+      "port": 8010,
+      "env": {
+        "DEMO_OFFLINE": "0",
+        "BEDROCK_MODEL_ID": "us.anthropic.claude-sonnet-4-6",
+        "AWS_REGION": "us-east-1"
+      }
     },
     {
       "name": "web",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "apps/web"],
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "apps/web"
+      ],
       "port": 5173
     }
   ]

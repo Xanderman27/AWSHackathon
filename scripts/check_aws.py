@@ -62,7 +62,10 @@ def main() -> int:
         line(MEH, f"Could not list models ({type(problem).__name__}); the account may still allow invoke.")
 
     configured = settings().model_id
-    if ids and configured not in ids:
+    # Invoke often needs the cross-region profile form ("us.<id>") while the listing returns
+    # the bare id, so compare with the prefix stripped.
+    bare = {model_id.removeprefix("us.") for model_id in ids}
+    if ids and configured.removeprefix("us.") not in bare:
         line(MEH, f"BEDROCK_MODEL_ID={configured} is not in that list.")
         print("         If invoke fails below, export one of the ids above (or its us. inference profile).")
     else:

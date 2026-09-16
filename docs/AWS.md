@@ -46,6 +46,25 @@ constant. If the pre-flight lists an id other than the default:
 export BEDROCK_MODEL_ID=<the id it listed>     # use the us.… inference profile if there is one
 ```
 
+## What this Workshop Studio account actually allows (verified 2026-09-16)
+
+`list_foundation_models` shows 13 Anthropic models, but an IAM policy named
+`ws-deny-bedrock-models-policy-1` explicitly denies most of them. Probing every id, only two
+are invokable, and **only through the cross-region inference profile** (`us.` prefix — the
+bare id is denied):
+
+| Model id to use | |
+|---|---|
+| `us.anthropic.claude-sonnet-4-6` | the default; fast, ample for a constrained tool call |
+| `us.anthropic.claude-opus-4-6-v1` | fallback if Sonnet is throttled |
+
+Everything else, including `anthropic.claude-sonnet-5` and `anthropic.claude-opus-5`, is
+listed but denied. If a teammate sees `AccessDeniedException` naming that policy, this is why:
+they are on a bare model id or a denied model, not missing credentials.
+
+Verified end to end: a live Converse call returns a `submit_activity` tool call, validates
+into `ActivityDraft`, and cites only approved sources (~1800 in / ~490 out tokens per draft).
+
 ## Step 3 — turn it on
 
 Only once the pre-flight is green:

@@ -16,10 +16,10 @@ from pydantic import BaseModel, Field
 class ActivityDraft(BaseModel):
     title: str = Field(min_length=4, max_length=90, description="A short, warm name for the activity.")
     why: str = Field(
-        min_length=20, max_length=400,
-        description="Why this helps this learner, in plain language a family can read. "
-                    "Describe what the learner can already do and what this builds next. "
-                    "Never name a disability, a diagnosis, or a deficit.",
+        min_length=20, max_length=700,
+        description="Two or three short sentences, under 500 characters, in plain language a "
+                    "family can read. Describe what the learner can already do and what this "
+                    "builds next. Never name a disability, a diagnosis, or a deficit.",
     )
     minutes: int = Field(ge=5, le=30, description="Realistic minutes at a kitchen table.")
     materials: list[str] = Field(
