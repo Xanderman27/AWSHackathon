@@ -1,32 +1,31 @@
-import { useEffect, useState } from 'react'
-import { api, getSession } from '../api'
-import Avatar from '../components/Avatar'
-import type { AvatarSpec } from '../components/Avatar'
-import MessagesWidget from '../components/MessagesWidget'
-import GroupActivityManager from '../components/GroupActivityManager'
-import ClassPhotoManager from '../components/ClassPhotoManager'
-import RoleGate from './RoleGate'
-import { BoltIcon, FlagIcon, StarIcon, TeamIcon } from '../components/PathArt'
+// Learners tab: who needs what, with the evidence one click away.
 
-interface Row { student_id: string; display_name: string; has_goal_link: boolean; skill_name: string; band: string; estimate: number; confidence: string; evidence_count: number }
-interface SubjectStat { subject: string; learners: number; avg: number }
-interface ClassStats { checkins: number; quests_done: number; stars: number; hints: number; active_learners: number; avg_estimate: number | null; subjects: SubjectStat[] }
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { api } from '../api'
+import Avatar, { type AvatarSpec } from '../components/Avatar'
+
+interface Row {
+  student_id: string; display_name: string; has_goal_link: boolean; skill_name: string
+  band: string; estimate: number; confidence: string; evidence_count: number; quests_done: number
+}
 interface Learner { id: string; display_name: string; photo?: string | null; avatar?: AvatarSpec | null }
-interface Summary { class_id: string; students: Learner[]; mastery: Row[]; counts: { needs_more_evidence: number; ready_for_extension: number }; class_stats: ClassStats }
+interface Summary {
+  class_id: string; students: Learner[]; mastery: Row[]
+  counts: { needs_more_evidence: number; ready_for_extension: number }
+}
 interface Evidence { student_id: string; evidence: { at: string; prompt: string; difficulty: number; correct: boolean; hint_used: boolean; route_reason?: string | null }[] }
 
 const BAND_TONE: Record<string, string> = { 'Building foundations': 'cream', Practicing: 'sky', 'Ready for extension': 'mint' }
 const CONF_TONE: Record<string, string> = { low: 'rose', medium: 'cream', high: 'mint' }
 
 export default function TeacherDashboard() {
-  const session = getSession()
   const [data, setData] = useState<Summary | null>(null)
   const [open, setOpen] = useState<Evidence | null>(null)
   const [err, setErr] = useState<string | null>(null)
 
   useEffect(() => { api<Summary>('/teacher/class').then(setData).catch((e) => setErr(String(e))) }, [])
 
-  if (!session || session.role !== 'teacher') return <RoleGate need="teacher" />
   if (err) return <p role="alert">{err}</p>
   if (!data) return <p>Loading…</p>
 
@@ -35,78 +34,60 @@ export default function TeacherDashboard() {
   const openName = open && data.students.find((s) => s.id === open.student_id)?.display_name
 
   return (
-    <div className="page">
+    <div className="stack">
       <div className="row between">
-        <div>
-          <span className="chip sky">Class 4A</span>
-          <h1 style={{ marginTop: 10 }}>Equivalent fractions</h1>
-          <p className="muted" style={{ margin: 0 }}>CCSS 4.NF.A.1 · updated just now</p>
-        </div>
-        <button type="button" className="btn-primary">Assign a quest</button>
+        <p className="muted" style={{ margin: 0 }}>Focus: Equivalent fractions · CCSS 4.NF.A.1</p>
+        <Link to="/teacher/activities" className="btn btn-primary" style={{ textDecoration: 'none' }}>Assign a quest</Link>
       </div>
 
       <div className="grid-3">
         <div className="card tinted-cream"><div className="stat">{data.counts.needs_more_evidence + without.length}</div><div className="stat-label">learners need more evidence</div></div>
         <div className="card tinted-mint"><div className="stat">{data.counts.ready_for_extension}</div><div className="stat-label">learners are ready for extension</div></div>
-        <div className="card tinted-sky"><div className="stat">{data.students.length - without.length}<span style={{ fontSize: '0.5em', opacity: 0.7 }}>/{data.students.length}</span></div><div className="stat-label">have completed a quest</div></div>
+        <div className="card tinted-sky"><div className="stat">{data.students.length - without.length}<span style={{ fontSize: '0.5em', opacity: 0.7 }}>/{data.students.length}</span></div><div className="stat-label">have practice evidence</div></div>
       </div>
-
-      <section className="card">
-        <h2 style={{ marginBottom: 12 }}>Class statistics</h2>
-        <div className="stat-grid">
-          <div className="stat-card"><StarIcon size={34} /><div><div className="stat-num">{data.class_stats.stars}</div><div className="stat-lbl">Stars earned classwide</div></div></div>
-          <div className="stat-card"><BoltIcon size={34} /><div><div className="stat-num">{data.class_stats.checkins}</div><div className="stat-lbl">Questions answered</div></div></div>
-          <div className="stat-card"><FlagIcon size={34} /><div><div className="stat-num">{data.class_stats.quests_done}</div><div className="stat-lbl">Quests finished</div></div></div>
-          <div className="stat-card"><TeamIcon size={34} /><div><div className="stat-num">{data.class_stats.active_learners}<span style={{ fontSize: '.55em', opacity: .7 }}>/{data.students.length}</span></div><div className="stat-lbl">Learners with evidence</div></div></div>
-        </div>
-        <h3 style={{ margin: '18px 0 8px', fontSize: '1.05em' }}>By subject <span className="muted" style={{ fontWeight: 500, fontSize: '.85em' }}>(average estimate)</span></h3>
-        <div className="subject-bars">
-          {data.class_stats.subjects.map((s) => (
-            <div className="sbar" key={s.subject}>
-              <span className="sbar-name">{s.subject}</span>
-              <span className="sbar-track"><i style={{ width: `${Math.round(s.avg * 100)}%` }} /></span>
-              <span className="sbar-val">{s.avg.toFixed(2)} · {s.learners} learner{s.learners === 1 ? '' : 's'}</span>
-            </div>
-          ))}
-        </div>
-      </section>
 
       <div className="card">
         <div className="row between" style={{ marginBottom: 8 }}><h2 style={{ margin: 0 }}>Learners</h2><span className="muted">Neutral language by design. No rankings.</span></div>
         <table>
-          <thead><tr><th>Learner</th><th>Skill</th><th>Where they are</th><th>Estimate</th><th>Confidence</th><th>Evidence</th><th></th></tr></thead>
+          <thead><tr><th>Learner</th><th>Skill</th><th>Where they are</th><th>Mastery</th><th>Confidence</th><th>Quests done</th><th></th></tr></thead>
           <tbody>
             {data.mastery.map((m) => (
               <tr key={m.student_id + m.skill_name}>
                 <td className="learner-cell">
-                  <Avatar photo={face(m.student_id)?.photo} spec={face(m.student_id)?.avatar} size={36} className="avatar-img" />
+                  <Avatar photo={face(m.student_id)?.photo} spec={face(m.student_id)?.avatar} size={36} />
                   {m.display_name}
-                  {m.has_goal_link && <span className="chip" title="Has a linked goal (teacher-only)" style={{ marginLeft: 6 }}>goal</span>}
+                  {m.has_goal_link && <span className="chip" title="You linked this learner's evidence to a plain-language IEP/504 goal label. Only you see this marker." style={{ marginLeft: 6 }}>🔗 goal link</span>}
                 </td>
                 <td className="muted">{m.skill_name}</td>
                 <td><span className={`chip ${BAND_TONE[m.band]}`}>{m.band}</span></td>
-                <td><span className="bar" aria-hidden="true"><i style={{ width: `${Math.round(m.estimate * 100)}%` }} /></span> <span className="muted">{m.estimate.toFixed(2)}</span></td>
+                <td><span className="bar" aria-hidden="true"><i style={{ width: `${Math.round(m.estimate * 100)}%` }} /></span> <span className="muted">{Math.round(m.estimate * 100)}%</span></td>
                 <td><span className={`chip ${CONF_TONE[m.confidence]}`}>{m.confidence}</span></td>
-                <td>{m.evidence_count} {m.evidence_count === 1 ? "item" : "items"}</td>
-                <td><button type="button" className="table-btn" onClick={() => api<Evidence>(`/teacher/students/${m.student_id}`).then(setOpen)}>Evidence</button></td>
+                <td>{m.quests_done} quest{m.quests_done === 1 ? '' : 's'}</td>
+                <td><button type="button" className="table-btn" onClick={() => api<Evidence>(`/teacher/students/${m.student_id}`).then(setOpen)}>Details</button></td>
               </tr>
             ))}
             {without.map((s) => (
               <tr key={s.id}>
                 <td className="learner-cell">
-                  <Avatar photo={s.photo} spec={s.avatar} size={36} className="avatar-img" />{s.display_name}
+                  <Avatar photo={s.photo} spec={s.avatar} size={36} />{s.display_name}
                 </td>
-                <td colSpan={5} className="muted">No quest completed yet</td><td></td>
+                <td colSpan={5} className="muted">No practice evidence yet</td><td></td>
               </tr>
             ))}
           </tbody>
         </table>
+        <p className="muted table-note">
+          <strong>Mastery</strong> is our best estimate that the learner knows this skill right now, based on
+          their answers so far. <strong>🔗 goal link</strong> means you connected this learner's evidence
+          to a plain-language goal label you wrote; learners and other families never see it. <strong>Quests done</strong> counts
+          finished quests on that skill.
+        </p>
       </div>
 
       {open && (
         <div className="card" role="region" aria-label="Item evidence">
-          <div className="row between"><h2 style={{ margin: 0 }}>Evidence for {openName}</h2><button type="button" onClick={() => setOpen(null)}>Close</button></div>
-          {open.evidence.length === 0 ? <p className="muted" style={{ marginTop: 12 }}>No item responses yet. Ask the learner to try a quest.</p> : (
+          <div className="row between"><h2 style={{ margin: 0 }}>Details for {openName}</h2><button type="button" onClick={() => setOpen(null)}>Close</button></div>
+          {open.evidence.length === 0 ? <p className="muted" style={{ marginTop: 12 }}>No answers yet. Ask the learner to try a quest.</p> : (
             <table style={{ marginTop: 12 }}>
               <thead><tr><th>Question</th><th>Difficulty</th><th>Result</th><th>Hint</th><th>Note</th></tr></thead>
               <tbody>
@@ -119,9 +100,6 @@ export default function TeacherDashboard() {
         </div>
       )}
 
-      <GroupActivityManager />
-      <ClassPhotoManager />
-      <MessagesWidget />
 
       <div className="card" style={{ background: 'var(--surface-2)' }}>
         <strong>How this works.</strong> <span className="muted">After every answer we update one number per skill: how likely it is that this learner knows it. Items are calibrated so the model knows which questions are hard, and the next question is the one that tells us the most without being discouraging. Nothing here diagnoses, grades, or places a student.</span>

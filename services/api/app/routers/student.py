@@ -40,3 +40,23 @@ def path(actor: Actor = Depends(require_role("student"))):
             "started": sk["id"] in mastery,
         })
     return {"tracks": tracks, "stars": sum(t["steps_done"] for t in tracks)}
+
+
+@router.get("/assignments")
+def my_assignments(actor: Actor = Depends(require_role("student"))):
+    me = next((s for s in store.read("students") if s["id"] == actor.user_id), None)
+    if me is None:
+        return []
+    skills = {s["id"]: s for s in store.read("skills")}
+    out = []
+    for a in store.read("assignments"):
+        if a["class_id"] != me["class_id"]:
+            continue
+        if a.get("student_ids") and actor.user_id not in a["student_ids"]:
+            continue
+        sk = skills.get(a["skill_id"])
+        if sk:
+            out.append({"assignment_id": a["id"], "skill_id": sk["id"], "title": sk["child_name"],
+                        "subject": sk["subject"], "at": a["at"]})
+    out.sort(key=lambda r: r["at"], reverse=True)
+    return out

@@ -1,6 +1,10 @@
+// Quests tab: only what the teacher has assigned (PRD FR-02). Free practice lives on My path.
+
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { api, type Skill } from '../api'
+import { api } from '../api'
+
+interface Assigned { assignment_id: string; skill_id: string; title: string; subject: string; at: string }
 
 const ART: Record<string, { glyph: string; tone: string }> = {
   math: { glyph: '🔢', tone: 'mint' },
@@ -12,31 +16,40 @@ const ART: Record<string, { glyph: string; tone: string }> = {
 
 export default function StudentAssessments() {
   const nav = useNavigate()
-  const [skills, setSkills] = useState<Skill[]>([])
+  const [quests, setQuests] = useState<Assigned[] | null>(null)
   const [err, setErr] = useState<string | null>(null)
-  useEffect(() => { api<Skill[]>('/skills').then(setSkills).catch((e) => setErr(String(e))) }, [])
+  useEffect(() => { api<Assigned[]>('/student/assignments').then(setQuests).catch((e) => setErr(String(e))) }, [])
 
   if (err) return <p role="alert">Something went wrong. {err}</p>
+  if (quests === null) return <p>Finding your quests…</p>
 
   return (
     <div className="stack">
-      <h2 className="section-title">Pick a quest</h2>
-      <div className="quest-pick">
-        {skills.filter((s) => s.id !== 'fraction_parts').map((s, i) => {
-          const art = ART[s.subject] ?? { glyph: '⭐', tone: 'cream' }
-          return (
-            <button key={s.id} type="button" className={`quest-card pop ${art.tone}`}
-              style={{ animationDelay: `${i * 90}ms` }}
-              onClick={() => nav(`/student/quest/${s.id}`)}>
-              <span className="art floaty" aria-hidden="true" style={{ animationDelay: `${i * 0.3}s` }}>{art.glyph}</span>
-              <strong>{cap(s.child_name)}</strong>
-              <span className="quest-meta">6 questions · about 5 minutes</span>
-              <span className="quest-go" aria-hidden="true">Let's go →</span>
-            </button>
-          )
-        })}
-      </div>
-      <p className="muted helper">Take your time. You can ask Dori for a hint on any question.</p>
+      <h2 className="section-title">Quests from your teacher</h2>
+      {quests.length === 0 ? (
+        <div className="card celebrate" style={{ padding: 32 }}>
+          <div className="big" aria-hidden="true">🌟</div>
+          <h2>No quests right now</h2>
+          <p className="muted" style={{ margin: 0 }}>Your teacher will send one when it is ready. You can practice on your path any time!</p>
+        </div>
+      ) : (
+        <div className="quest-pick">
+          {quests.map((q, i) => {
+            const art = ART[q.subject] ?? { glyph: '⭐', tone: 'cream' }
+            return (
+              <button key={q.assignment_id} type="button" className={`quest-card pop ${art.tone}`}
+                style={{ animationDelay: `${i * 90}ms` }}
+                onClick={() => nav(`/student/quest/${q.skill_id}`)}>
+                <span className="art floaty" aria-hidden="true" style={{ animationDelay: `${i * 0.3}s` }}>{art.glyph}</span>
+                <strong>{cap(q.title)}</strong>
+                <span className="quest-meta">6 questions · about 5 minutes</span>
+                <span className="quest-go" aria-hidden="true">Let's go →</span>
+              </button>
+            )
+          })}
+        </div>
+      )}
+      <p className="muted helper">Take your time. You can ask Capy for a hint on any question.</p>
     </div>
   )
 }
