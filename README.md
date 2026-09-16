@@ -14,8 +14,8 @@ Requires Node 20+ and Python 3.12+.
 # API (first time: create the venv and install)
 cd services/api
 python -m venv .venv
-.venv/Scripts/python -m pip install -r requirements.txt     # macOS/Linux: .venv/bin/python
-.venv/Scripts/python -m uvicorn app.main:app --port 8010 --reload
+.venv/bin/python -m pip install -r requirements.txt         # Windows: .venv/Scripts/python
+.venv/bin/python -m uvicorn app.main:app --port 8010 --reload
 ```
 
 ```bash
@@ -29,12 +29,12 @@ Open http://localhost:5173. The API runs on port 8010. Pick a role on the home p
 
 - `python scripts/build_items.py` regenerates the item bank from the authored list.
 - `POST http://localhost:8010/demo/reset` restores the seeded state.
-- Tests: `cd services/api && .venv/Scripts/python -m pytest`.
+- Tests: `cd services/api && .venv/bin/python -m pytest` (Windows: `.venv/Scripts/python`).
 
 ## What works today
 
 - Landing page: animated, states who it is for, and links the frameworks the product follows.
-- Student portal: Quests (adaptive assessments) and Games (free play, placeholders for now).
+- Student portal: Quests (adaptive assessments) and Games (collaborative activities and free play).
 - Student quest: adaptive item selection, prerequisite routing, resume, reading passages that are not read aloud so the item still measures reading.
 - One play/pause button per question that highlights each word as it is spoken, and light confetti on a correct answer.
 - Dori appears beside the question and delivers the hint in a speech bubble.
@@ -42,13 +42,28 @@ Open http://localhost:5173. The API runs on port 8010. Pick a role on the home p
 - Teacher dashboard: class counts in neutral language, learner table with band and confidence, per-student item evidence with route reasons.
 - Parent view: linked children only, a child-only mastery gauge, teacher-approved next steps, and a rights library that opens in a popup.
 - Messages: a corner panel on the parent and teacher views. A parent can only reach their child's teacher; a teacher can only reach families in their own class. The server decides the pairing, not the client.
+- Collaborative activities: six shared-room games over one WebSocket endpoint. A teacher picks an activity, reviews the suggested groups, moves anyone, and publishes; only then does a learner see it, and never the reason they were grouped. Every board is live for the whole group, and each square is tinted with the colour of the teammate who last touched it.
+
+| Activity | What the group does | Grouped by |
+|---|---|---|
+| Beat Together | Build one 8-count loop together | equivalent-fractions evidence |
+| Fraction Strips Together | Shade a fraction wall to find every row equal to the target | equivalent-fractions evidence |
+| Story Detectives | Sort clue cards into big idea, helpful detail, and not in the story | main-idea evidence |
+| Memory Meadow | Find matching pairs on one shared board | mixed groups, no evidence used |
+| Sort It Out | Invent your own groups, name them, and defend them | mixed groups, no evidence used |
+| Shape Shift | Turn and flip pieces to fill a shared outline | mixed groups, no evidence used |
+
+  Games are free play: no score, no timer, and nothing from a room reaches the mastery model, the teacher dashboard, or a parent. The five activities that do not need a group can also be opened alone from the Games tab, in a room private to that learner.
 
 ## Layout
 
 ```
 apps/web          React + Vite + TypeScript (student, teacher, parent routes)
+  src/games       Shared room client: one socket, one snapshot, one send()
+  src/pages/games One screen per collaborative activity
 services/api      FastAPI: mastery model, selection, authorization, local JSON storage
   app/mastery     Layer 1 BKT (item-aware) and Layer 2 adaptive selection
+  app/games       Activity registry and one module per game (state + apply)
 data/seed         Skills, items, students, links, seeded mastery
 data/state        Runtime state (gitignored; reset copies seed over it)
 scripts           build_items.py; fit_*.py and simulate.py to come

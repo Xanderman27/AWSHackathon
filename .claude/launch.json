@@ -3,6 +3,12 @@
   "configurations": [
     {
       "name": "api",
+      "runtimeExecutable": "services/api/.venv/bin/python",
+      "runtimeArgs": ["-m", "uvicorn", "app.main:app", "--port", "8010", "--reload", "--app-dir", "services/api"],
+      "port": 8010
+    },
+    {
+      "name": "api-windows",
       "runtimeExecutable": "services/api/.venv/Scripts/python.exe",
       "runtimeArgs": ["-m", "uvicorn", "app.main:app", "--port", "8010", "--reload", "--app-dir", "services/api"],
       "port": 8010

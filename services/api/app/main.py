@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import attempts, beat_game, conferences, group_activities, messages, parent, resources, teacher
+from .routers import attempts, conferences, games, group_activities, messages, parent, resources, teacher
 from .storage import store
 
 app = FastAPI(title="Adaptive Learning Platform API", version="0.1.0")
@@ -18,7 +18,7 @@ app.include_router(parent.router)
 app.include_router(conferences.router)
 app.include_router(resources.router)
 app.include_router(messages.router)
-app.include_router(beat_game.router)
+app.include_router(games.router)
 app.include_router(group_activities.router)
 
 

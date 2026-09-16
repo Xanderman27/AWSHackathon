@@ -10,5 +10,29 @@
     "status": "published",
     "created_by": "teacher-01",
     "published_at": "2026-09-16T18:00:00+00:00"
+  },
+  {
+    "id": "group-activity-fractions-01",
+    "class_id": "class-4a",
+    "game_id": "fraction-strips",
+    "title": "Fraction Strips Together",
+    "group_name": "Team 1",
+    "member_ids": ["student-01", "student-09", "student-03", "student-06"],
+    "rationale": "Similar-need recommendation on equivalent fractions, reviewed and adjusted by the teacher, who added Sam by hand. Goal links, disability, demographic, and behavior data were not used.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-16T18:05:00+00:00"
+  },
+  {
+    "id": "group-activity-fractions-02",
+    "class_id": "class-4a",
+    "game_id": "fraction-strips",
+    "title": "Fraction Strips Together",
+    "group_name": "Team 2",
+    "member_ids": ["student-12", "student-08", "student-04"],
+    "rationale": "Similar-need recommendation on equivalent fractions. Goal links, disability, demographic, and behavior data were not used.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-16T18:05:00+00:00"
   }
 ]

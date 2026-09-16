@@ -6,7 +6,7 @@ import Home from './pages/Home'
 import StudentLayout from './pages/StudentLayout'
 import StudentAssessments from './pages/StudentAssessments'
 import StudentGames from './pages/StudentGames'
-import BeatBuilder from './pages/BeatBuilder'
+import GameRoute from './pages/games'
 import StudentQuest from './pages/StudentQuest'
 import TeacherDashboard from './pages/TeacherDashboard'
 import ParentLayout from './pages/ParentLayout'
@@ -27,7 +27,7 @@ function Shell() {
           <Route path="/student" element={<StudentLayout />}>
             <Route index element={<StudentAssessments />} />
             <Route path="games" element={<StudentGames />} />
-            <Route path="games/beat-together/:activityId" element={<BeatBuilder />} />
+            <Route path="games/:gameId/:activityId" element={<GameRoute />} />
           </Route>
           <Route path="/student/quest/:skillId" element={<StudentQuest />} />
           <Route path="/teacher" element={<TeacherDashboard />} />

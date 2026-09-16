@@ -1,32 +1,26 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { api } from '../api'
+import type { GameSpec, GroupActivity } from '../games/room'
 
-// Games are free play: no score sent to the teacher, no time limit, playable any time.
-
-const GAMES = [
-  { id: 'memory-meadow', name: 'Memory Meadow', glyph: '🌼', tone: 'sky', blurb: 'Flip the cards and remember where things are hiding.', skill: 'Working memory' },
-  { id: 'sort-it-out', name: 'Sort It Out', glyph: '🧺', tone: 'cream', blurb: 'Put things into groups and say why they belong together.', skill: 'Sorting' },
-  { id: 'shape-shift', name: 'Shape Shift', glyph: '🔷', tone: 'rose', blurb: 'Turn and flip shapes to see how they fit.', skill: 'Space and shape' },
-]
-
-interface GroupActivity {
-  id: string
-  game_id: string
-  title: string
-  group_name: string
-  teammates: { id: string; display_name: string }[]
-  member_count: number
-  instructions: string
-}
+// Games are free play: no score is sent to the teacher, there is no timer, and a learner can
+// stop whenever they like. The only thing a teacher controls is who is grouped with whom.
 
 export default function StudentGames() {
   const [activities, setActivities] = useState<GroupActivity[] | null>(null)
+  const [catalog, setCatalog] = useState<GameSpec[]>([])
   const [error, setError] = useState('')
 
   useEffect(() => {
-    api<GroupActivity[]>('/student/group-activities').then(setActivities).catch(() => setError('Group activities could not load.'))
+    Promise.all([
+      api<GroupActivity[]>('/student/group-activities'),
+      api<GameSpec[]>('/games'),
+    ])
+      .then(([assigned, games]) => { setActivities(assigned); setCatalog(games) })
+      .catch(() => setError('Your activities could not load. Try again in a moment.'))
   }, [])
+
+  const solo = catalog.filter((game) => game.solo)
 
   return (
     <div className="stack">
@@ -45,8 +39,8 @@ export default function StudentGames() {
       {activities && activities.length > 0 && (
         <div className="group-activity-grid">
           {activities.map((activity) => (
-            <article className="card group-activity-card tinted-mint pop" key={activity.id}>
-              <div className="group-activity-art" aria-hidden="true">🎵</div>
+            <article className={`card group-activity-card tinted-${activity.tone} pop`} key={activity.id}>
+              <div className="group-activity-art" aria-hidden="true">{activity.glyph}</div>
               <div>
                 <span className="chip mint">Ready to join</span>
                 <h3>{activity.title}</h3>
@@ -56,7 +50,7 @@ export default function StudentGames() {
                 <strong>{activity.group_name}</strong>
                 <span>With {activity.teammates.map((teammate) => teammate.display_name).join(' and ')}</span>
               </div>
-              <Link className="btn btn-primary btn-lg group-join" to={`/student/games/beat-together/${activity.id}`}>
+              <Link className="btn btn-primary btn-lg group-join" to={`/student/games/${activity.game_id}/${activity.id}`}>
                 Join activity <span aria-hidden="true">→</span>
               </Link>
             </article>
@@ -64,23 +58,27 @@ export default function StudentGames() {
         </div>
       )}
 
-      <div style={{ marginTop: 12 }}>
-        <h2 className="section-title">Play on your own</h2>
-        <p className="muted helper">Just for fun and thinking practice. Nothing here is graded.</p>
-      </div>
-      <div className="game-grid">
-        {GAMES.map((g, i) => (
-          <div key={g.id} className={`game-card pop ${g.tone}`} style={{ animationDelay: `${i * 80}ms` }}>
-            <span className="game-glyph floaty" aria-hidden="true" style={{ animationDelay: `${i * 0.25}s` }}>{g.glyph}</span>
-            <strong>{g.name}</strong>
-            <span className="game-blurb">{g.blurb}</span>
-            <span className="row between" style={{ width: '100%', marginTop: 'auto' }}>
-              <span className="chip">{g.skill}</span>
-              <button type="button" disabled>Coming soon</button>
-            </span>
+      {solo.length > 0 && (
+        <>
+          <div style={{ marginTop: 12 }}>
+            <h2 className="section-title">Play on your own</h2>
+            <p className="muted helper">Just for fun and thinking practice. Nothing here is graded.</p>
           </div>
-        ))}
-      </div>
+          <div className="game-grid">
+            {solo.map((game, index) => (
+              <div key={game.id} className={`game-card pop ${game.tone}`} style={{ animationDelay: `${index * 80}ms` }}>
+                <span className="game-glyph floaty" aria-hidden="true" style={{ animationDelay: `${index * 0.25}s` }}>{game.glyph}</span>
+                <strong>{game.title}</strong>
+                <span className="game-blurb">{game.blurb}</span>
+                <span className="row between" style={{ width: '100%', marginTop: 'auto' }}>
+                  <span className="chip">{game.skill_hint}</span>
+                  <Link className="btn" to={`/student/games/${game.id}/solo`}>Play</Link>
+                </span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   )
 }

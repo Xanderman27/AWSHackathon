@@ -605,3 +605,142 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
   .msg-panel { right: 10px; left: 10px; width: auto; bottom: 78px; }
   .msg-launcher { right: 12px; bottom: 12px; }
 }
+
+/* ---------- Collaborative activities ---------------------------------------
+   Every board below is shared state: a square a teammate changed is tinted with
+   that teammate's colour, which is why --editor-color shows up so often. Colour is
+   never the only signal, so each of these also carries a label or a shape change. */
+
+.card.tinted-rose { background: var(--rose); color: var(--rose-ink); border-color: transparent; }
+.game-instructions { padding: 16px 20px; margin: 0; font-weight: 600; background: var(--surface-2); }
+
+/* Fraction Strips Together */
+.target-card { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.target-card > div:nth-child(2) { flex: 1; min-width: 220px; }
+.target-name { margin: 8px 0 4px; font-size: 1.5em; }
+.target-found { text-align: center; padding: 10px 20px; border-radius: var(--radius); background: var(--surface-2); }
+.target-found strong { display: block; font-size: 2.2em; line-height: 1; }
+.target-found span { font-size: .85em; color: var(--muted); font-weight: 600; }
+.wall-card { display: grid; gap: 14px; }
+.fraction-wall { display: grid; gap: 10px; }
+.wall-row { display: grid; grid-template-columns: 110px 1fr 28px; gap: 12px; align-items: center; }
+.wall-label strong { display: block; }
+.wall-label small { color: var(--muted); font-weight: 600; }
+.wall-strip { display: flex; gap: 3px; border: 2px solid var(--line); border-radius: 12px; padding: 3px; background: var(--surface-2); }
+.wall-piece { flex: 1; min-width: 0; min-height: 46px; padding: 0; border-radius: 8px; border: 2px dashed var(--line);
+  background: var(--surface); }
+.wall-piece.on { background: var(--editor-color, var(--brand)); border-style: solid; border-color: var(--editor-color, var(--brand)); }
+.wall-piece:hover { transform: none; filter: brightness(0.97); }
+.wall-row.matched .wall-strip { border-color: var(--zone-green); box-shadow: 0 0 0 3px color-mix(in srgb, var(--zone-green) 22%, transparent); }
+.wall-mark { font-size: 1.5em; color: var(--zone-green); font-weight: 700; text-align: center; }
+.round-picker { display: grid; gap: 10px; }
+:root[data-contrast='high'] .wall-piece.on { background: var(--brand); border-color: var(--line); }
+@media (max-width: 700px) { .wall-row { grid-template-columns: 84px 1fr 24px; gap: 8px; } .wall-piece { min-height: 40px; } }
+
+/* Story Detectives */
+.passage-card .passage-title { margin: 10px 0 8px; }
+.story-text { font-size: 1.15em; line-height: 1.7; max-width: 62ch; margin: 0; }
+.clue-pile { display: flex; flex-wrap: wrap; gap: 10px; }
+.clue-card { text-align: left; font-weight: 600; padding: 14px 18px; border-radius: var(--radius); border-width: 2px;
+  max-width: 320px; min-height: 56px; background: var(--surface); }
+.clue-card.held, .clue-card[aria-pressed='true'] { background: var(--brand-soft); border-color: var(--brand); box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 22%, transparent); }
+.detective-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.column-card { display: grid; gap: 10px; align-content: start; }
+.column-card h3 { margin: 0; }
+.column-help { margin: 0; font-size: .9em; }
+.drop-here { width: 100%; justify-content: center; border-style: dashed; border-width: 2px; min-height: 52px; font-weight: 600; }
+.drop-here:not(:disabled) { border-style: solid; background: var(--brand-soft); border-color: var(--brand); color: var(--brand-deep); }
+.placed-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.placed { display: grid; gap: 4px; padding: 10px 12px; border-radius: 12px; background: var(--surface-2);
+  border-left: 5px solid var(--editor-color, var(--brand)); }
+.placed-text { font-weight: 600; }
+.placed-by { font-size: .82em; color: var(--muted); }
+.placed.right { background: var(--mint); color: var(--mint-ink); }
+.placed.rethink { background: var(--cream); color: var(--cream-ink); }
+.placed-list .empty { padding: 10px 2px; font-size: .9em; }
+.check-card { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.check-card > div:nth-child(2) { flex: 1; min-width: 220px; }
+:root[data-contrast='high'] .placed.right, :root[data-contrast='high'] .placed.rethink { border: 2px solid var(--line); }
+
+/* Memory Meadow */
+.meadow-head { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.meadow-head > div:nth-child(2) { flex: 1; min-width: 200px; }
+.meadow-score { text-align: center; padding: 8px 18px; border-radius: var(--radius); background: var(--surface-2); }
+.meadow-score strong { display: block; font-size: 2em; line-height: 1; }
+.meadow-score span { font-size: .82em; color: var(--muted); font-weight: 600; }
+.meadow-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; max-width: 520px; margin: 0 auto; }
+.meadow-card { aspect-ratio: 1; min-height: 72px; padding: 0; justify-content: center; font-size: 2.2em;
+  border-radius: var(--radius); border-width: 2px; background: var(--sky); color: var(--sky-ink); }
+.meadow-card.up { background: var(--surface); }
+.meadow-card.matched { background: var(--mint); border-color: var(--editor-color, var(--zone-green)); border-width: 4px; }
+.meadow-card:disabled { opacity: 1; }
+:root[data-contrast='high'] .meadow-card { border-color: var(--line); }
+:root[data-contrast='high'] .meadow-card.matched { border-color: var(--brand); }
+@media (max-width: 560px) { .meadow-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+/* Sort It Out */
+.sort-head { display: flex; gap: 18px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.sort-pile { display: flex; flex-wrap: wrap; gap: 10px; }
+.sort-card { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; padding: 10px 16px;
+  border-radius: var(--radius-pill); border-width: 2px; min-height: 52px; background: var(--surface); }
+.sort-glyph { font-size: 1.4em; }
+.sort-card.held, .sort-card[aria-pressed='true'] { background: var(--brand-soft); border-color: var(--brand); box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 22%, transparent); }
+.sort-card.placed { border-color: var(--editor-color, var(--brand)); }
+.bin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+.bin-card { display: grid; gap: 10px; align-content: start; }
+.bin-name input, .new-bin input { width: 100%; min-height: 48px; font-size: 1.05em; font-weight: 700;
+  border: 2px solid var(--line); border-radius: 12px; padding: 0 12px; background: var(--surface); color: inherit; font-family: inherit; }
+.bin-name input:focus, .new-bin input:focus { border-color: var(--focus); outline: 3px solid color-mix(in srgb, var(--focus) 30%, transparent); outline-offset: 2px; }
+.bin-author { font-size: .8em; color: var(--muted); font-weight: 600; padding-left: 10px; border-left: 4px solid var(--editor-color, var(--brand)); }
+.bin-items { display: flex; flex-wrap: wrap; gap: 8px; min-height: 52px; align-items: center; }
+.new-bin { border-style: dashed; border-width: 2px; }
+
+/* Shape Shift */
+.shape-head { display: flex; gap: 18px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.shape-layout { display: grid; grid-template-columns: minmax(280px, 1fr) minmax(260px, 340px); gap: 16px; align-items: start; }
+.shape-board { display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: 6px; max-width: 420px; margin: 0 auto; }
+.board-cell { aspect-ratio: 1; min-height: 52px; min-width: 0; padding: 0; border-radius: 10px; border-width: 2px; }
+.board-cell.off { border: none; background: transparent; visibility: hidden; }
+.board-cell.open { background: var(--surface-2); border-style: dashed; border-color: var(--line); }
+.board-cell.ghost { background: var(--brand-soft); border-style: solid; border-color: var(--brand); }
+.board-cell.ghost-bad { background: var(--rose); border-style: solid; border-color: var(--rose-ink); }
+.board-cell.filled { border-style: solid; }
+.board-cell.filled.mint { background: var(--mint); border-color: var(--mint-ink); }
+.board-cell.filled.sky { background: var(--sky); border-color: var(--sky-ink); }
+.board-cell.filled.cream { background: var(--cream); border-color: var(--cream-ink); }
+.board-cell.filled.rose { background: var(--rose); border-color: var(--rose-ink); }
+.board-cell.filled.brand { background: var(--brand-soft); border-color: var(--brand); }
+.piece-tray { display: grid; gap: 14px; }
+.tray-piece { display: grid; gap: 8px; padding: 12px; border-radius: var(--radius); border: 2px solid var(--line); background: var(--surface-2); }
+.tray-piece.mine { border-color: var(--brand); box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 20%, transparent); }
+.piece-pick { display: flex; align-items: center; gap: 14px; width: 100%; justify-content: flex-start; background: transparent; border-color: transparent; }
+.piece-shape { display: grid; grid-template-columns: repeat(var(--cols), 16px); grid-template-rows: repeat(var(--rows), 16px); gap: 3px; }
+.piece-shape i { border-radius: 4px; background: transparent; }
+.piece-shape i.on { background: var(--brand); }
+.piece-shape i.on.mint { background: var(--mint-ink); }
+.piece-shape i.on.sky { background: var(--sky-ink); }
+.piece-shape i.on.cream { background: var(--cream-ink); }
+.piece-shape i.on.rose { background: var(--rose-ink); }
+.piece-holder { font-size: .8em; color: var(--muted); font-weight: 600; }
+.piece-tools button { min-height: 44px; padding: 0.3em 1em; font-size: .9em; }
+:root[data-contrast='high'] .board-cell.filled { background: var(--surface); border-color: var(--brand); border-width: 4px; }
+:root[data-contrast='high'] .piece-shape i.on { background: var(--brand); }
+@media (max-width: 860px) { .shape-layout { grid-template-columns: 1fr; } }
+
+/* Teacher: choosing which activity to group for */
+.game-picker { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; margin: 6px 0 4px; }
+.game-pick { display: flex; align-items: center; gap: 12px; text-align: left; padding: 12px 14px; border-radius: var(--radius);
+  border-width: 2px; background: var(--surface); min-height: 68px; }
+.game-pick-glyph { font-size: 1.7em; }
+.game-pick-text { display: grid; }
+.game-pick-text small { color: var(--muted); font-weight: 600; }
+.game-pick-live { margin-left: auto; }
+.game-pick[aria-pressed='true'] { border-color: var(--brand); background: var(--brand-soft); }
+.game-pick[aria-pressed='true'] .game-pick-text small { color: var(--brand-deep); }
+/* Piece numbers are the non-colour way to tell one shape from another. They only need to
+   show where colour stops doing that job, which is high contrast. */
+.cell-mark { display: none; font-size: .95em; font-weight: 700; }
+:root[data-contrast='high'] .board-cell.filled { display: grid; place-items: center; }
+:root[data-contrast='high'] .cell-mark { display: block; }
+:root[data-contrast='high'] .cell-mark.inline { display: inline; }

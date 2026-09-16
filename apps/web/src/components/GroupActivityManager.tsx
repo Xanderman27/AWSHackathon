@@ -1,22 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
 import { api } from '../api'
+import type { GameSpec } from '../games/room'
 
-interface Student {
-  id: string
-  display_name: string
-  evidence_count: number
-}
-
-interface RecommendedGroup {
-  id: string
-  name: string
-  member_ids: string[]
-  rationale: string
-}
+interface Student { id: string; display_name: string; evidence_count: number }
+interface RecommendedGroup { id: string; name: string; member_ids: string[]; rationale: string }
 
 interface Recommendation {
   game_id: string
   title: string
+  glyph: string
+  teacher_note: string
+  uses_evidence: boolean
   method: string
   students: Student[]
   groups: RecommendedGroup[]
@@ -26,19 +20,18 @@ interface Recommendation {
 
 interface PublishedActivity {
   id: string
+  game_id: string
   title: string
   group_name: string
   member_ids: string[]
   published_at: string
 }
 
-interface DraftGroup {
-  name: string
-  member_ids: string[]
-  rationale: string
-}
+interface DraftGroup { name: string; member_ids: string[]; rationale: string }
 
 export default function GroupActivityManager() {
+  const [catalog, setCatalog] = useState<GameSpec[]>([])
+  const [gameId, setGameId] = useState('')
   const [recommendation, setRecommendation] = useState<Recommendation | null>(null)
   const [drafts, setDrafts] = useState<DraftGroup[]>([])
   const [published, setPublished] = useState<PublishedActivity[]>([])
@@ -48,27 +41,42 @@ export default function GroupActivityManager() {
 
   useEffect(() => {
     Promise.all([
-      api<Recommendation>('/teacher/group-activities/recommendation'),
+      api<GameSpec[]>('/games'),
       api<PublishedActivity[]>('/teacher/group-activities'),
-    ]).then(([suggested, live]) => {
-      setRecommendation(suggested)
-      setDrafts(suggested.groups.map((group) => ({
-        name: group.name,
-        member_ids: group.member_ids,
-        rationale: group.rationale,
-      })))
+    ]).then(([games, live]) => {
+      setCatalog(games)
       setPublished(live)
-    }).catch(() => setError('Group recommendations could not load.'))
+      setGameId((current) => current || games[0]?.id || '')
+    }).catch(() => setError('Group activities could not load.'))
   }, [])
+
+  // Switching games pulls a fresh suggestion; drafts never carry over between activities.
+  useEffect(() => {
+    if (!gameId) return
+    setRecommendation(null)
+    setNotice('')
+    api<Recommendation>(`/teacher/group-activities/recommendation?game_id=${gameId}`)
+      .then((suggested) => {
+        setRecommendation(suggested)
+        setDrafts(suggested.groups.map((group) => ({ ...group })))
+      })
+      .catch(() => setError('Group recommendations could not load.'))
+  }, [gameId])
 
   const assignment = useMemo(() => {
     const result: Record<string, number> = {}
-    drafts.forEach((group, groupIndex) => group.member_ids.forEach((studentId) => { result[studentId] = groupIndex }))
+    drafts.forEach((group, index) => group.member_ids.forEach((studentId) => { result[studentId] = index }))
     return result
   }, [drafts])
 
-  const groupsWithMembers = drafts.filter((group) => group.member_ids.length > 0)
-  const canPublish = groupsWithMembers.length > 0 && groupsWithMembers.every((group) => group.member_ids.length >= 2 && group.member_ids.length <= 4)
+  const spec = catalog.find((game) => game.id === gameId)
+  const minGroup = spec?.min_group ?? 2
+  const maxGroup = spec?.max_group ?? 4
+  const withMembers = drafts.filter((group) => group.member_ids.length > 0)
+  const canPublish = withMembers.length > 0
+    && withMembers.every((group) => group.member_ids.length >= minGroup && group.member_ids.length <= maxGroup)
+  const liveForThisGame = published.filter((activity) => activity.game_id === gameId)
+  const publishedGameIds = new Set(published.map((activity) => activity.game_id))
 
   function moveStudent(studentId: string, target: string) {
     setNotice('')
@@ -79,109 +87,165 @@ export default function GroupActivityManager() {
     })
   }
 
-  function renameGroup(groupIndex: number, name: string) {
-    setDrafts((current) => current.map((group, index) => index === groupIndex ? { ...group, name } : group))
+  function renameGroup(index: number, name: string) {
+    setDrafts((current) => current.map((group, i) => (i === index ? { ...group, name } : group)))
   }
 
   async function publishGroups() {
-    setSaving(true)
-    setError('')
-    setNotice('')
+    setSaving(true); setError(''); setNotice('')
     try {
       const response = await api<{ activities: PublishedActivity[] }>('/teacher/group-activities/publish', {
         method: 'POST',
-        body: JSON.stringify({ groups: groupsWithMembers }),
+        body: JSON.stringify({ game_id: gameId, groups: withMembers }),
       })
-      setPublished(response.activities)
+      setPublished((current) => [...current.filter((a) => a.game_id !== gameId), ...response.activities])
       setNotice('Published. Each learner can now see only their assigned group activity.')
     } catch {
-      setError('The groups could not be published. Check that every group has 2–4 learners.')
+      setError(`The groups could not be published. Check that every group has ${minGroup}–${maxGroup} learners.`)
     } finally {
       setSaving(false)
     }
   }
 
-  if (error && !recommendation) return <div className="card feedback try" role="alert">{error}</div>
-  if (!recommendation) return <div className="card"><p style={{ margin: 0 }}>Building group recommendations…</p></div>
+  async function unpublish() {
+    setSaving(true); setError(''); setNotice('')
+    try {
+      await api<{ activities: PublishedActivity[] }>(`/teacher/group-activities/${gameId}`, { method: 'DELETE' })
+      setPublished((current) => current.filter((activity) => activity.game_id !== gameId))
+      setNotice('Taken down. This activity no longer appears for any learner.')
+    } catch {
+      setError('The groups could not be taken down.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (error && !catalog.length) return <div className="card feedback try" role="alert">{error}</div>
+  if (!catalog.length) return <div className="card"><p style={{ margin: 0 }}>Loading collaborative activities…</p></div>
 
   return (
     <section className="card group-manager" aria-labelledby="group-manager-title">
       <div className="row between">
         <div>
-          <span className="chip mint">Collaborative activity</span>
-          <h2 id="group-manager-title">Create Beat Together groups</h2>
-          <p className="muted">Review the platform suggestion, move learners if needed, then publish.</p>
+          <span className="chip mint">Collaborative activities</span>
+          <h2 id="group-manager-title">Group learners for an activity</h2>
+          <p className="muted">Pick an activity, review the suggestion, move learners if needed, then publish.</p>
         </div>
-        <span className="teacher-game-icon" aria-hidden="true">🎵</span>
+        <span className="teacher-game-icon" aria-hidden="true">{spec?.glyph ?? '🎲'}</span>
       </div>
 
-      <div className="recommendation-note">
-        <strong>How the platform recommended these groups</strong>
-        <span>{recommendation.method}</span>
-        <span>Goal links, disability status, demographics, and behavior are never inputs.</span>
-      </div>
-
-      <div className="draft-group-grid">
-        {drafts.map((group, groupIndex) => (
-          <div className="draft-group" key={groupIndex}>
-            <label>
-              <span className="visually-hidden">Name for group {groupIndex + 1}</span>
-              <input value={group.name} maxLength={40} onChange={(event) => renameGroup(groupIndex, event.target.value)} />
-            </label>
-            <div className="draft-members">
-              {group.member_ids.map((studentId) => <span className="chip sky" key={studentId}>{recommendation.student_names[studentId]}</span>)}
-              {group.member_ids.length === 0 && <span className="muted">No learners assigned</span>}
-            </div>
-            <p>{group.rationale}</p>
-            <span className={`group-size ${group.member_ids.length > 0 && group.member_ids.length < 2 ? 'warn' : ''}`}>
-              {group.member_ids.length} learner{group.member_ids.length === 1 ? '' : 's'} · 2–4 needed
+      <div className="game-picker" role="group" aria-label="Choose a collaborative activity">
+        {catalog.map((game) => (
+          <button type="button" key={game.id} aria-pressed={game.id === gameId}
+            className={`game-pick ${game.tone}`} onClick={() => setGameId(game.id)}>
+            <span className="game-pick-glyph" aria-hidden="true">{game.glyph}</span>
+            <span className="game-pick-text">
+              <strong>{game.title}</strong>
+              <small>{game.skill_hint}</small>
             </span>
-          </div>
+            {publishedGameIds.has(game.id) && <span className="chip mint game-pick-live">live</span>}
+          </button>
         ))}
       </div>
 
-      <div className="cohort-roster">
-        <h3>Adjust the groups</h3>
-        <p className="muted">Every change is teacher-controlled. “Not assigned” keeps the activity off that learner’s screen.</p>
-        <div className="table-scroll">
-          <table>
-            <thead><tr><th>Learner</th><th>Relevant evidence</th><th>Activity group</th></tr></thead>
-            <tbody>
-              {recommendation.students.map((student) => (
-                <tr key={student.id}>
-                  <td><span className="avatar" aria-hidden="true">{student.display_name[0]}</span>{student.display_name}</td>
-                  <td>
-                    {recommendation.needs_more_evidence.includes(student.id)
-                      ? <span className="chip cream">Needs more evidence</span>
-                      : `${student.evidence_count} recent items`}
-                  </td>
-                  <td>
-                    <select aria-label={`Group for ${student.display_name}`} value={assignment[student.id] ?? ''}
-                      onChange={(event) => moveStudent(student.id, event.target.value)}>
-                      <option value="">Not assigned</option>
-                      {drafts.map((group, index) => (
-                        <option value={index} key={index} disabled={group.member_ids.length >= 4 && assignment[student.id] !== index}>
-                          {group.name || `Group ${index + 1}`}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {!recommendation ? (
+        <p className="muted">Building group recommendations…</p>
+      ) : (
+        <>
+          <div className="recommendation-note">
+            <strong>How the platform recommended these groups</strong>
+            <span>{recommendation.method}</span>
+            {recommendation.teacher_note && <span>{recommendation.teacher_note}</span>}
+            <span>Goal links, disability status, demographics, and behavior are never inputs.</span>
+          </div>
 
-      <div className="publish-row">
-        <div>
-          {published.length > 0 && <strong>{published.length} group{published.length === 1 ? '' : 's'} currently published</strong>}
-          <p className="muted">Students see their team and a single Join activity button—never the recommendation rationale.</p>
-        </div>
-        <button className="btn-primary btn-lg" type="button" disabled={!canPublish || saving} onClick={publishGroups}>
-          {saving ? 'Publishing…' : published.length ? 'Update published groups' : 'Publish to students'}
-        </button>
-      </div>
+          <div className="draft-group-grid">
+            {drafts.map((group, index) => (
+              <div className="draft-group" key={index}>
+                <label>
+                  <span className="visually-hidden">Name for group {index + 1}</span>
+                  <input value={group.name} maxLength={40} onChange={(event) => renameGroup(index, event.target.value)} />
+                </label>
+                <div className="draft-members">
+                  {group.member_ids.map((studentId) => (
+                    <span className="chip sky" key={studentId}>{recommendation.student_names[studentId]}</span>
+                  ))}
+                  {group.member_ids.length === 0 && <span className="muted">No learners assigned</span>}
+                </div>
+                <p>{group.rationale}</p>
+                <span className={`group-size ${group.member_ids.length > 0 && group.member_ids.length < minGroup ? 'warn' : ''}`}>
+                  {group.member_ids.length} learner{group.member_ids.length === 1 ? '' : 's'} · {minGroup}–{maxGroup} needed
+                </span>
+              </div>
+            ))}
+            {drafts.length === 0 && (
+              <p className="muted">
+                No learner has enough evidence for this activity yet. Ask the class to finish a quest first, or pick an
+                activity that does not read from an objective.
+              </p>
+            )}
+          </div>
+
+          <div className="cohort-roster">
+            <h3>Adjust the groups</h3>
+            <p className="muted">Every change is teacher-controlled. “Not assigned” keeps the activity off that learner’s screen.</p>
+            <div className="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Learner</th>
+                    <th>{recommendation.uses_evidence ? 'Relevant evidence' : 'Evidence used'}</th>
+                    <th>Activity group</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recommendation.students.map((student) => (
+                    <tr key={student.id}>
+                      <td><span className="avatar" aria-hidden="true">{student.display_name[0]}</span>{student.display_name}</td>
+                      <td>
+                        {!recommendation.uses_evidence
+                          ? <span className="muted">None · free play</span>
+                          : recommendation.needs_more_evidence.includes(student.id)
+                            ? <span className="chip cream">Needs more evidence</span>
+                            : `${student.evidence_count} recent items`}
+                      </td>
+                      <td>
+                        <select aria-label={`Group for ${student.display_name}`} value={assignment[student.id] ?? ''}
+                          onChange={(event) => moveStudent(student.id, event.target.value)}>
+                          <option value="">Not assigned</option>
+                          {drafts.map((group, index) => (
+                            <option value={index} key={index}
+                              disabled={group.member_ids.length >= maxGroup && assignment[student.id] !== index}>
+                              {group.name || `Group ${index + 1}`}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="publish-row">
+            <div>
+              {liveForThisGame.length > 0 && (
+                <strong>{liveForThisGame.length} group{liveForThisGame.length === 1 ? '' : 's'} published for {recommendation.title}</strong>
+              )}
+              <p className="muted">Students see their team and a single Join activity button—never the recommendation rationale.</p>
+            </div>
+            <div className="row">
+              {liveForThisGame.length > 0 && (
+                <button type="button" disabled={saving} onClick={unpublish}>Take down</button>
+              )}
+              <button className="btn-primary btn-lg" type="button" disabled={!canPublish || saving} onClick={publishGroups}>
+                {saving ? 'Publishing…' : liveForThisGame.length ? 'Update published groups' : 'Publish to students'}
+              </button>
+            </div>
+          </div>
+        </>
+      )}
       {notice && <div className="feedback good" role="status">✓ {notice}</div>}
       {error && <div className="feedback try" role="alert">{error}</div>}
     </section>
