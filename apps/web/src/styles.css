@@ -49,8 +49,6 @@
   --focus: #00e5ff;
   --shadow: none;
 }
-:root[data-scale='2'] { --step: 1.2rem; }
-:root[data-scale='3'] { --step: 1.45rem; }
 :root[data-motion='reduced'] { --motion: 0ms; }
 @media (prefers-reduced-motion: reduce) { :root { --motion: 0ms; } }
 
@@ -331,7 +329,8 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .reading-block { background: var(--brand-soft); border-radius: 8px; }
 
 /* Single play / pause control */
-.listen { margin: 16px 0 4px; font-size: 1.05em; padding: .6em 1.4em; border-width: 2px; }
+.listen-wrap { display: flex; justify-content: center; margin: 18px 0 14px; }
+.listen { font-size: 1.1em; padding: .65em 1.8em; border-width: 2px; }
 .listen .listen-ico { font-size: 1.1em; }
 .listen.on { background: var(--brand); color: var(--brand-ink); border-color: var(--brand);
   box-shadow: 0 6px 18px rgba(40,105,221,.3); }
@@ -361,3 +360,18 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
   padding: 20px 24px; margin-bottom: 20px; font-size: 1.12em; line-height: 1.7; }
 .passage-title { font-size: .78em; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 8px; }
 .read-note { font-size: .9em; margin: 6px 0 0; }
+
+/* ---- Quest display tools (icon-only) ---- */
+.quest-head { flex-wrap: wrap; }
+.tools { display: inline-flex; align-items: center; gap: 6px; background: var(--surface-2);
+  border: 1.5px solid var(--line); border-radius: var(--radius-pill); padding: 4px; }
+.tool { min-width: 44px; min-height: 44px; padding: 0; border-color: transparent; background: transparent;
+  display: inline-flex; align-items: center; justify-content: center; }
+.tool[aria-pressed='true'] { background: var(--ink); color: var(--surface); }
+:root[data-contrast='high'] .tool[aria-pressed='true'] { background: var(--brand); color: var(--brand-ink); }
+.tool.zoom { gap: 6px; padding: 0 10px 0 8px; cursor: default; }
+.tool.zoom:hover { transform: none; }
+.zoom-ico { display: inline-flex; }
+.zoom-pct { font-size: .8em; font-weight: 700; min-width: 3.2em; text-align: right; color: var(--muted); }
+.tool.zoom input[type='range'] { width: 110px; accent-color: var(--brand); cursor: pointer; margin: 0; }
+.tool.zoom input[type='range']:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; border-radius: 6px; }

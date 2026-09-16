@@ -1,8 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
-import { AccessibilityBar, PrefsProvider } from './a11y'
-import Bear from './components/Bear'
+import { PrefsProvider } from './a11y'
 import Home from './pages/Home'
 import StudentLayout from './pages/StudentLayout'
 import StudentAssessments from './pages/StudentAssessments'
@@ -19,11 +18,7 @@ function Shell() {
     <div className="shell">
       <a href="#main" className="visually-hidden">Skip to main content</a>
       <header className="topbar">
-        <Link to="/" className="brand">
-          <Bear size={38} mood="happy" />
-          Dori
-        </Link>
-        <AccessibilityBar />
+        <Link to="/" className="brand"><span className="dot" aria-hidden="true" />Dori</Link>
       </header>
       <main id="main">
         <Routes>

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { api, getSession, type AnswerOut, type NextItem, type Skill } from '../api'
-import { usePrefs } from '../a11y'
+import { QuestTools } from '../a11y'
 import Bear from '../components/Bear'
 import Confetti from '../components/Confetti'
 import { buildScript, SpokenText, useNarrator } from '../components/speech'
@@ -14,7 +14,6 @@ export default function StudentQuest() {
   const { skillId = '' } = useParams()
   const nav = useNavigate()
   const session = getSession()
-  const { prefs } = usePrefs()
   const narrator = useNarrator()
 
   const [phase, setPhase] = useState<Phase>('question')
@@ -25,6 +24,7 @@ export default function StudentQuest() {
   const [result, setResult] = useState<AnswerOut | null>(null)
   const [burst, setBurst] = useState(0)
   const [error, setError] = useState<string | null>(null)
+  const [sending, setSending] = useState(false)
   const startedFor = useRef<string | null>(null)
 
   const item = next?.item ?? null
@@ -55,17 +55,11 @@ export default function StudentQuest() {
       .catch((e) => setError(String(e)))
   }, [skillId])
 
-  // Auto-read a new question only when the learner has read-aloud switched on.
-  useEffect(() => {
-    narrator.stop()
-    if (phase === 'question' && prefs.readAloud && script.full) narrator.play(script.full)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [item?.id, phase])
+  // Nothing plays on its own. A new question just makes sure the last one has stopped.
+  useEffect(() => { narrator.stop() /* eslint-disable-line react-hooks/exhaustive-deps */ }, [item?.id, phase])
 
   if (!session || session.role !== 'student') return <RoleGate need="student" />
   if (error) return <p role="alert">Something went wrong. {error}</p>
-
-  const [sending, setSending] = useState(false)
 
   async function submit() {
     if (!next?.item || !picked || sending) return
@@ -126,6 +120,7 @@ export default function StudentQuest() {
             ))}
           </div>
           <span className="chip">{pos} of {total}</span>
+          <QuestTools />
         </div>
 
         {phase === 'question' && (
@@ -149,6 +144,7 @@ export default function StudentQuest() {
             {item.image_alt && <p className="muted picture-note"><em>Picture: {item.image_alt}</em></p>}
 
             {narrator.available && (
+              <div className="listen-wrap">
               <button type="button" className={`listen ${playing ? 'on' : ''}`}
                 aria-pressed={playing} onClick={() => narrator.toggle(script.full)}>
                 <span className="listen-ico" aria-hidden="true">{playing ? '⏸' : '▶'}</span>
@@ -156,9 +152,10 @@ export default function StudentQuest() {
                 <span className="visually-hidden"> the question and answers out loud</span>
                 {playing && <span className="eq" aria-hidden="true"><i /><i /><i /></span>}
               </button>
+              </div>
             )}
             {narrator.available && item.passage && !item.passage_read_aloud_allowed && (
-              <p className="muted read-note">
+              <p className="muted read-note" style={{ textAlign: 'center' }}>
                 This one is a reading quest, so the story stays for your eyes. Dori will read the
                 question and the answers.
               </p>
