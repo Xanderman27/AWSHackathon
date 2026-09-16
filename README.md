@@ -34,7 +34,7 @@ Open http://localhost:5173. The API runs on port 8010. Pick a role on the home p
 ## What works today
 
 - Landing page: animated, states who it is for, and links the frameworks the product follows.
-- Student portal: Quests (adaptive assessments) and Games (free play, placeholders for now).
+- Student portal: a Duolingo-style practice path (3D step nodes per skill, earned from the same mastery estimate the teacher sees, never shown as a number), plus Quests (assigned adaptive assessments) and Games tabs.
 - Student quest: adaptive item selection, prerequisite routing, resume, reading passages that are not read aloud so the item still measures reading.
 - One play/pause button per question that highlights each word as it is spoken, and light confetti on a correct answer.
 - Dori appears beside the question and delivers the hint in a speech bubble.

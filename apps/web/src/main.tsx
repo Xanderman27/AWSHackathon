@@ -5,6 +5,7 @@ import { PrefsProvider } from './a11y'
 import Home from './pages/Home'
 import StudentLayout from './pages/StudentLayout'
 import StudentAssessments from './pages/StudentAssessments'
+import StudentPath from './pages/StudentPath'
 import StudentGames from './pages/StudentGames'
 import BeatBuilder from './pages/BeatBuilder'
 import StudentQuest from './pages/StudentQuest'
@@ -25,7 +26,8 @@ function Shell() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/student" element={<StudentLayout />}>
-            <Route index element={<StudentAssessments />} />
+            <Route index element={<StudentPath />} />
+            <Route path="quests" element={<StudentAssessments />} />
             <Route path="games" element={<StudentGames />} />
             <Route path="games/beat-together/:activityId" element={<BeatBuilder />} />
           </Route>
