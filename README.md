@@ -25,7 +25,13 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173. The API runs on port 8010. Pick a role on the home page; the demo uses synthetic accounts (Sam is `student-01`, the teacher owns class 4A, `parent-01` is linked to Sam).
+Open http://localhost:5173. The API runs on port 8010. Sign in with a demo account (synthetic data, demo-only plaintext credentials; Cognito is the production plan):
+
+| Role | Username | Password |
+|---|---|---|
+| Student (Sam) | `sam` | `otter123` |
+| Teacher (Ms. Rivera) | `rivera` | `teach123` |
+| Parent (Jordan, linked to Sam) | `jordan` | `family123` |
 
 - `python scripts/build_items.py` regenerates the item bank from the authored list.
 - `POST http://localhost:8010/demo/reset` restores the seeded state.
@@ -33,14 +39,14 @@ Open http://localhost:5173. The API runs on port 8010. Pick a role on the home p
 
 ## What works today
 
-- Landing page: animated, states who it is for, and links the frameworks the product follows.
+- Landing page: a simple Duolingo-style login. Students use the login their teacher set; teachers and parents have their own.
 - Student portal: a Duolingo-style practice path (3D step nodes per skill, earned from the same mastery estimate the teacher sees, never shown as a number), plus Quests (assigned adaptive assessments) and Games tabs.
 - Student quest: adaptive item selection, prerequisite routing, resume, reading passages that are not read aloud so the item still measures reading.
 - One play/pause button per question that highlights each word as it is spoken, and light confetti on a correct answer.
 - Dori appears beside the question and delivers the hint in a speech bubble.
 - Accessibility bar: read-aloud (browser speech engine as a stand-in for Polly), high contrast, three text sizes, reduced motion, keyboard focus.
-- Teacher dashboard: class counts in neutral language, learner table with band and confidence, per-student item evidence with route reasons.
-- Parent view: linked children only, a child-only mastery gauge, teacher-approved next steps, and a rights library that opens in a popup.
+- Teacher dashboard: class counts, classwide statistics with per-subject averages, learner table with band and confidence, per-student item evidence with route reasons.
+- Parent view: a Duolingo-profile-style page for the linked child — statistics, calculated achievements, group activities, mastery gauge and outcomes, teacher-approved next steps, and a rights library in a popup.
 - Messages: a corner panel on the parent and teacher views. A parent can only reach their child's teacher; a teacher can only reach families in their own class. The server decides the pairing, not the client.
 
 ## Layout

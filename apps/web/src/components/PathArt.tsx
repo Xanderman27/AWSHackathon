@@ -100,3 +100,41 @@ export const TreasureMapIcon = (p: P) => (
     <circle cx="14" cy="33" r="2" fill="#57cf78" stroke="#2b8a3e" strokeWidth="1.2" />
   </S>
 )
+
+export const StarIcon = (p: P) => (
+  <S {...p}>
+    <path d="M24 4 l6 12.5 13.5 2 -9.8 9.5 2.3 13.5 -12 -6.4 -12 6.4 2.3 -13.5 -9.8 -9.5 13.5 -2 Z"
+      fill="#ffc800" stroke="#e0a500" strokeWidth="2.4" strokeLinejoin="round" />
+  </S>
+)
+
+export const BoltIcon = (p: P) => (
+  <S {...p}>
+    <path d="M27 3 L10 27 h10 L21 45 L38 20 h-10 Z" fill="#ffb020" stroke="#e8590c" strokeWidth="2.4" strokeLinejoin="round" />
+  </S>
+)
+
+export const FlagIcon = (p: P) => (
+  <S {...p}>
+    <rect x="9" y="4" width="3.6" height="40" rx="1.8" fill="#8a5a2b" stroke="#5e3b17" strokeWidth="1.6" />
+    <path d="M12.6 7 h24 l-6 7 6 7 h-24 Z" fill="#57cf78" stroke="#2b8a3e" strokeWidth="2.2" strokeLinejoin="round" />
+  </S>
+)
+
+export const TeamIcon = (p: P) => (
+  <S {...p}>
+    <circle cx="17" cy="17" r="8" fill="#ffb997" stroke="#d9480f" strokeWidth="2.2" />
+    <path d="M5 41 c0 -9 24 -9 24 0 Z" fill="#4aa8ff" stroke="#1971c2" strokeWidth="2.2" strokeLinejoin="round" />
+    <circle cx="33" cy="15" r="6.6" fill="#ffd8be" stroke="#d9480f" strokeWidth="2.2" />
+    <path d="M25 38 c0 -8 18 -8 18 0 Z" fill="#57cf78" stroke="#2b8a3e" strokeWidth="2.2" strokeLinejoin="round" />
+  </S>
+)
+
+export const BulbIcon = (p: P) => (
+  <S {...p}>
+    <path d="M24 4 a13 13 0 0 1 7 24 c-2 1.5 -2 4 -2 6 h-10 c0 -2 0 -4.5 -2 -6 a13 13 0 0 1 7 -24 Z"
+      fill="#ffe066" stroke="#e0a500" strokeWidth="2.4" strokeLinejoin="round" />
+    <rect x="19" y="36" width="10" height="4" rx="2" fill="#8d99ae" />
+    <rect x="20" y="41" width="8" height="3.4" rx="1.7" fill="#8d99ae" />
+  </S>
+)

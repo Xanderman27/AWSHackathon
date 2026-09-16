@@ -5,6 +5,7 @@ export type Role = 'student' | 'teacher' | 'parent'
 export interface Session {
   role: Role
   userId: string
+  name?: string
 }
 
 const KEY = 'alp.session'
@@ -37,6 +38,19 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   const res = await fetch(`/api${path}`, { ...init, headers })
   if (!res.ok) throw new Error(`${res.status} ${await res.text()}`)
   return res.json() as Promise<T>
+}
+
+export async function login(username: string, password: string): Promise<Session> {
+  const res = await fetch('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
+  })
+  if (!res.ok) throw new Error(res.status === 401 ? 'bad-credentials' : `${res.status}`)
+  const d = (await res.json()) as { role: Role; user_id: string; display_name: string }
+  const s: Session = { role: d.role, userId: d.user_id, name: d.display_name }
+  setSession(s)
+  return s
 }
 
 export interface Choice { id: string; text: string }

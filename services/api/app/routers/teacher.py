@@ -41,7 +41,41 @@ def class_summary(actor: Actor = Depends(require_role("teacher"))):
             })
     counts = {"needs_more_evidence": sum(1 for r in rows if r["confidence"] == "low"),
               "ready_for_extension": sum(1 for r in rows if r["band"] == "Ready for extension")}
-    return {"class_id": sorted(actor.class_ids)[0], "students": students, "mastery": rows, "counts": counts}
+    # Classwide statistics (neutral, aggregate; no rankings).
+    my_ids = {s["id"] for s in students}
+    responses = 0
+    hints = 0
+    quests_done = 0
+    active = set()
+    for a in store.read("attempts"):
+        if a["student_id"] not in my_ids:
+            continue
+        responses += len(a["responses"])
+        hints += sum(1 for r in a["responses"] if r.get("hint_used"))
+        if a.get("completed"):
+            quests_done += 1
+        if a["responses"]:
+            active.add(a["student_id"])
+    thresholds = [0.15, 0.35, 0.55, 0.75, 0.92]
+    stars = sum(sum(1 for t in thresholds if m["estimate"] >= t)
+                for m in mastery if m["student_id"] in my_ids)
+    ests = [m["estimate"] for m in mastery if m["student_id"] in my_ids]
+    by_subject: dict = {}
+    for m in mastery:
+        if m["student_id"] not in my_ids:
+            continue
+        subj = skills[m["skill_id"]]["subject"]
+        by_subject.setdefault(subj, []).append(m["estimate"])
+    subject_stats = [{"subject": k, "learners": len(v), "avg": round(sum(v) / len(v), 2)}
+                     for k, v in sorted(by_subject.items())]
+    class_stats = {
+        "checkins": responses, "quests_done": quests_done, "stars": stars, "hints": hints,
+        "active_learners": len(active | {m["student_id"] for m in mastery if m["student_id"] in my_ids}),
+        "avg_estimate": round(sum(ests) / len(ests), 2) if ests else None,
+        "subjects": subject_stats,
+    }
+    return {"class_id": sorted(actor.class_ids)[0], "students": students, "mastery": rows,
+            "counts": counts, "class_stats": class_stats}
 
 
 @router.get("/students/{student_id}")
