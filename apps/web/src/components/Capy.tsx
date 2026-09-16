@@ -46,7 +46,6 @@ export default function Capy({ mood = 'happy', size = 72, float = false, classNa
         <circle className="cp-earin" cx="156" cy="27" r="6" fill="#7c5433" />
       </g>
       <rect className="cp-head" x="46" y="18" width="128" height="110" rx="46" fill="url(#cpgHead)" strokeWidth="5" />
-      <ellipse className="cp-sheen" cx="84" cy="42" rx="34" ry="15" fill="#ffffff" opacity="0.26" />
       <g className={m === 'happy' ? 'cp-mouthg' : ''}>
         <path className="cp-muzzle" d="M62 92 h96 a30 30 0 0 1 -30 34 h-36 a30 30 0 0 1 -30 -34 z" fill="url(#cpgMuzzle)" />
         <ellipse className="cp-nose" cx="100" cy="104" rx="4.6" ry="6" fill="#6d4a2a" />

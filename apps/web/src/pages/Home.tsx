@@ -75,8 +75,9 @@ export default function Home() {
           <span className="eyebrow" style={{ marginBottom: 0 }}>For students with IEPs &amp; 504 plans</span>
           <h1 className="land-h1">Learning that <span className="underline">listens</span> to every kid.</h1>
           <p className="lede muted" style={{ margin: 0 }}>
-            Short, friendly check-ins for students. Clear next steps for teachers. Plain-language
-            progress for families, with Capy alongside every step of the path.
+            Inclusive by design: students of every ability learn, play, and collaborate together.
+            Parents and teachers stay in the loop, so the right support reaches each child at the
+            right moment.
           </p>
           <div className="land-ctas">
             <button type="button" className="btn-primary land-cta" onClick={openLogin}>Get started</button>
