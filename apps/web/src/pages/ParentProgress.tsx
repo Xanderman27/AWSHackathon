@@ -127,7 +127,7 @@ export default function ParentProgress() {
         <Avatar photo={student.photo} spec={student.avatar} size={76} className="profile-avatar" />
         <div>
           <h2 style={{ marginBottom: 2 }}>{student.display_name}</h2>
-          <p className="muted" style={{ margin: 0 }}>Grade {student.grade} · Only {student.display_name}'s own progress. No class ranks, no comparisons.</p>
+          <p className="muted" style={{ margin: 0 }}>Grade {student.grade}</p>
         </div>
       </div>
 

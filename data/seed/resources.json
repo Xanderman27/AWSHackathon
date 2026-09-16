@@ -7,7 +7,7 @@
     "source_org": "U.S. Department of Education, Office of Special Education Programs",
     "source_name": "IDEA: Individualized Education Program (IEP)",
     "source_url": "https://sites.ed.gov/idea/regs/b/d/300.320",
-    "citation": "34 CFR §300.320",
+    "citation": "34 CFR \u00a7300.320",
     "reading_minutes": 4,
     "key_points": [
       "Every child found eligible for special education under IDEA must have a written IEP.",
@@ -112,7 +112,7 @@
     "source_org": "U.S. Department of Education, Office of Special Education Programs",
     "source_name": "IDEA: Content of the IEP",
     "source_url": "https://sites.ed.gov/idea/regs/b/d/300.320",
-    "citation": "34 CFR §300.320(a)(3)",
+    "citation": "34 CFR \u00a7300.320(a)(3)",
     "reading_minutes": 3,
     "key_points": [
       "The IEP must state how progress will be measured and when periodic reports will be given to you.",
@@ -162,7 +162,7 @@
     "source_org": "U.S. Department of Education, Student Privacy Policy Office",
     "source_name": "Family Educational Rights and Privacy Act (FERPA)",
     "source_url": "https://studentprivacy.ed.gov/",
-    "citation": "20 U.S.C. §1232g; 34 CFR Part 99",
+    "citation": "20 U.S.C. \u00a71232g; 34 CFR Part 99",
     "reading_minutes": 4,
     "key_points": [
       "The school must let you inspect and review your child's education records within 45 days of your request.",
@@ -212,7 +212,7 @@
     "source_org": "U.S. Department of Education, Office of Special Education and Rehabilitative Services",
     "source_name": "IDEA: Authority of School Personnel (discipline)",
     "source_url": "https://sites.ed.gov/idea/idea-files/dcl-implementation-of-idea-discipline-provisions",
-    "citation": "34 CFR §300.530",
+    "citation": "34 CFR \u00a7300.530",
     "reading_minutes": 4,
     "key_points": [
       "A school may remove a child to another setting or suspend for up to 10 consecutive school days, the same as it would for a child without a disability.",
@@ -260,7 +260,7 @@
     "source_org": "U.S. Department of Education, Office of Special Education Programs",
     "source_name": "IDEA: Procedural Safeguards",
     "source_url": "https://sites.ed.gov/idea/statuteregulations",
-    "citation": "34 CFR §§300.502–300.507",
+    "citation": "34 CFR \u00a7\u00a7300.502\u2013300.507",
     "reading_minutes": 5,
     "key_points": [
       "The school must give you prior written notice before it proposes or refuses to change identification, evaluation, placement, or services.",
@@ -346,6 +346,99 @@
           "What is the one thing you would most like to see change?",
           "How will we know in six weeks whether this is working?",
           "What should we do at home, and what should we not worry about?"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "district-sped-office",
+    "category": "District resources",
+    "title": "Your district's special education office",
+    "summary": "Every district has an office responsible for special education. Here is what they handle and how to reach yours.",
+    "source_org": "Center for Parent Information and Resources",
+    "source_name": "Find Your Parent Center",
+    "source_url": "https://www.parentcenterhub.org/find-your-center/",
+    "citation": "IDEA Part B, local education agency duties",
+    "reading_minutes": 2,
+    "key_points": [
+      "The district special education office coordinates evaluations, IEP meetings, and services across schools.",
+      "You can contact them directly; you do not have to go through the school first.",
+      "Your state's Parent Center can help you find the right contact if the district site is unclear."
+    ],
+    "sections": [
+      {
+        "heading": "What they handle",
+        "paragraphs": [
+          "Evaluations and eligibility decisions, IEP and Section 504 processes, related services like speech or occupational therapy, transportation, and disputes that go beyond one school building.",
+          "In the demo this office is a placeholder. A real deployment would show your district's actual contacts here, set up by district staff."
+        ]
+      },
+      {
+        "heading": "How to reach yours",
+        "paragraphs": [
+          "Search your district's website for special education, student services, or exceptional children. The office usually lists a director, a phone number, and a records contact.",
+          "If you cannot find it, your state Parent Training and Information Center will know, and their help is free."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "district-request-evaluation",
+    "category": "District resources",
+    "title": "Requesting an evaluation from your district",
+    "summary": "How to ask the district, in writing, to evaluate your child for special education, and the clock that starts when you do.",
+    "source_org": "U.S. Department of Education, Office of Special Education Programs",
+    "source_name": "IDEA: Initial evaluations",
+    "source_url": "https://sites.ed.gov/idea/regs/b/d/300.301",
+    "citation": "34 CFR \u00a7300.301",
+    "reading_minutes": 3,
+    "key_points": [
+      "You can request an initial evaluation at any time, in writing, to the school or district.",
+      "Once the district has your consent, the evaluation generally must finish within 60 days, unless your state sets its own timeline.",
+      "Keep a dated copy of every request and reply."
+    ],
+    "sections": [
+      {
+        "heading": "What to write",
+        "paragraphs": [
+          "A short letter or email works: your child's name and school, that you are requesting an initial special education evaluation under IDEA, why you are concerned, and the date. Ask for a written response."
+        ]
+      },
+      {
+        "heading": "What happens next",
+        "paragraphs": [
+          "The district must respond within a reasonable time, either seeking your consent to evaluate or giving you prior written notice explaining a refusal, which you can challenge.",
+          "After consent, the 60-day clock (or your state's timeline) runs. The evaluation must cover all areas of suspected disability."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "district-safeguards-handbook",
+    "category": "District resources",
+    "title": "The procedural safeguards notice",
+    "summary": "The rights handbook your district must give you, what is in it, and when you are entitled to a copy.",
+    "source_org": "U.S. Department of Education, Office of Special Education Programs",
+    "source_name": "IDEA: Procedural safeguards notice",
+    "source_url": "https://sites.ed.gov/idea/regs/b/e/300.504",
+    "citation": "34 CFR \u00a7300.504",
+    "reading_minutes": 2,
+    "key_points": [
+      "Districts must give you the full notice of procedural safeguards at least once a year.",
+      "You are also entitled to it at referral, at your request, on the first complaint of the year, and when discipline changes a placement.",
+      "It explains evaluations, consent, records, mediation, complaints, and hearings in one document."
+    ],
+    "sections": [
+      {
+        "heading": "When you get it",
+        "paragraphs": [
+          "Once per year automatically, plus: when your child is first referred or you request an evaluation, when you file your first state complaint or due process complaint of the year, when discipline results in a change of placement, and whenever you ask."
+        ]
+      },
+      {
+        "heading": "How to use it",
+        "paragraphs": [
+          "Keep the current copy with your child's records. When a disagreement starts, this is the document that lists your options and deadlines, in your district's own words."
         ]
       }
     ]

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { api, getSession, type AnswerOut, type NextItem, type Skill } from '../api'
 import { QuestTools } from '../a11y'
 import Capy from '../components/Capy'
@@ -12,6 +12,9 @@ const LETTERS = ['A', 'B', 'C', 'D']
 
 export default function StudentQuest() {
   const { skillId = '' } = useParams()
+  const [params] = useSearchParams()
+  // When the quiz was opened as a subject check-in, finishing it unlocks that subject's path.
+  const benchSubject = params.get('bench')
   const nav = useNavigate()
   const session = getSession()
   const narrator = useNarrator()
@@ -26,6 +29,7 @@ export default function StudentQuest() {
   const [error, setError] = useState<string | null>(null)
   const [sending, setSending] = useState(false)
   const startedFor = useRef<string | null>(null)
+  const benchMarked = useRef(false)
 
   const item = next?.item ?? null
 
@@ -33,10 +37,8 @@ export default function StudentQuest() {
   const script = useMemo(() => {
     if (!item) return { full: '', tokens: [] }
     // The letter is spoken but drawn as a badge, so it gets a region that is never rendered.
-    // A reading passage is only spoken when the item allows it: reading the text aloud would
-    // change what a reading-comprehension item measures (PRD FR-07).
     return buildScript([
-      ...(item.passage && item.passage_read_aloud_allowed ? [{ region: 'passage', text: item.passage }] : []),
+      ...(item.passage ? [{ region: 'passage', text: item.passage }] : []),
       { region: 'prompt', text: item.prompt },
       ...item.choices.flatMap((c, i) => [
         { region: `key${i}`, text: LETTERS[i] },
@@ -57,6 +59,13 @@ export default function StudentQuest() {
 
   // Nothing plays on its own. A new question just makes sure the last one has stopped.
   useEffect(() => { narrator.stop() /* eslint-disable-line react-hooks/exhaustive-deps */ }, [item?.id, phase])
+
+  // Finishing a check-in unlocks the subject's path (idempotent on the server).
+  useEffect(() => {
+    if (phase !== 'done' || !benchSubject || benchMarked.current) return
+    benchMarked.current = true
+    api(`/student/benchmarks/${benchSubject}`, { method: 'POST' }).catch(() => {})
+  }, [phase, benchSubject])
 
   if (!session || session.role !== 'student') return <RoleGate need="student" />
   if (error) return <p role="alert">Something went wrong. {error}</p>
@@ -92,13 +101,19 @@ export default function StudentQuest() {
 
   if (phase === 'done' && next) {
     return (
-      <div className="page center student-theme">
+      <div className="page center student-theme quest-zoom">
         <Confetti burst={burst} />
         <div className="card celebrate">
           <Capy size={126} mood="cheer" float />
-          <h1 style={{ marginTop: 12 }}>You did it!</h1>
-          <p style={{ fontSize: '1.2em' }}>{next.summary}</p>
-          <button type="button" className="btn-primary btn-lg" onClick={leave}>Back to my path</button>
+          <h1 style={{ marginTop: 12 }}>{benchSubject ? 'Awesome check-in!' : 'You did it!'}</h1>
+          <p style={{ fontSize: '1.2em' }}>
+            {benchSubject
+              ? 'Capy found the perfect starting spot for you. Your path is ready!'
+              : next.summary}
+          </p>
+          <button type="button" className="btn-primary btn-lg" onClick={leave}>
+            {benchSubject ? 'See my path' : 'Back to my path'}
+          </button>
         </div>
       </div>
     )
@@ -109,7 +124,7 @@ export default function StudentQuest() {
   const playing = narrator.state === 'playing'
 
   return (
-    <div className="page center student-theme">
+    <div className="page center student-theme quest-zoom">
       <Confetti burst={burst} />
       <div className="card quest-card-main">
         <div className="quest-head">
@@ -128,9 +143,7 @@ export default function StudentQuest() {
             {item.passage && (
               <div className="passage">
                 <h2 className="passage-title">Read this first</h2>
-                {item.passage_read_aloud_allowed
-                  ? <SpokenText tokens={script.tokens} region="passage" charIndex={narrator.charIndex} playing={playing} />
-                  : <p style={{ margin: 0 }}>{item.passage}</p>}
+                <SpokenText tokens={script.tokens} region="passage" charIndex={narrator.charIndex} playing={playing} />
               </div>
             )}
 
@@ -153,12 +166,6 @@ export default function StudentQuest() {
                 {playing && <span className="eq" aria-hidden="true"><i /><i /><i /></span>}
               </button>
               </div>
-            )}
-            {narrator.available && item.passage && !item.passage_read_aloud_allowed && (
-              <p className="muted read-note" style={{ textAlign: 'center' }}>
-                This one is a reading quiz, so the story stays for your eyes. Capy will read the
-                question and the answers.
-              </p>
             )}
 
             <div className="choices" role="group" aria-labelledby="prompt">

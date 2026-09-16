@@ -49,7 +49,9 @@ function Shell() {
             {session.role === 'student' && stars !== null && (
               <span className="stars-chip stars-mini" aria-label={`${stars} stars earned`}>⭐ {stars}</span>
             )}
-            <span className="muted" style={{ fontWeight: 600, fontSize: '.92em' }}>{session.name ?? session.userId}</span>
+            {session.role !== 'student' && (
+              <span className="muted" style={{ fontWeight: 600, fontSize: '.92em' }}>{session.name ?? session.userId}</span>
+            )}
             <button type="button" className="logout" onClick={() => confirmRef.current?.showModal()}>Log out</button>
           </div>
         )}
@@ -79,7 +81,7 @@ function Shell() {
       </main>
       <dialog ref={confirmRef} className="confirm-dialog" aria-labelledby="logout-q">
         <h2 id="logout-q" style={{ fontSize: '1.15em' }}>Are you sure you want to log out?</h2>
-        <div className="row" style={{ justifyContent: 'flex-end', marginTop: 14 }}>
+        <div className="row" style={{ justifyContent: 'center', marginTop: 14 }}>
           <button type="button" onClick={() => confirmRef.current?.close()}>Stay logged in</button>
           <button type="button" className="btn-primary"
             onClick={() => { confirmRef.current?.close(); setSession(null); nav('/') }}>Log out</button>

@@ -14,7 +14,7 @@ interface ResourceDoc extends ResourceCard { sections: Section[] }
 
 const ICON: Record<string, string> = {
   'Special education': '🎓', 'Progress and goals': '📈', 'Privacy and records': '🔒',
-  Discipline: '🛡️', 'Your rights': '⚖️',
+  Discipline: '🛡️', 'Your rights': '⚖️', 'District resources': '🏫',
 }
 const DISCLAIMER = 'General information from official sources, not legal advice. For your own situation, contact your state parent center.'
 
