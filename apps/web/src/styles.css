@@ -101,7 +101,8 @@ button[aria-pressed='true'] { background: var(--ink); color: var(--surface); bor
 .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 .between { justify-content: space-between; }
 .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } .grid-2 > * { grid-column: auto !important; } }
 
 /* Chips and stat tiles */
 .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 8px; font-size: 0.85em; font-weight: 600; background: var(--brand-soft); color: var(--brand-deep); }
