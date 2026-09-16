@@ -156,12 +156,20 @@ def _profile_extras(student_id: str, skills: dict) -> dict:
         if a.get("completed"):
             quests_done += 1
 
-    stars = 0
+    # Stars are growth: quizzes finished after the subject check-in (matches the child's path).
+    benchmarks = {b["subject"]: b["at"] for b in store.read("benchmarks") if b["student_id"] == student_id}
+    per_skill_done: dict = {}
+    for a in store.read("attempts"):
+        if a["student_id"] == student_id and a.get("completed"):
+            sk = skills.get(a["skill_id"])
+            since = benchmarks.get(sk["subject"]) if sk else None
+            if since and a.get("started_at", "") > since:
+                per_skill_done[a["skill_id"]] = per_skill_done.get(a["skill_id"], 0) + 1
+    stars = sum(min(5, n) for n in per_skill_done.values())
     subjects = set()
     for m in store.read("mastery"):
         if m["student_id"] != student_id:
             continue
-        stars += sum(1 for t in STEP_THRESHOLDS if m["estimate"] >= t)
         sk = skills.get(m["skill_id"])
         if sk and m.get("evidence_count", 0) > 0:
             subjects.add(sk["subject"])

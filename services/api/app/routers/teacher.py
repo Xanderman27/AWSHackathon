@@ -68,9 +68,19 @@ def class_summary(actor: Actor = Depends(require_role("teacher"))):
             quests_done += 1
         if a["responses"]:
             active.add(a["student_id"])
-    thresholds = [0.15, 0.35, 0.55, 0.75, 0.92]
-    stars = sum(sum(1 for t in thresholds if m["estimate"] >= t)
-                for m in mastery if m["student_id"] in my_ids)
+    # Stars are growth: quizzes finished after each learner's subject check-in.
+    benchmarks: dict = {}
+    for b in store.read("benchmarks"):
+        benchmarks[(b["student_id"], b["subject"])] = b["at"]
+    per_pair: dict = {}
+    for a in attempts:
+        if a["student_id"] in my_ids and a.get("completed"):
+            sk = skills.get(a["skill_id"])
+            since = benchmarks.get((a["student_id"], sk["subject"])) if sk else None
+            if since and a.get("started_at", "") > since:
+                key = (a["student_id"], a["skill_id"])
+                per_pair[key] = per_pair.get(key, 0) + 1
+    stars = sum(min(5, n) for n in per_pair.values())
     ests = [m["estimate"] for m in mastery if m["student_id"] in my_ids]
     by_subject: dict = {}
     for m in mastery:

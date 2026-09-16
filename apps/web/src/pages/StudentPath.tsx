@@ -5,6 +5,7 @@
 import { useEffect, useMemo, useState, type ComponentType } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../api'
+import Capy from '../components/Capy'
 import {
   AbacusIcon, BookIcon, CastleIcon, FlaskIcon, GlobeIcon, PencilIcon,
   PirateFlagIcon, RocketIcon, ShapesIcon, TreasureMapIcon,
@@ -33,10 +34,16 @@ export default function StudentPath() {
   const [tracks, setTracks] = useState<Track[]>([])
   const [subject, setSubject] = useState<string>('english')
   const [err, setErr] = useState<string | null>(null)
+  // A subject's path stays hidden until the learner does a short check-in for it. The
+  // check-in only tunes which questions appear afterwards — the path itself always
+  // starts at zero, because steps are growth, not a head start.
+  const [benchmarks, setBenchmarks] = useState<Record<string, string | null>>({})
+  const [benchSkill, setBenchSkill] = useState<Record<string, string>>({})
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    api<{ tracks: Track[]; stars: number }>('/student/path')
-      .then((d) => setTracks(d.tracks))
+    api<{ tracks: Track[]; stars: number; benchmarks: Record<string, string | null>; bench_skill: Record<string, string> }>('/student/path')
+      .then((d) => { setTracks(d.tracks); setBenchmarks(d.benchmarks); setBenchSkill(d.bench_skill); setLoaded(true) })
       .catch((e) => setErr(String(e)))
   }, [])
 
@@ -54,6 +61,7 @@ export default function StudentPath() {
   const meta = SUBJECTS.find((s) => s.id === subject) ?? SUBJECTS[0]
   const mine = bySubject.get(subject) ?? []
   const [DecorA, DecorB] = meta.decor
+  const gated = loaded && mine.length > 0 && !benchmarks[subject]
 
   return (
     <div className="stack">
@@ -72,7 +80,9 @@ export default function StudentPath() {
                 <span className="subj-ico"><Icon size={34} /></span>
                 <span className="subj-text">
                   {s.label}
-                  <small>{total === 0 ? 'Coming soon' : `${done} of ${total} steps`}</small>
+                  <small>{total === 0 ? 'Coming soon'
+                    : !benchmarks[s.id] && loaded ? 'Take your check-in!'
+                    : `${done} of ${total} steps`}</small>
                 </span>
               </button>
             )
@@ -87,7 +97,24 @@ export default function StudentPath() {
               <p className="muted" style={{ margin: 0 }}>New {meta.label} adventures are on the way.</p>
             </div>
           )}
-          {mine.map((t) => {
+          {gated && (
+            <div className={`card celebrate bench-cta tinted-${meta.tone === 'p' ? 'cream' : meta.tone === 'b' ? 'sky' : 'mint'} pop`}>
+              <Capy size={132} mood="cheer" float />
+              <h2 style={{ marginTop: 10 }}>Ready for {meta.label}?</h2>
+              <p className="bench-copy">
+                Do a quick check-in with Capy first! It's short, there are no grades, and it
+                helps us pick the just-right questions for you.
+              </p>
+              <button type="button" className="btn-primary btn-lg bench-go"
+                onClick={() => nav(`/student/quest/${benchSkill[subject]}?bench=${subject}`)}>
+                Start my check-in ✨
+              </button>
+              <p className="muted" style={{ margin: '10px 0 0', fontSize: '.9em' }}>
+                Your path appears as soon as you finish!
+              </p>
+            </div>
+          )}
+          {!gated && mine.map((t) => {
             const complete = t.steps_done >= t.total_steps
             return (
               <section key={t.skill_id} className="unit">
