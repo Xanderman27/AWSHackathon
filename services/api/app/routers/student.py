@@ -21,14 +21,18 @@ STEP_THRESHOLDS = [0.15, 0.35, 0.55, 0.75, 0.92]
 @router.get("/path")
 def path(actor: Actor = Depends(require_role("student"))):
     mastery = {m["skill_id"]: m for m in store.read("mastery") if m["student_id"] == actor.user_id}
-    skills = sorted(store.read("skills"), key=lambda s: (s["grade"], s["subject"]))
+    order = ["english", "science", "math", "history", "geography"]
+    skills = sorted(store.read("skills"),
+                    key=lambda s: (order.index(s["subject"]) if s["subject"] in order else 99, s["grade"]))
     tracks = []
-    for i, sk in enumerate(skills):
+    per_subject: dict[str, int] = {}
+    for sk in skills:
         est = mastery.get(sk["id"], {}).get("estimate", 0.0)
         steps = sum(1 for t in STEP_THRESHOLDS if est >= t)
+        per_subject[sk["subject"]] = per_subject.get(sk["subject"], 0) + 1
         tracks.append({
             "skill_id": sk["id"],
-            "unit": i + 1,
+            "unit": per_subject[sk["subject"]],
             "title": sk["child_name"],
             "subject": sk["subject"],
             "steps_done": steps,
