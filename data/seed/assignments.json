@@ -1,0 +1,18 @@
+[
+  {
+    "id": "assign-0001",
+    "class_id": "class-4a",
+    "skill_id": "fraction_equivalence",
+    "student_ids": null,
+    "assigned_by": "teacher-01",
+    "at": "2026-09-15T14:00:00+00:00"
+  },
+  {
+    "id": "assign-0002",
+    "class_id": "class-4a",
+    "skill_id": "main_idea",
+    "student_ids": null,
+    "assigned_by": "teacher-01",
+    "at": "2026-09-15T14:00:00+00:00"
+  }
+]

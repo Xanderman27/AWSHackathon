@@ -937,3 +937,20 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .sbar-val { font-size: .85em; color: var(--muted); font-weight: 600; white-space: nowrap; }
 :root[data-contrast='high'] .ach-badge { box-shadow: none; border: 2px solid var(--line); }
 :root[data-contrast='high'] .profile-avatar { background: var(--brand); color: var(--brand-ink); box-shadow: none; }
+
+/* ---- Teacher activities + tabs ---- */
+.pick-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.pick { min-height: 44px; padding: .35em 1em; font-size: .92em; border-bottom-width: 4px; border-radius: 14px; }
+.pick[aria-pressed='true'] { background: var(--duo-green); color: #fff; border-color: var(--duo-green-edge); }
+.assign-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.assign-list li { display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 10px 14px; border: 1.5px solid var(--line); border-radius: 12px; background: var(--surface-2); }
+.table-note { font-size: .85em; margin: 12px 0 0; }
+.sbar-track.stacked { display: flex; height: 26px; border-radius: 999px; overflow: hidden; }
+.sbar-track.stacked i { display: flex; align-items: center; justify-content: center; height: 100%;
+  color: #fff; font-size: .78em; font-weight: 800; min-width: 22px; }
+.confirm-dialog { border: 2px solid var(--line); border-bottom-width: 4px; border-radius: var(--radius);
+  padding: 22px 26px; max-width: 380px; background: var(--surface); color: var(--ink); }
+.confirm-dialog::backdrop { background: rgba(11,18,28,.45); }
+:root[data-contrast='high'] .pick[aria-pressed='true'] { background: var(--brand); color: var(--brand-ink); }
+:root[data-contrast='high'] .sbar-track.stacked i { color: #000; }

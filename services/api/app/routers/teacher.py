@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends
+import uuid
+
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
+
+from ..models import now
 
 from ..auth import Actor, require_role, require_student_access
 from ..mastery import bkt
@@ -19,6 +24,11 @@ def class_summary(actor: Actor = Depends(require_role("teacher"))):
     mastery = store.read("mastery")
     attempts = store.read("attempts")
     skills = {s["id"]: s for s in store.read("skills")}
+    quests_done_map: dict = {}
+    for a in attempts:
+        if a.get("completed"):
+            key = (a["student_id"], a["skill_id"])
+            quests_done_map[key] = quests_done_map.get(key, 0) + 1
     rows = []
     for s in students:
         for m in mastery:
@@ -38,6 +48,7 @@ def class_summary(actor: Actor = Depends(require_role("teacher"))):
                 "estimate": round(m["estimate"], 2),
                 "confidence": bkt.confidence(m.get("history", []), flags),
                 "evidence_count": m.get("evidence_count", 0),
+                "quests_done": quests_done_map.get((s["id"], m["skill_id"]), 0),
             })
     counts = {"needs_more_evidence": sum(1 for r in rows if r["confidence"] == "low"),
               "ready_for_extension": sum(1 for r in rows if r["band"] == "Ready for extension")}
@@ -66,8 +77,13 @@ def class_summary(actor: Actor = Depends(require_role("teacher"))):
             continue
         subj = skills[m["skill_id"]]["subject"]
         by_subject.setdefault(subj, []).append(m["estimate"])
-    subject_stats = [{"subject": k, "learners": len(v), "avg": round(sum(v) / len(v), 2)}
-                     for k, v in sorted(by_subject.items())]
+    # Proficiency buckets follow the learner-model bands (below 0.40 / 0.40-0.80 / above 0.80).
+    subject_stats = [{
+        "subject": k, "learners": len(v), "avg": round(sum(v) / len(v), 2),
+        "below": sum(1 for e in v if e < 0.40),
+        "proficient": sum(1 for e in v if 0.40 <= e <= 0.80),
+        "above": sum(1 for e in v if e > 0.80),
+    } for k, v in sorted(by_subject.items())]
     class_stats = {
         "checkins": responses, "quests_done": quests_done, "stars": stars, "hints": hints,
         "active_learners": len(active | {m["student_id"] for m in mastery if m["student_id"] in my_ids}),
@@ -104,3 +120,67 @@ def _correct_flags(attempts, student_id, skill_id):
         for r in a["responses"]:
             flags.append(r["correct"])
     return flags
+
+
+# ---- Quest assignments (PRD FR-02) ----
+
+class AssignIn(BaseModel):
+    skill_id: str
+    student_ids: list[str] | None = None  # None means the whole class
+
+
+def _assignment_view(a: dict, skills: dict, students: dict) -> dict:
+    sk = skills.get(a["skill_id"], {})
+    return {
+        **a,
+        "skill_name": sk.get("name", a["skill_id"]),
+        "subject": sk.get("subject", ""),
+        "who": "Whole class" if not a.get("student_ids")
+               else ", ".join(students.get(i, i) for i in a["student_ids"]),
+    }
+
+
+@router.get("/assignments")
+def list_assignments(actor: Actor = Depends(require_role("teacher"))):
+    skills = {s["id"]: s for s in store.read("skills")}
+    students = {s["id"]: s["display_name"] for s in store.read("students")}
+    rows = [a for a in store.read("assignments") if a["class_id"] in actor.class_ids]
+    rows.sort(key=lambda a: a["at"], reverse=True)
+    return [_assignment_view(a, skills, students) for a in rows]
+
+
+@router.post("/assignments", status_code=201)
+def create_assignment(body: AssignIn, actor: Actor = Depends(require_role("teacher"))):
+    skills = {s["id"]: s for s in store.read("skills")}
+    if body.skill_id not in skills:
+        raise HTTPException(404, "unknown skill")
+    if body.student_ids is not None:
+        if not body.student_ids:
+            raise HTTPException(400, "pick at least one learner or assign to the whole class")
+        if not set(body.student_ids).issubset(actor.student_ids):
+            raise HTTPException(403, "one or more learners are outside this class")
+    row = {
+        "id": f"assign-{uuid.uuid4().hex[:8]}",
+        "class_id": sorted(actor.class_ids)[0],
+        "skill_id": body.skill_id,
+        "student_ids": body.student_ids,
+        "assigned_by": actor.user_id,
+        "at": now(),
+    }
+    store.append("assignments", row)
+    store.append("audit", {"actor": actor.user_id, "action": "assignment.create",
+                           "object_id": row["id"], "at": row["at"]})
+    students = {s["id"]: s["display_name"] for s in store.read("students")}
+    return _assignment_view(row, skills, students)
+
+
+@router.delete("/assignments/{assignment_id}")
+def remove_assignment(assignment_id: str, actor: Actor = Depends(require_role("teacher"))):
+    rows = store.read("assignments")
+    keep = [a for a in rows if not (a["id"] == assignment_id and a["class_id"] in actor.class_ids)]
+    if len(keep) == len(rows):
+        raise HTTPException(404, "unknown assignment")
+    store.write_all("assignments", keep)
+    store.append("audit", {"actor": actor.user_id, "action": "assignment.remove",
+                           "object_id": assignment_id, "at": now()})
+    return {"ok": True}
