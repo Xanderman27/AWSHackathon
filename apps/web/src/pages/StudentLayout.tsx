@@ -7,7 +7,7 @@ export default function StudentLayout() {
   const session = getSession()
   if (!session || session.role !== 'student') return <RoleGate need="student" />
   return (
-    <div className="page">
+    <div className="page student-theme">
       <div className="student-head">
         <Bear size={84} mood="wave" float />
         <div>
@@ -15,7 +15,8 @@ export default function StudentLayout() {
           <p className="muted" style={{ margin: 0 }}>What would you like to do today?</p>
         </div>
         <nav className="tabs big" aria-label="Student sections">
-          <NavLink to="/student" end>🌟 Quests</NavLink>
+          <NavLink to="/student" end>🗺️ My path</NavLink>
+          <NavLink to="/student/quests">🌟 Quests</NavLink>
           <NavLink to="/student/games">🎲 Games</NavLink>
         </nav>
       </div>

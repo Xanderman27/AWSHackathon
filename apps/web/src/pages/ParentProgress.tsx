@@ -1,6 +1,12 @@
-import { useEffect, useState } from 'react'
+// The parent home, shaped like a Duolingo profile: identity up top, a statistics grid,
+// achievements with progress, the child's group activities, then the mastery detail.
+
+import { useEffect, useState, type ComponentType } from 'react'
 import { api } from '../api'
 import { MasteryGauge, OutcomeTrack } from '../components/MasteryGauge'
+import {
+  BoltIcon, BulbIcon, FlagIcon, GlobeIcon, StarIcon, TeamIcon, TreasureMapIcon,
+} from '../components/PathArt'
 
 interface Child { id: string; display_name: string; grade: number }
 interface NextStep {
@@ -11,15 +17,24 @@ interface MasteryRow {
   skill_id: string; skill: string; child_name: string; estimate: number; score: number
   band: string; band_label: string; evidence_count: number; history: number[]
 }
+interface Achievement { id: string; title: string; desc: string; icon: string; progress: number; goal: number; earned: boolean }
+interface GroupActivity { id: string; title: string; group_name: string; teammates: string[] }
 interface Progress {
   student: Child
   what_we_practiced: { skill: string; practiced: string; sessions: number }[]
   next_steps: NextStep[]
   mastery: MasteryRow[]
   average_score: number | null
+  stats: { stars: number; checkins: number; quests_done: number; subjects: number; hints: number; group_count: number }
+  achievements: Achievement[]
+  group_activities: GroupActivity[]
 }
 
 const BAND_TONE: Record<string, string> = { building: 'cream', practicing: 'sky', extension: 'mint' }
+const ACH_ICON: Record<string, ComponentType<{ size?: number }>> = {
+  flag: FlagIcon, star: StarIcon, map: TreasureMapIcon, bolt: BoltIcon, team: TeamIcon, bulb: BulbIcon,
+}
+const ACH_TONE = ['#ffc800', '#1cb0f6', '#58cc02', '#ce82ff', '#ff8fab', '#ffb020']
 
 export default function ParentProgress() {
   const [children, setChildren] = useState<Child[]>([])
@@ -35,7 +50,14 @@ export default function ParentProgress() {
   if (err) return <p role="alert">{err}</p>
   if (!progress) return <p>Loading…</p>
 
-  const { student, next_steps: next, mastery, average_score: avg } = progress
+  const { student, next_steps: next, mastery, average_score: avg, stats, achievements, group_activities: groups } = progress
+
+  const STATS = [
+    { label: 'Stars on the path', value: stats.stars, Icon: StarIcon },
+    { label: 'Questions answered', value: stats.checkins, Icon: BoltIcon },
+    { label: 'Quests finished', value: stats.quests_done, Icon: FlagIcon },
+    { label: 'Subjects explored', value: stats.subjects, Icon: GlobeIcon },
+  ]
 
   return (
     <div className="stack">
@@ -50,15 +72,69 @@ export default function ParentProgress() {
         </div>
       )}
 
-      <div>
-        <h2 style={{ marginBottom: 2 }}>{student.display_name}, Grade {student.grade}</h2>
-        <p className="muted" style={{ margin: 0 }}>Only {student.display_name}'s own progress. No class ranks, no comparisons.</p>
+      <div className="profile-head">
+        <span className="profile-avatar" aria-hidden="true">{student.display_name[0]}</span>
+        <div>
+          <h2 style={{ marginBottom: 2 }}>{student.display_name}</h2>
+          <p className="muted" style={{ margin: 0 }}>Grade {student.grade} · Only {student.display_name}'s own progress. No class ranks, no comparisons.</p>
+        </div>
       </div>
 
-      <div className="card">
-        <div className="mastery-grid">
-          <div>
-            <h3 style={{ marginBottom: 4 }}>Mastery <span className="muted" style={{ fontWeight: 500, fontSize: '.85em' }}>(0 to 4)</span></h3>
+      <section>
+        <h3 className="profile-sub">Statistics</h3>
+        <div className="stat-grid">
+          {STATS.map(({ label, value, Icon }) => (
+            <div className="stat-card" key={label}>
+              <Icon size={34} />
+              <div><div className="stat-num">{value}</div><div className="stat-lbl">{label}</div></div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="grid-2" style={{ alignItems: 'start' }}>
+        <section className="card">
+          <h3 className="profile-sub" style={{ marginTop: 0 }}>Achievements</h3>
+          <div className="ach-list">
+            {achievements.map((a, i) => {
+              const Icon = ACH_ICON[a.icon] ?? StarIcon
+              const pct = Math.round((a.progress / a.goal) * 100)
+              return (
+                <div className={`ach ${a.earned ? 'earned' : ''}`} key={a.id}>
+                  <span className="ach-badge" style={{ background: ACH_TONE[i % ACH_TONE.length] }}><Icon size={30} /></span>
+                  <div className="ach-body">
+                    <div className="row between"><strong>{a.title}</strong>
+                      <span className="muted" style={{ fontSize: '.82em' }}>{a.earned ? 'Earned!' : `${a.progress}/${a.goal}`}</span>
+                    </div>
+                    <span className="muted" style={{ fontSize: '.88em' }}>{a.desc}</span>
+                    <span className="ach-bar" role="img" aria-label={`${pct} percent complete`}><i style={{ width: `${pct}%` }} /></span>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+
+        <div className="stack">
+          <section className="card">
+            <h3 className="profile-sub" style={{ marginTop: 0 }}>Group activities</h3>
+            {groups.length === 0 ? (
+              <p className="muted" style={{ margin: 0 }}>{student.display_name} has not joined a group activity yet.</p>
+            ) : groups.map((g) => (
+              <div className="group-row" key={g.id}>
+                <span className="ach-badge" style={{ background: '#1cb0f6' }}><TeamIcon size={30} /></span>
+                <div>
+                  <strong>{g.title}</strong>
+                  <p className="muted" style={{ margin: 0, fontSize: '.9em' }}>
+                    {g.group_name} · with {g.teammates.join(' and ')}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </section>
+
+          <section className="card">
+            <h3 className="profile-sub" style={{ marginTop: 0 }}>Mastery <span className="muted" style={{ fontWeight: 500, fontSize: '.8em' }}>(0 to 4)</span></h3>
             <MasteryGauge score={avg} label="Average mastery score" />
             <div className="legend" aria-hidden="true">
               <span><i style={{ background: 'var(--zone-red)' }} />Building</span>
@@ -66,27 +142,28 @@ export default function ParentProgress() {
               <span><i style={{ background: 'var(--zone-green)' }} />Ready</span>
               <span><i style={{ background: 'var(--zone-blue)' }} />Stretching</span>
             </div>
-          </div>
-          <div>
-            <h3 style={{ marginBottom: 4 }}>Outcomes</h3>
-            {mastery.length === 0 ? (
-              <p className="muted">{student.display_name} has not started a quest yet, so there is nothing to show.</p>
-            ) : mastery.map((m) => (
-              <div className="outcome" key={m.skill_id}>
-                <div className="outcome-head">
-                  <strong>{student.display_name} can work on {m.child_name}</strong>
-                  <span className="row" style={{ gap: 8 }}>
-                    <span className={`chip ${BAND_TONE[m.band]}`}>{m.band_label}</span>
-                    <span className="chip">{m.score.toFixed(1)} / 4</span>
-                  </span>
-                </div>
-                <OutcomeTrack score={m.score} band={m.band_label} evidence={m.evidence_count} />
-                <span className="muted" style={{ fontSize: '.85em' }}>Based on {m.evidence_count} check-in{m.evidence_count === 1 ? '' : 's'}</span>
-              </div>
-            ))}
-          </div>
+          </section>
         </div>
       </div>
+
+      <section className="card">
+        <h3 className="profile-sub" style={{ marginTop: 0 }}>Outcomes</h3>
+        {mastery.length === 0 ? (
+          <p className="muted">{student.display_name} has not started a quest yet, so there is nothing to show.</p>
+        ) : mastery.map((m) => (
+          <div className="outcome" key={m.skill_id}>
+            <div className="outcome-head">
+              <strong>{student.display_name} can work on {m.child_name}</strong>
+              <span className="row" style={{ gap: 8 }}>
+                <span className={`chip ${BAND_TONE[m.band]}`}>{m.band_label}</span>
+                <span className="chip">{m.score.toFixed(1)} / 4</span>
+              </span>
+            </div>
+            <OutcomeTrack score={m.score} band={m.band_label} evidence={m.evidence_count} />
+            <span className="muted" style={{ fontSize: '.85em' }}>Based on {m.evidence_count} check-in{m.evidence_count === 1 ? '' : 's'}</span>
+          </div>
+        ))}
+      </section>
 
       <div>
         <div className="row between" style={{ marginBottom: 12 }}>

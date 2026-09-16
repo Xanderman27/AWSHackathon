@@ -92,7 +92,7 @@ export default function StudentQuest() {
 
   if (phase === 'done' && next) {
     return (
-      <div className="page center">
+      <div className="page center student-theme">
         <Confetti burst={burst} />
         <div className="card celebrate">
           <Bear size={120} mood="cheer" float />
@@ -109,7 +109,7 @@ export default function StudentQuest() {
   const playing = narrator.state === 'playing'
 
   return (
-    <div className="page center">
+    <div className="page center student-theme">
       <Confetti burst={burst} />
       <div className="card quest-card-main">
         <div className="quest-head">

@@ -7,7 +7,9 @@
     "standard_framework": "CCSS",
     "standard_id": "4.NF.A.1",
     "grade": 4,
-    "prerequisites": ["fraction_parts"]
+    "prerequisites": [
+      "fraction_parts"
+    ]
   },
   {
     "id": "fraction_parts",
@@ -21,11 +23,41 @@
   },
   {
     "id": "main_idea",
-    "subject": "reading",
+    "subject": "english",
     "name": "Main idea and supporting details",
     "child_name": "finding the big idea in a story",
     "standard_framework": "CCSS",
     "standard_id": "RI.4.2",
+    "grade": 4,
+    "prerequisites": []
+  },
+  {
+    "id": "animal_adaptations",
+    "subject": "science",
+    "name": "Animal adaptations",
+    "child_name": "how animals stay safe and warm",
+    "standard_framework": "NGSS",
+    "standard_id": "4-LS1-1",
+    "grade": 4,
+    "prerequisites": []
+  },
+  {
+    "id": "sea_explorers",
+    "subject": "history",
+    "name": "Explorers and pirates",
+    "child_name": "explorers and pirates of the seas",
+    "standard_framework": "C3",
+    "standard_id": "D2.His.2.3-5",
+    "grade": 4,
+    "prerequisites": []
+  },
+  {
+    "id": "maps_continents",
+    "subject": "geography",
+    "name": "Maps and continents",
+    "child_name": "reading maps and finding continents",
+    "standard_framework": "C3",
+    "standard_id": "D2.Geo.1.3-5",
     "grade": 4,
     "prerequisites": []
   }

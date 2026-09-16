@@ -69,4 +69,58 @@ def progress(student_id: str, actor: Actor = Depends(require_role("parent"))):
         if r["student_id"] == student_id and r["status"] == "approved" and r["audience"] == "family"
     ]
     return {"student": _safe(student), "what_we_practiced": practiced, "next_steps": next_steps,
-            "mastery": mastery_rows, "average_score": avg}
+            "mastery": mastery_rows, "average_score": avg,
+            **_profile_extras(student_id, skills)}
+
+
+STEP_THRESHOLDS = [0.15, 0.35, 0.55, 0.75, 0.92]
+
+
+def _profile_extras(student_id: str, skills: dict) -> dict:
+    """Duolingo-profile-style stats, computed fresh from the child's own records."""
+    responses = 0
+    quests_done = 0
+    hints = 0
+    for a in store.read("attempts"):
+        if a["student_id"] != student_id:
+            continue
+        responses += len(a["responses"])
+        hints += sum(1 for r in a["responses"] if r.get("hint_used"))
+        if a.get("completed"):
+            quests_done += 1
+
+    stars = 0
+    subjects = set()
+    for m in store.read("mastery"):
+        if m["student_id"] != student_id:
+            continue
+        stars += sum(1 for t in STEP_THRESHOLDS if m["estimate"] >= t)
+        sk = skills.get(m["skill_id"])
+        if sk and m.get("evidence_count", 0) > 0:
+            subjects.add(sk["subject"])
+
+    groups = []
+    students = {st["id"]: st["display_name"] for st in store.read("students")}
+    for g in store.read("group_activities"):
+        if g.get("status") == "published" and student_id in g.get("member_ids", []):
+            groups.append({
+                "id": g["id"], "title": g["title"], "group_name": g["group_name"],
+                "teammates": [students.get(m, "A classmate") for m in g["member_ids"] if m != student_id],
+            })
+
+    stats = {"stars": stars, "checkins": responses, "quests_done": quests_done,
+             "subjects": len(subjects), "hints": hints, "group_count": len(groups)}
+
+    def ach(id, title, desc, icon, have, need):
+        return {"id": id, "title": title, "desc": desc, "icon": icon,
+                "progress": min(have, need), "goal": need, "earned": have >= need}
+
+    achievements = [
+        ach("first-quest", "First Steps", "Finish 1 quest", "flag", quests_done, 1),
+        ach("star-collector", "Star Collector", "Earn 5 stars on the path", "star", stars, 5),
+        ach("adventurer", "Adventurer", "Practice in 3 different subjects", "map", len(subjects), 3),
+        ach("practice-pro", "Practice Pro", "Answer 25 questions", "bolt", responses, 25),
+        ach("team-player", "Team Player", "Join a group activity", "team", len(groups), 1),
+        ach("wise-owl", "Good Asker", "Use a hint 3 times (asking for help is smart!)", "bulb", hints, 3),
+    ]
+    return {"stats": stats, "achievements": achievements, "group_activities": groups}

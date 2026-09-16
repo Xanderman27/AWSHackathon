@@ -4,7 +4,10 @@ import { api, type Skill } from '../api'
 
 const ART: Record<string, { glyph: string; tone: string }> = {
   math: { glyph: '🔢', tone: 'mint' },
-  reading: { glyph: '📖', tone: 'sky' },
+  english: { glyph: '📖', tone: 'sky' },
+  science: { glyph: '🧪', tone: 'mint' },
+  history: { glyph: '🏴‍☠️', tone: 'cream' },
+  geography: { glyph: '🗺️', tone: 'sky' },
 }
 
 export default function StudentAssessments() {

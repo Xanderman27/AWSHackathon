@@ -1,81 +1,90 @@
+// Sign-in page, kept as simple as Duolingo's: one card, two fields, one button.
+// Students use the login their teacher set; teachers and parents have their own.
+
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { setSession, type Role } from '../api'
+import { login } from '../api'
 import Bear from '../components/Bear'
 
-const ROLES: { role: Role; userId: string; label: string; blurb: string; emoji: string; tone: string }[] = [
-  { role: 'student', userId: 'student-01', label: 'I am a student', blurb: 'Play a quest or a game.', emoji: '🧒', tone: 'mint' },
-  { role: 'teacher', userId: 'teacher-01', label: 'I am a teacher', blurb: 'See the class and each learner.', emoji: '🧑‍🏫', tone: 'sky' },
-  { role: 'parent', userId: 'parent-01', label: 'I am a parent', blurb: "See your child's progress and your rights.", emoji: '👪', tone: 'cream' },
-]
-
-// Typographic badges, not agency seals: reproducing a government seal would imply endorsement.
 const FRAMEWORKS = [
-  { abbr: 'IDEA', full: 'Individuals with Disabilities Education Act', url: 'https://sites.ed.gov/idea/statuteregulations', glyph: '🏛' },
-  { abbr: 'Section 504', full: 'Rehabilitation Act of 1973', url: 'https://www.ed.gov/laws-and-policy/civil-rights-laws/disability-discrimination/protecting-students-with-disabilities', glyph: '⚖️' },
-  { abbr: 'FERPA', full: 'Family Educational Rights and Privacy Act', url: 'https://studentprivacy.ed.gov/', glyph: '🔒' },
-  { abbr: 'COPPA', full: "Children's Online Privacy Protection Rule", url: 'https://www.ftc.gov/business-guidance/privacy-security/childrens-privacy', glyph: '🛡' },
-  { abbr: 'WCAG 2.2 AA', full: 'Web Content Accessibility Guidelines', url: 'https://www.w3.org/TR/WCAG22/', glyph: '♿' },
+  { abbr: 'IDEA', url: 'https://sites.ed.gov/idea/statuteregulations' },
+  { abbr: 'Section 504', url: 'https://www.ed.gov/laws-and-policy/civil-rights-laws/disability-discrimination/protecting-students-with-disabilities' },
+  { abbr: 'FERPA', url: 'https://studentprivacy.ed.gov/' },
+  { abbr: 'COPPA', url: 'https://www.ftc.gov/business-guidance/privacy-security/childrens-privacy' },
+  { abbr: 'WCAG 2.2 AA', url: 'https://www.w3.org/TR/WCAG22/' },
 ]
 
 export default function Home() {
   const nav = useNavigate()
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault()
+    if (busy) return
+    setBusy(true); setErr(null)
+    try {
+      const s = await login(username, password)
+      nav(`/${s.role}`)
+    } catch (ex) {
+      setErr(String(ex).includes('bad-credentials')
+        ? 'That username or password does not match. Try again.'
+        : 'Something went wrong. Is the server running?')
+      setBusy(false)
+    }
+  }
+
   return (
-    <div className="page">
-      <section className="hero">
-        <div>
-          <span className="eyebrow reveal" style={{ animationDelay: '40ms' }}>
-            <span aria-hidden="true">✨</span> Built for students with IEPs and 504 plans
-          </span>
-          <h1 className="reveal" style={{ animationDelay: '120ms' }}>
-            Learning that <span className="underline">listens</span> to every kid.
-          </h1>
-          <p className="lede reveal muted" style={{ animationDelay: '200ms' }}>
-            Dori turns short, friendly check-ins into clear next steps for teachers and
-            plain-language progress for families, so nobody waits until the next meeting to
-            find out how a child is doing.
+    <div className="page center student-theme">
+      <div className="login-wrap">
+        <div className="login-hello reveal">
+          <Bear size={110} mood="wave" float />
+          <h1 className="login-brand">Dori</h1>
+          <p className="muted" style={{ margin: 0, textAlign: 'center' }}>
+            Learning that listens, for students with IEPs and 504 plans.
           </p>
-          <div className="role-list" role="group" aria-label="Choose who you are">
-            {ROLES.map((r, i) => (
-              <button key={r.role} type="button" className="role reveal"
-                style={{ animationDelay: `${280 + i * 90}ms` }}
-                onClick={() => { setSession({ role: r.role, userId: r.userId }); nav(`/${r.role}`) }}>
-                <span className={`ico ${r.tone}`} aria-hidden="true">{r.emoji}</span>
-                <span><strong>{r.label}</strong><span className="sub">{r.blurb}</span></span>
-                <span className="go" aria-hidden="true">→</span>
-              </button>
-            ))}
-          </div>
         </div>
 
-        <div className="hero-art" aria-hidden="true">
-          <div className="tile tall pop" style={{ background: 'var(--brand)', animationDelay: '160ms' }}>
-            <Bear size={132} mood="wave" float />
-          </div>
-          <div className="tile pop" style={{ background: 'var(--mint)', animationDelay: '300ms' }}>
-            <span className="tile-glyph floaty" style={{ animationDelay: '.4s' }}>🔢</span>
-          </div>
-          <div className="tile pop" style={{ background: 'var(--cream)', animationDelay: '420ms' }}>
-            <span className="tile-glyph floaty" style={{ animationDelay: '.9s' }}>📖</span>
-          </div>
-        </div>
-      </section>
+        <form className="card login-card reveal" style={{ animationDelay: '120ms' }} onSubmit={submit}>
+          <h2 style={{ textAlign: 'center' }}>Log in</h2>
+          {err && <p role="alert" className="feedback try" style={{ padding: '12px 16px', fontSize: '.95em' }}>{err}</p>}
+          <label className="msg-field">
+            <span>Username</span>
+            <input type="text" value={username} autoComplete="username" required
+              onChange={(e) => setUsername(e.target.value)} placeholder="Your username" />
+          </label>
+          <label className="msg-field">
+            <span>Password</span>
+            <input type="password" value={password} autoComplete="current-password" required
+              onChange={(e) => setPassword(e.target.value)} placeholder="Your password" />
+          </label>
+          <button type="submit" className="btn-primary btn-lg" disabled={busy || !username || !password}
+            style={{ width: '100%', justifyContent: 'center' }}>
+            {busy ? 'Logging in…' : 'Log in'}
+          </button>
+          <p className="muted" style={{ margin: 0, fontSize: '.85em', textAlign: 'center' }}>
+            Students: use the login your teacher gave you.
+          </p>
+          <details className="demo-creds">
+            <summary>Demo logins for judges</summary>
+            <table>
+              <tbody>
+                <tr><td>Student</td><td><code>sam</code></td><td><code>otter123</code></td></tr>
+                <tr><td>Teacher</td><td><code>rivera</code></td><td><code>teach123</code></td></tr>
+                <tr><td>Parent</td><td><code>jordan</code></td><td><code>family123</code></td></tr>
+              </tbody>
+            </table>
+          </details>
+        </form>
 
-      <section className="compliance reveal" style={{ animationDelay: '620ms' }} aria-labelledby="frameworks-title">
-        <h2 id="frameworks-title" className="compliance-title">Built to follow</h2>
-        <ul className="badge-row">
+        <ul className="login-frameworks reveal" style={{ animationDelay: '220ms' }} aria-label="Built to follow">
           {FRAMEWORKS.map((f) => (
-            <li key={f.abbr}>
-              <a className="badge" href={f.url} target="_blank" rel="noreferrer noopener" title={f.full}>
-                <span className="badge-glyph" aria-hidden="true">{f.glyph}</span>
-                <span className="badge-text">
-                  <strong>{f.abbr}</strong>
-                  <span>{f.full}</span>
-                </span>
-              </a>
-            </li>
+            <li key={f.abbr}><a href={f.url} target="_blank" rel="noreferrer noopener">{f.abbr}</a></li>
           ))}
         </ul>
-      </section>
+      </div>
     </div>
   )
 }

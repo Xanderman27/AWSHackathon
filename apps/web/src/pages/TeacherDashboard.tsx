@@ -3,9 +3,12 @@ import { api, getSession } from '../api'
 import MessagesWidget from '../components/MessagesWidget'
 import GroupActivityManager from '../components/GroupActivityManager'
 import RoleGate from './RoleGate'
+import { BoltIcon, FlagIcon, StarIcon, TeamIcon } from '../components/PathArt'
 
 interface Row { student_id: string; display_name: string; has_goal_link: boolean; skill_name: string; band: string; estimate: number; confidence: string; evidence_count: number }
-interface Summary { class_id: string; students: { id: string; display_name: string }[]; mastery: Row[]; counts: { needs_more_evidence: number; ready_for_extension: number } }
+interface SubjectStat { subject: string; learners: number; avg: number }
+interface ClassStats { checkins: number; quests_done: number; stars: number; hints: number; active_learners: number; avg_estimate: number | null; subjects: SubjectStat[] }
+interface Summary { class_id: string; students: { id: string; display_name: string }[]; mastery: Row[]; counts: { needs_more_evidence: number; ready_for_extension: number }; class_stats: ClassStats }
 interface Evidence { student_id: string; evidence: { at: string; prompt: string; difficulty: number; correct: boolean; hint_used: boolean; route_reason?: string | null }[] }
 
 const BAND_TONE: Record<string, string> = { 'Building foundations': 'cream', Practicing: 'sky', 'Ready for extension': 'mint' }
@@ -42,6 +45,26 @@ export default function TeacherDashboard() {
         <div className="card tinted-mint"><div className="stat">{data.counts.ready_for_extension}</div><div className="stat-label">learners are ready for extension</div></div>
         <div className="card tinted-sky"><div className="stat">{data.students.length - without.length}<span style={{ fontSize: '0.5em', opacity: 0.7 }}>/{data.students.length}</span></div><div className="stat-label">have completed a quest</div></div>
       </div>
+
+      <section className="card">
+        <h2 style={{ marginBottom: 12 }}>Class statistics</h2>
+        <div className="stat-grid">
+          <div className="stat-card"><StarIcon size={34} /><div><div className="stat-num">{data.class_stats.stars}</div><div className="stat-lbl">Stars earned classwide</div></div></div>
+          <div className="stat-card"><BoltIcon size={34} /><div><div className="stat-num">{data.class_stats.checkins}</div><div className="stat-lbl">Questions answered</div></div></div>
+          <div className="stat-card"><FlagIcon size={34} /><div><div className="stat-num">{data.class_stats.quests_done}</div><div className="stat-lbl">Quests finished</div></div></div>
+          <div className="stat-card"><TeamIcon size={34} /><div><div className="stat-num">{data.class_stats.active_learners}<span style={{ fontSize: '.55em', opacity: .7 }}>/{data.students.length}</span></div><div className="stat-lbl">Learners with evidence</div></div></div>
+        </div>
+        <h3 style={{ margin: '18px 0 8px', fontSize: '1.05em' }}>By subject <span className="muted" style={{ fontWeight: 500, fontSize: '.85em' }}>(average estimate)</span></h3>
+        <div className="subject-bars">
+          {data.class_stats.subjects.map((s) => (
+            <div className="sbar" key={s.subject}>
+              <span className="sbar-name">{s.subject}</span>
+              <span className="sbar-track"><i style={{ width: `${Math.round(s.avg * 100)}%` }} /></span>
+              <span className="sbar-val">{s.avg.toFixed(2)} · {s.learners} learner{s.learners === 1 ? '' : 's'}</span>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <div className="card">
         <div className="row between" style={{ marginBottom: 8 }}><h2 style={{ margin: 0 }}>Learners</h2><span className="muted">Neutral language by design. No rankings.</span></div>

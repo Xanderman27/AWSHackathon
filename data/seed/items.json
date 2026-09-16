@@ -986,5 +986,689 @@
     "passage": "Desert plants save water in clever ways. A cactus stores water in its thick stem. Some plants grow roots that spread wide and shallow to catch rain fast. Others drop their leaves in dry months so they lose less water to the air.",
     "passage_read_aloud_allowed": false,
     "approved": true
+  },
+  {
+    "id": "sc-01",
+    "skill_id": "animal_adaptations",
+    "prerequisite_skill_id": null,
+    "difficulty": 1,
+    "irt_a": 1.0,
+    "irt_b": -2.0,
+    "prompt": "Why does a polar bear have thick fur?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "To stay warm in the cold",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "To swim faster",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "To look bigger",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "To climb ice better",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "Think about where a polar bear lives.",
+    "explanation": "Thick fur keeps heat in, which matters in the Arctic cold.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
+  },
+  {
+    "id": "sc-02",
+    "skill_id": "animal_adaptations",
+    "prerequisite_skill_id": null,
+    "difficulty": 1,
+    "irt_a": 1.0,
+    "irt_b": -2.0,
+    "prompt": "What helps a duck float and stay dry?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "Oily feathers",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "Heavy bones",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "Big feet",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "A loud quack",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "Water rolls right off a duck's back. What is on its back?",
+    "explanation": "The oil on a duck's feathers pushes water away.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
+  },
+  {
+    "id": "sc-03",
+    "skill_id": "animal_adaptations",
+    "prerequisite_skill_id": null,
+    "difficulty": 2,
+    "irt_a": 1.0,
+    "irt_b": -1.0,
+    "prompt": "Which of these is camouflage?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "White fur that matches the snow",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "Running very fast",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "Sharp teeth",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "A loud roar",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "Camouflage means blending in so you are hard to see.",
+    "explanation": "Fur that matches the snow hides an animal from hunters and prey.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
+  },
+  {
+    "id": "sc-04",
+    "skill_id": "animal_adaptations",
+    "prerequisite_skill_id": null,
+    "difficulty": 3,
+    "irt_a": 1.0,
+    "irt_b": 0.0,
+    "prompt": "Why do many birds fly south in winter?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "To find food and warmer weather",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "To race each other",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "Because trees fall down",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "To build snow nests",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "What is hard to find here in winter?",
+    "explanation": "Winter makes food scarce, so birds travel to warmer places that have more.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
+  },
+  {
+    "id": "sc-05",
+    "skill_id": "animal_adaptations",
+    "prerequisite_skill_id": null,
+    "difficulty": 4,
+    "irt_a": 1.0,
+    "irt_b": 1.0,
+    "prompt": "A desert fox has very big ears. What job do they do?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "They let out extra heat to cool the fox",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "They help it hear underwater",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "They dig sand",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "They scare enemies away",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "Deserts are very hot. Big ears have lots of skin for a reason.",
+    "explanation": "Heat escapes through the big ears, which keeps the fox cooler.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
+  },
+  {
+    "id": "sc-06",
+    "skill_id": "animal_adaptations",
+    "prerequisite_skill_id": null,
+    "difficulty": 5,
+    "irt_a": 1.0,
+    "irt_b": 2.0,
+    "prompt": "Which of these is learned, not something an animal is born knowing?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "A dog sitting when you say sit",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "A spider spinning a web",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "A chick pecking for seeds",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "A bear growing winter fur",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "Which one needs a person to teach it?",
+    "explanation": "Dogs learn to sit from practice with people. The others happen on their own.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
+  },
+  {
+    "id": "hi-01",
+    "skill_id": "sea_explorers",
+    "prerequisite_skill_id": null,
+    "difficulty": 1,
+    "irt_a": 1.0,
+    "irt_b": -2.0,
+    "prompt": "What did explorers sail across to find new lands?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "Oceans",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "Deserts",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "Mountains",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "Forests",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "Explorers travelled by ship.",
+    "explanation": "Ships cross oceans, and that is how explorers reached faraway lands.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
+  },
+  {
+    "id": "hi-02",
+    "skill_id": "sea_explorers",
+    "prerequisite_skill_id": null,
+    "difficulty": 1,
+    "irt_a": 1.0,
+    "irt_b": -2.0,
+    "prompt": "A pirate flag with a skull was meant to\u2026",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "Scare other ships",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "Say hello",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "Show fish for sale",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "Celebrate a birthday",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "How would you feel seeing that flag sail toward you?",
+    "explanation": "Pirates flew the skull flag so ships would give up without a fight.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
+  },
+  {
+    "id": "hi-03",
+    "skill_id": "sea_explorers",
+    "prerequisite_skill_id": null,
+    "difficulty": 2,
+    "irt_a": 1.0,
+    "irt_b": -1.0,
+    "prompt": "Why did explorers bring a compass on their ships?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "To know which direction they were sailing",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "To cook their food",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "To fix the sails",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "To trade it for gold",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "In the middle of the ocean, every direction looks the same.",
+    "explanation": "A compass always points north, so sailors could keep their direction.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
+  },
+  {
+    "id": "hi-04",
+    "skill_id": "sea_explorers",
+    "prerequisite_skill_id": null,
+    "difficulty": 3,
+    "irt_a": 1.0,
+    "irt_b": 0.0,
+    "prompt": "Long voyages were dangerous because ships could run out of\u2026",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "Fresh food and water",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "Cannonballs",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "Parrots",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "Gold coins",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "What do people need every single day to stay alive?",
+    "explanation": "There were no stores at sea. Ships had to carry all their food and water.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
+  },
+  {
+    "id": "hi-05",
+    "skill_id": "sea_explorers",
+    "prerequisite_skill_id": null,
+    "difficulty": 4,
+    "irt_a": 1.0,
+    "irt_b": 1.0,
+    "prompt": "Why did sailors start eating oranges and limes on long trips?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "The fruit kept them from getting a sickness called scurvy",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "To feed the fish",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "To clean the decks",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "To make orange paint",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "It has to do with staying healthy.",
+    "explanation": "Oranges and limes have vitamin C, which stopped a sickness called scurvy.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
+  },
+  {
+    "id": "hi-06",
+    "skill_id": "sea_explorers",
+    "prerequisite_skill_id": null,
+    "difficulty": 5,
+    "irt_a": 1.0,
+    "irt_b": 2.0,
+    "prompt": "What does the word voyage mean?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "A long journey, especially by sea",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "A pirate's hat",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "A kind of storm",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "A treasure chest",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "Explorers went on long voyages across the ocean.",
+    "explanation": "A voyage is a long journey, and explorers made theirs by ship.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
+  },
+  {
+    "id": "ge-01",
+    "skill_id": "maps_continents",
+    "prerequisite_skill_id": null,
+    "difficulty": 1,
+    "irt_a": 1.0,
+    "irt_b": -2.0,
+    "prompt": "How many continents are there on Earth?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "7",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "3",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "12",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "50",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "Count them: Africa, Antarctica, Asia, Australia, Europe, North America, South America.",
+    "explanation": "Earth has seven continents.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
+  },
+  {
+    "id": "ge-02",
+    "skill_id": "maps_continents",
+    "prerequisite_skill_id": null,
+    "difficulty": 1,
+    "irt_a": 1.0,
+    "irt_b": -2.0,
+    "prompt": "On most maps, which direction is at the top?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "North",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "South",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "East",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "West",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "Think of where the N points on a compass rose.",
+    "explanation": "Mapmakers usually put north at the top.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
+  },
+  {
+    "id": "ge-03",
+    "skill_id": "maps_continents",
+    "prerequisite_skill_id": null,
+    "difficulty": 2,
+    "irt_a": 1.0,
+    "irt_b": -1.0,
+    "prompt": "What does a map key tell you?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "What the little symbols on the map mean",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "How old the map is",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "What the weather will be",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "Who built the roads",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "The key unlocks the map's secret code of symbols.",
+    "explanation": "The key explains each symbol, like a tree for a forest or a tent for a campsite.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
+  },
+  {
+    "id": "ge-04",
+    "skill_id": "maps_continents",
+    "prerequisite_skill_id": null,
+    "difficulty": 3,
+    "irt_a": 1.0,
+    "irt_b": 0.0,
+    "prompt": "Which continent is the United States part of?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "North America",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "Africa",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "Asia",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "Europe",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "It is in the name of the continent.",
+    "explanation": "The United States is in North America, along with Canada and Mexico.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
+  },
+  {
+    "id": "ge-05",
+    "skill_id": "maps_continents",
+    "prerequisite_skill_id": null,
+    "difficulty": 4,
+    "irt_a": 1.0,
+    "irt_b": 1.0,
+    "prompt": "The compass rose on a map shows\u2026",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "The directions: north, south, east, and west",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "Where flowers grow",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "How far away the sun is",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "The flags of countries",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "It is a star shape with letters like N and S.",
+    "explanation": "The compass rose points out the four directions on the map.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
+  },
+  {
+    "id": "ge-06",
+    "skill_id": "maps_continents",
+    "prerequisite_skill_id": null,
+    "difficulty": 5,
+    "irt_a": 1.0,
+    "irt_b": 2.0,
+    "prompt": "On a treasure map, what does the X usually mark?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "The spot where the treasure is hidden",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "A dangerous flower",
+        "misconception": null
+      },
+      {
+        "id": "c",
+        "text": "The captain's name",
+        "misconception": null
+      },
+      {
+        "id": "d",
+        "text": "Which way is north",
+        "misconception": null
+      }
+    ],
+    "answer": "a",
+    "hint": "X marks the spot!",
+    "explanation": "On treasure maps, the X marks where the treasure is buried.",
+    "passage": null,
+    "passage_read_aloud_allowed": true,
+    "approved": true
   }
 ]
