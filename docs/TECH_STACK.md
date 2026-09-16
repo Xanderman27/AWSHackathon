@@ -19,6 +19,8 @@ This document expands §17 of the PRD into concrete choices, versions, and the r
 | Auth (P1) | Amazon Cognito | Real role claims once the flow works. Until then, a header-based synthetic role switch. |
 | Hosting | Local for the judged demo; AWS Amplify Hosting (front end) and AWS App Runner (API) if time allows | Reliability over cloud points. A recorded backup video is required either way. |
 | Observability | Amazon CloudWatch via structured JSON logs | Audit events and model latency without extra infrastructure. |
+| Delivery and config | Amazon CloudFront over S3; AWS Systems Manager Parameter Store | Instant audio playback; one source of truth for service IDs across four machines. |
+| Corpus ingestion | Amazon Textract for district PDFs | Turns Tier 2 teaching guidelines into clean text for the knowledge base. |
 | Testing | pytest for the API, Vitest for the front end, Playwright for one keyboard-only smoke test | The keyboard test is the accessibility acceptance criterion in code form. |
 
 ## Front end
@@ -43,6 +45,18 @@ This document expands §17 of the PRD into concrete choices, versions, and the r
 - BKT per skill with the PRD §9.1 defaults. One function: `update(state, correct, hint_used) -> state`. One selector: `next_item(state, bank, seen) -> item`.
 - Confidence is computed from evidence count and agreement, not stored separately.
 - Unit tests cover the scripted demo path for "Sam" so the adaptive route is reproducible on every run.
+
+### Why there is no ML library in the inference path
+
+BKT inference is a closed-form Bayes update with four parameters. There is nothing to train at demo time, so scikit-learn, PyTorch, or SageMaker would add a dependency without adding a capability, and a teacher-readable formula is part of the explainability requirement.
+
+ML tooling enters in three places:
+
+1. **Parameter calibration (optional, `scripts/calibrate_bkt.py`).** Uses `pyBKT` to fit `p_learn`, `p_guess`, and `p_slip` per skill from a response log by expectation-maximization. Runs on the synthetic log for the demo so the pipeline exists; the "how this works" panel can show default versus fitted values. On real data this is how the model improves per district.
+2. **Embeddings.** Retrieval uses Amazon Titan Text Embeddings through Bedrock. That is a trained model in the loop.
+3. **Generation.** Claude through Bedrock.
+
+The outcome-learning loop in PRD §27 (ranking activities by demonstrated effectiveness) is the first place a trained, district-specific model would be justified. See "Roadmap services" below.
 
 ## Generative AI on Bedrock
 
@@ -69,6 +83,49 @@ This document expands §17 of the PRD into concrete choices, versions, and the r
 - `storage/local.py` reads and writes JSON files under `data/state/`. `scripts/reset_demo.py` copies `data/seed/` over it.
 - `storage/dynamo.py` implements the same protocol with single-table design. It is built only after the local path works end to end.
 
+## Additional AWS services
+
+The Workshop Studio account exposes most of the AWS catalog. Each service below was judged on one question: does it remove work or add a real capability for this product? Anything that only adds a logo is left out.
+
+### Use in the MVP
+
+| Service | Use | Why it earns its place |
+|---|---|---|
+| Amazon CloudFront | Serve pre-generated Polly audio and, if deployed, the static front end from S3 | Audio playback on the student screen must be instant; CloudFront in front of S3 makes cached MP3s load from an edge in milliseconds and avoids exposing the bucket. |
+| AWS Systems Manager Parameter Store | Hold the Bedrock model ID, Guardrail ID, Knowledge Base ID, bucket names | Four people will each have their own environment. One parameter path per setting means no hard-coded IDs and no `.env` files passed around in chat. |
+| Amazon Textract | Convert Tier 2 district curriculum PDFs to text during corpus ingestion | District teaching guidelines usually arrive as scanned or layout-heavy PDFs. Textract turns them into clean text for chunking, which is the difference between a trusted corpus and a demo corpus. |
+| AWS IAM | Least-privilege role for the API: Bedrock invoke, KB retrieve, Polly synthesize, S3 read/write on one bucket, DynamoDB on one table | Required anyway; documenting it up front avoids a wildcard policy on demo day. |
+
+### Use if time allows (P1)
+
+| Service | Use | Why |
+|---|---|---|
+| Amazon Cognito | Authentication and role claims | Already P1 in the PRD. Amplify wires it in with little code. |
+| Amazon Translate | Parent-facing summaries in the family's language | Already P1. One API call per summary, English source retained. |
+| Amazon Bedrock Agents | Run the conference-scheduling assistant as a managed agent with `list_available_slots` and `create_conference_request` as action-group tools | Replaces a hand-written tool-use loop with a managed one and gives judges a native AWS agent to look at. Only worth it if the manual scheduling flow is already done. |
+| Amazon Comprehend | PII detection on free-text fields parents and teachers type (conference agenda, observation notes) before storage | Guardrails covers model calls; Comprehend covers text that never reaches a model but still lands in the database. |
+
+### Roadmap services (post-hackathon)
+
+| Service | Use | Why later |
+|---|---|---|
+| Amazon SageMaker | Train and host the outcome-ranking model for the learning loop; run BKT calibration at district scale | Needs real outcome data and governance first. |
+| Amazon Personalize | Alternative to a custom model for ranking activity templates per learner evidence pattern | Managed recommender; makes sense once there are thousands of outcomes. |
+| Amazon Transcribe | Spoken answers for students who cannot use a pointer or keyboard | Real accessibility value, pairs with AAC support in PRD FR-30. Needs careful design so speech recognition errors do not become mastery errors. |
+| Amazon SES and Amazon EventBridge | Conference status notifications by email, scheduled progress digests to families | PRD keeps external email out of scope until a district privacy review. |
+| AWS Step Functions | Orchestrate ingestion (Textract, chunk, embed, sync) and the recommendation pipeline with retries | Useful once ingestion runs on real district content; in-process is fine for 30 documents. |
+| Amazon CloudTrail | Audit AWS API activity alongside the application audit log | Part of a district security review, not the demo. |
+
+### Considered and rejected
+
+| Service | Reason |
+|---|---|
+| Amazon QuickSight | Embedded dashboards are slow to set up and would replace the accessible React views with iframes. |
+| Amazon Kendra | Overlaps with Bedrock Knowledge Bases and costs more; metadata filtering in KB is sufficient. |
+| Amazon Lex | The student experience is not a chatbot, and the scheduling assistant is better served by Converse tool use or Bedrock Agents. |
+| AWS Lambda + API Gateway for the API | Works (FastAPI runs under Mangum), but App Runner runs the same container with no cold starts and less wiring. Keep as an alternative if App Runner is unavailable. |
+| Amazon Chime SDK | Virtual conference rooms are out of scope; scheduling is the problem, not the meeting. |
+
 ## Repository layout
 
 ```
@@ -94,5 +151,5 @@ docs/                   PRD.md, TECH_STACK.md
 1. Confirm Bedrock model access and note the exact model IDs.
 2. Start Knowledge Base provisioning immediately; build the local index in parallel.
 3. Create the Guardrail and record its ID.
-4. Create the S3 bucket for corpus and audio.
+4. Create the S3 bucket for corpus and audio, put a CloudFront distribution in front of the audio prefix, and store all IDs in Parameter Store under `/hackathon/`.
 5. Run `scripts/seed.py`, `scripts/pregenerate_audio.py`, and `scripts/reset_demo.py` once each to prove the offline path.
