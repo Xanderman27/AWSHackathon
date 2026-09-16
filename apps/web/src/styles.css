@@ -20,6 +20,7 @@
   --rose: #fbe3e8;
   --rose-ink: #7a2438;
   --sun: #f4c45b;
+  --zone-red: #d64545; --zone-yellow: #f2b632; --zone-green: #2e8b57; --zone-blue: #2869dd;
   --focus: #2869dd;
   --radius-xl: 28px;
   --radius: 18px;
@@ -46,6 +47,7 @@
   --cream: #000000; --cream-ink: #ffffff;
   --rose: #000000; --rose-ink: #ffffff;
   --sun: #ffff00;
+  --zone-red: #ff6b6b; --zone-yellow: #ffe066; --zone-green: #7cffb2; --zone-blue: #6fd6ff;
   --focus: #00e5ff;
   --shadow: none;
 }
@@ -375,3 +377,48 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .zoom-pct { font-size: .8em; font-weight: 700; min-width: 3.2em; text-align: right; color: var(--muted); }
 .tool.zoom input[type='range'] { width: 110px; accent-color: var(--brand); cursor: pointer; margin: 0; }
 .tool.zoom input[type='range']:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; border-radius: 6px; }
+
+/* ---- Family mastery gauge ---- */
+.mastery-grid { display: grid; grid-template-columns: 300px 1fr; gap: 20px; align-items: start; }
+@media (max-width: 760px) { .mastery-grid { grid-template-columns: 1fr; } }
+.gauge { margin: 0; position: relative; }
+.gauge-caption { position: absolute; left: 0; right: 0; top: 52%; text-align: center; }
+.gauge-num { font-size: 3.2em; font-weight: 700; letter-spacing: -.04em; line-height: 1; }
+.gauge-label { font-weight: 600; color: var(--muted); font-size: .9em; margin-top: 2px; }
+.outcome { display: grid; gap: 6px; padding: 12px 0; border-bottom: 1.5px solid var(--line); }
+.outcome:last-child { border-bottom: 0; }
+.outcome-head { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; }
+.outcome-head strong { font-size: 1.05em; }
+.track-bar { position: relative; display: flex; height: 16px; border-radius: 999px; overflow: visible; }
+.track-bar i { display: block; height: 100%; }
+.track-bar i:first-child { border-radius: 999px 0 0 999px; }
+.track-bar i:last-of-type { border-radius: 0 999px 999px 0; }
+.track-dot { position: absolute; top: 50%; width: 18px; height: 18px; border-radius: 50%; background: var(--surface);
+  border: 3px solid var(--ink); transform: translate(-50%, -50%); box-shadow: 0 1px 4px rgba(0,0,0,.25); }
+.track-scale { display: flex; justify-content: space-between; font-size: .75em; color: var(--muted); padding: 2px 2px 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 16px; font-size: .85em; color: var(--muted); margin-top: 8px; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+/* ---- Resource tiles + popup ---- */
+.res-section { display: grid; gap: 10px; }
+.res-cat { font-size: 1em; margin: 0; color: var(--muted); font-weight: 700; }
+.res-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+.res-tile { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left;
+  padding: 14px 16px; border-radius: var(--radius); min-height: 64px; background: var(--surface); }
+.res-tile:hover { border-color: var(--brand); }
+.res-tile-title { font-weight: 600; line-height: 1.25; }
+.res-tile-meta { font-size: .78em; color: var(--muted); font-weight: 500; }
+.res-dialog { border: 0; padding: 0; border-radius: var(--radius-xl); background: var(--surface); color: var(--ink);
+  width: min(680px, calc(100vw - 32px)); max-height: min(86vh, 900px); box-shadow: 0 24px 60px rgba(11,18,28,.25); }
+.res-dialog::backdrop { background: rgba(11,18,28,.45); }
+:root[data-contrast='high'] .res-dialog { border: 2px solid var(--line); }
+.res-dialog-body { padding: 26px 28px; overflow: auto; max-height: min(86vh, 900px); }
+.res-more { display: grid; gap: 6px; }
+.res-more details { border: 1.5px solid var(--line); border-radius: 12px; padding: 0 14px; }
+.res-more summary { cursor: pointer; font-weight: 600; padding: 10px 0; list-style: none; display: flex; align-items: center; gap: 8px; }
+.res-more summary::before { content: '›'; display: inline-block; transition: transform var(--motion); font-size: 1.2em; color: var(--muted); }
+.res-more details[open] summary::before { transform: rotate(90deg); }
+.res-more-body { padding: 0 0 12px; font-size: .95em; }
+.res-more-body p { margin: 0 0 8px; }
+.res-dialog-head { display: flex; align-items: flex-start; gap: 12px; }
+.res-dialog-head .tool { flex: 0 0 auto; border-color: var(--line); }

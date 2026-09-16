@@ -10,7 +10,7 @@ import StudentQuest from './pages/StudentQuest'
 import TeacherDashboard from './pages/TeacherDashboard'
 import ParentLayout from './pages/ParentLayout'
 import ParentProgress from './pages/ParentProgress'
-import { ResourceDocument, ResourceList } from './pages/Resources'
+import { ResourceList } from './pages/Resources'
 import './styles.css'
 
 function Shell() {
@@ -32,7 +32,6 @@ function Shell() {
           <Route path="/parent" element={<ParentLayout />}>
             <Route index element={<ParentProgress />} />
             <Route path="resources" element={<ResourceList />} />
-            <Route path="resources/:id" element={<ResourceDocument />} />
           </Route>
         </Routes>
       </main>
