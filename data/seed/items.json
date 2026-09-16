@@ -682,5 +682,309 @@
     "passage": null,
     "passage_read_aloud_allowed": true,
     "approved": true
+  },
+  {
+    "id": "mi-01",
+    "skill_id": "main_idea",
+    "prerequisite_skill_id": null,
+    "difficulty": 1,
+    "irt_a": 1.0,
+    "irt_b": -2.0,
+    "prompt": "What is this passage mostly about?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "Bees in a hive each have a job",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "Some bees guard the door",
+        "misconception": "detail_for_main"
+      },
+      {
+        "id": "c",
+        "text": "Flowers grow in gardens",
+        "misconception": "off_topic"
+      },
+      {
+        "id": "d",
+        "text": "All insects work hard",
+        "misconception": "too_broad"
+      }
+    ],
+    "answer": "a",
+    "hint": "Look for the idea that covers the whole passage, not just one sentence.",
+    "explanation": "Every sentence is about the different jobs bees do, so that is the big idea.",
+    "passage": "Bees live together in a hive. Each bee has a job. Some bees look for flowers. Some bees take care of the baby bees. Some bees guard the door. Working together keeps the hive safe.",
+    "passage_read_aloud_allowed": false,
+    "approved": true
+  },
+  {
+    "id": "mi-02",
+    "skill_id": "main_idea",
+    "prerequisite_skill_id": null,
+    "difficulty": 1,
+    "irt_a": 1.0,
+    "irt_b": -2.0,
+    "prompt": "What is the big idea of this passage?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "Rain helps plants grow",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "Roots drink water",
+        "misconception": "detail_for_main"
+      },
+      {
+        "id": "c",
+        "text": "Sunlight is warm",
+        "misconception": "off_topic"
+      },
+      {
+        "id": "d",
+        "text": "Weather changes every day",
+        "misconception": "too_broad"
+      }
+    ],
+    "answer": "a",
+    "hint": "The first sentence often tells you the big idea. Check if the rest of the passage matches it.",
+    "explanation": "The passage explains how rain helps a plant grow, step by step.",
+    "passage": "Rain helps plants grow. After it rains, the soil holds water. Roots drink the water. Then the plant can make food from sunlight.",
+    "passage_read_aloud_allowed": false,
+    "approved": true
+  },
+  {
+    "id": "mi-03",
+    "skill_id": "main_idea",
+    "prerequisite_skill_id": null,
+    "difficulty": 2,
+    "irt_a": 1.0,
+    "irt_b": -1.0,
+    "prompt": "Which detail supports the big idea that otters keep from drifting away?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "They wrap themselves in seaweed",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "Sea otters float on their backs",
+        "misconception": "detail_for_main"
+      },
+      {
+        "id": "c",
+        "text": "Otters eat shellfish",
+        "misconception": "off_topic"
+      },
+      {
+        "id": "d",
+        "text": "Ocean animals are clever",
+        "misconception": "too_broad"
+      }
+    ],
+    "answer": "a",
+    "hint": "Find the sentence that shows HOW they stop drifting.",
+    "explanation": "Wrapping in seaweed is what holds an otter in place, so it supports that idea.",
+    "passage": "Sea otters float on their backs. They wrap themselves in seaweed so they do not drift away while they sleep. They also hold hands with other otters. Both tricks keep the group together.",
+    "passage_read_aloud_allowed": false,
+    "approved": true
+  },
+  {
+    "id": "mi-04",
+    "skill_id": "main_idea",
+    "prerequisite_skill_id": null,
+    "difficulty": 2,
+    "irt_a": 1.0,
+    "irt_b": -1.0,
+    "prompt": "What is this passage mostly about?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "How a sundial shows the time",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "A sundial has a stick",
+        "misconception": "detail_for_main"
+      },
+      {
+        "id": "c",
+        "text": "The sun is very hot",
+        "misconception": "off_topic"
+      },
+      {
+        "id": "d",
+        "text": "People invented many machines",
+        "misconception": "too_broad"
+      }
+    ],
+    "answer": "a",
+    "hint": "Ask yourself: what is the passage explaining from beginning to end?",
+    "explanation": "Each sentence adds one step in how a sundial tells time.",
+    "passage": "Long ago, people told time using the sun. A sundial has a stick in the middle. The stick makes a shadow. As the sun moves across the sky, the shadow moves too. People read the time from where the shadow falls.",
+    "passage_read_aloud_allowed": false,
+    "approved": true
+  },
+  {
+    "id": "mi-05",
+    "skill_id": "main_idea",
+    "prerequisite_skill_id": null,
+    "difficulty": 3,
+    "irt_a": 1.0,
+    "irt_b": 0.0,
+    "prompt": "Which sentence best states the main idea?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "Some frogs survive winter by freezing and thawing",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "Ice forms inside their bodies",
+        "misconception": "detail_for_main"
+      },
+      {
+        "id": "c",
+        "text": "Frogs eat insects in the spring",
+        "misconception": "off_topic"
+      },
+      {
+        "id": "d",
+        "text": "Animals do amazing things",
+        "misconception": "too_broad"
+      }
+    ],
+    "answer": "a",
+    "hint": "A main idea sentence should cover the beginning AND the end of the passage.",
+    "explanation": "The passage covers freezing in winter and thawing in spring, which choice A states.",
+    "passage": "Some frogs can freeze in winter. Ice forms inside their bodies, and their hearts stop beating. Sugar in their blood protects them from harm. When spring comes, they thaw out and hop away.",
+    "passage_read_aloud_allowed": false,
+    "approved": true
+  },
+  {
+    "id": "mi-06",
+    "skill_id": "main_idea",
+    "prerequisite_skill_id": null,
+    "difficulty": 3,
+    "irt_a": 1.0,
+    "irt_b": 0.0,
+    "prompt": "What is the main idea of this passage?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "Rooftop gardens help cities in several ways",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "Leaves cool the building below",
+        "misconception": "detail_for_main"
+      },
+      {
+        "id": "c",
+        "text": "Bees make honey",
+        "misconception": "off_topic"
+      },
+      {
+        "id": "d",
+        "text": "Cities are growing quickly",
+        "misconception": "too_broad"
+      }
+    ],
+    "answer": "a",
+    "hint": "Count how many different benefits the passage lists. What do they all have in common?",
+    "explanation": "Flooding, cooling, and wildlife are all ways rooftop gardens help, so choice A covers them.",
+    "passage": "City planners are adding gardens to rooftops. The plants soak up rain, so less water floods the streets. The leaves also cool the building below, so people use less power in summer. Birds and bees find new places to visit.",
+    "passage_read_aloud_allowed": false,
+    "approved": true
+  },
+  {
+    "id": "mi-07",
+    "skill_id": "main_idea",
+    "prerequisite_skill_id": null,
+    "difficulty": 4,
+    "irt_a": 1.0,
+    "irt_b": 1.0,
+    "prompt": "Which statement best captures the main idea?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "Making paper changed from slow handwork to fast machines",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "A worker dipped a screen into wet pulp",
+        "misconception": "detail_for_main"
+      },
+      {
+        "id": "c",
+        "text": "Paper is made from trees",
+        "misconception": "off_topic"
+      },
+      {
+        "id": "d",
+        "text": "Machines changed the world",
+        "misconception": "too_broad"
+      }
+    ],
+    "answer": "a",
+    "hint": "The last sentence compares old and new. Does your answer include both?",
+    "explanation": "The passage contrasts the slow hand process with fast machines, which choice A states.",
+    "passage": "Paper was once made only by hand, one sheet at a time. A worker dipped a screen into wet pulp, lifted it, and let the water drain. Then the sheet was pressed and hung to dry. A skilled worker might finish a few hundred sheets in a day. Today a machine can make that many in a second.",
+    "passage_read_aloud_allowed": false,
+    "approved": true
+  },
+  {
+    "id": "mi-08",
+    "skill_id": "main_idea",
+    "prerequisite_skill_id": null,
+    "difficulty": 4,
+    "irt_a": 1.0,
+    "irt_b": 1.0,
+    "prompt": "Which detail best supports the main idea?",
+    "image_alt": null,
+    "choices": [
+      {
+        "id": "a",
+        "text": "A cactus stores water in its thick stem",
+        "misconception": null
+      },
+      {
+        "id": "b",
+        "text": "Desert plants save water in clever ways",
+        "misconception": "detail_for_main"
+      },
+      {
+        "id": "c",
+        "text": "Deserts are hot during the day",
+        "misconception": "off_topic"
+      },
+      {
+        "id": "d",
+        "text": "Plants need water to live",
+        "misconception": "too_broad"
+      }
+    ],
+    "answer": "a",
+    "hint": "The main idea is already given. Which choice is an EXAMPLE of it?",
+    "explanation": "Storing water in a stem is one clever way a desert plant saves water.",
+    "passage": "Desert plants save water in clever ways. A cactus stores water in its thick stem. Some plants grow roots that spread wide and shallow to catch rain fast. Others drop their leaves in dry months so they lose less water to the air.",
+    "passage_read_aloud_allowed": false,
+    "approved": true
   }
 ]

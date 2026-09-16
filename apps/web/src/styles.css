@@ -86,9 +86,9 @@ button[aria-pressed='true'] { background: var(--ink); color: var(--surface); bor
 .shell { max-width: 1120px; width: 100%; margin: 0 auto; padding: 16px 24px 24px; flex: 1; display: flex; flex-direction: column; }
 #main { flex: 1; display: flex; flex-direction: column; min-height: 0; }
 .page { flex: 1; display: flex; flex-direction: column; gap: 18px; }
-.page.center { justify-content: center; }
-.site-foot { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; align-items: center;
-  margin-top: 28px; padding-top: 18px; border-top: 1.5px solid var(--line); color: var(--muted); font-size: 0.85em; }
+/* safe center: when content is taller than the viewport, do not clip the top (it would
+   become unreachable by scrolling). */
+.page.center { justify-content: center; justify-content: safe center; }
 .topbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 10px 0 22px; }
 .brand { font-weight: 700; font-size: 1.35em; color: var(--ink); text-decoration: none; letter-spacing: -0.03em; display: inline-flex; align-items: center; gap: 8px; }
 .brand .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--brand); display: inline-block; }
@@ -226,3 +226,138 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .doc ul { padding-left: 1.2em; display: grid; gap: 8px; }
 .source-card { border: 1.5px solid var(--line); border-radius: var(--radius); padding: 18px 20px; background: var(--surface-2); display: grid; gap: 6px; }
 .note { border-left: 4px solid var(--sun); padding: 6px 0 6px 16px; color: var(--muted); }
+
+
+/* ================= Motion ================= */
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes pop  { from { opacity: 0; transform: scale(.92); }       to { opacity: 1; transform: none; } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes stroke { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes confetti {
+  0%   { opacity: 0; transform: translate3d(0,0,0) rotate(0) scale(.5); }
+  10%  { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(var(--dx), var(--dy), 0) rotate(var(--rot)) scale(1); }
+}
+@keyframes eqbar { 0%, 100% { transform: scaleY(.4); } 50% { transform: scaleY(1); } }
+
+.reveal { animation: rise .55s cubic-bezier(.2,.8,.2,1) both; }
+.pop    { animation: pop .45s cubic-bezier(.2,.8,.2,1) both; }
+.floaty { animation: float 4.5s ease-in-out infinite; }
+
+/* One switch turns every decorative animation off. */
+:root[data-motion='reduced'] .reveal,
+:root[data-motion='reduced'] .pop,
+:root[data-motion='reduced'] .floaty,
+:root[data-motion='reduced'] .underline::after,
+:root[data-motion='reduced'] .eq i { animation: none !important; opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .pop, .floaty, .underline::after, .eq i { animation: none !important; opacity: 1; transform: none; }
+}
+
+/* ================= Dori the bear ================= */
+.bear { display: block; overflow: visible; }
+.bear-fur   { fill: #b3814f; stroke: var(--bear-line, transparent); stroke-width: 2; }
+.bear-inner { fill: #f0d7ba; }
+.bear-eye   { fill: #2a1c10; }
+.bear-line  { stroke: #2a1c10; stroke-width: 3; stroke-linecap: round; }
+.bear-blush { fill: #ef8fa8; opacity: .55; }
+.bear-paw   { opacity: .95; }
+:root[data-contrast='high'] { --bear-line: #ffffff; }
+:root[data-contrast='high'] .bear-inner { fill: #ffffff; }
+:root[data-contrast='high'] .bear-fur   { fill: #000000; }
+:root[data-contrast='high'] .bear-eye   { fill: #ffffff; }
+:root[data-contrast='high'] .bear-line  { stroke: #000000; }
+:root[data-contrast='high'] .bear-blush { display: none; }
+
+.brand .bear { margin-right: 2px; }
+
+/* ================= Landing ================= */
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 7px 16px; border-radius: var(--radius-pill);
+  background: var(--brand-soft); color: var(--brand-deep); font-weight: 700; font-size: 0.88em; margin-bottom: 18px; }
+.hero h1 { font-size: 3.3em; }
+.lede { font-size: 1.15em; max-width: 54ch; }
+.underline::after { animation: stroke .5s .5s cubic-bezier(.2,.8,.2,1) both; transform-origin: left center; }
+.hero-art .tile { position: relative; overflow: hidden; }
+.tile-glyph { font-size: 3.2em; display: block; }
+.role { position: relative; }
+.role .go { margin-left: auto; font-size: 1.3em; color: var(--muted); transition: transform var(--motion); }
+.role:hover .go { transform: translateX(4px); color: var(--brand); }
+
+.compliance { margin-top: 36px; padding-top: 22px; border-top: 1.5px solid var(--line); }
+.compliance-title { font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 14px; }
+.badge-row { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.badge { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: var(--radius);
+  border: 1.5px solid var(--line); background: var(--surface); text-decoration: none; color: var(--ink);
+  transition: border-color var(--motion), transform var(--motion); min-height: 48px; }
+.badge:hover { border-color: var(--brand); transform: translateY(-2px); }
+.badge-glyph { font-size: 1.3em; }
+.badge-text { display: grid; line-height: 1.25; }
+.badge-text strong { font-size: 0.95em; }
+.badge-text span { font-size: 0.74em; color: var(--muted); }
+
+/* ================= Student portal ================= */
+.student-head { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.student-head nav { margin-left: auto; }
+.tabs.big a { font-size: 1.05em; padding: 0.6em 1.4em; min-height: 52px; }
+.section-title { font-size: 1.5em; margin-bottom: 4px; }
+.helper { font-size: 0.95em; }
+.quest-card { position: relative; }
+.quest-meta { opacity: .8; font-size: .92em; }
+.quest-go { margin-top: auto; font-weight: 700; }
+.game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.game-card { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; padding: 24px;
+  border-radius: var(--radius-xl); min-height: 220px; border: 1.5px solid transparent; }
+.game-card.mint { background: var(--mint); color: var(--mint-ink); }
+.game-card.sky { background: var(--sky); color: var(--sky-ink); }
+.game-card.cream { background: var(--cream); color: var(--cream-ink); }
+.game-card.rose { background: var(--rose); color: var(--rose-ink); }
+.game-card strong { font-size: 1.2em; }
+.game-blurb { font-size: .95em; opacity: .9; }
+.game-glyph { font-size: 2.6em; }
+:root[data-contrast='high'] .game-card { border-color: var(--line); }
+
+/* ================= Quest question ================= */
+.quest-card-main { width: 100%; }
+.quest-head .back { min-height: 44px; padding: .3em .8em; }
+.ask { display: flex; gap: 18px; align-items: flex-start; }
+.ask .prompt { margin: 6px 0 0; }
+.picture-note { margin-left: 94px; }
+.quest-foot { text-align: center; margin-top: 14px; font-size: .9em; }
+.actions { margin-top: 22px; }
+
+/* Word-by-word read-aloud highlight */
+.word { border-radius: 6px; padding: 1px 2px; transition: background var(--motion), color var(--motion); }
+.word.now { background: var(--brand); color: var(--brand-ink); }
+.reading-block { background: var(--brand-soft); border-radius: 8px; }
+
+/* Single play / pause control */
+.listen { margin: 16px 0 4px; font-size: 1.05em; padding: .6em 1.4em; border-width: 2px; }
+.listen .listen-ico { font-size: 1.1em; }
+.listen.on { background: var(--brand); color: var(--brand-ink); border-color: var(--brand);
+  box-shadow: 0 6px 18px rgba(40,105,221,.3); }
+.listen.on:hover { border-color: var(--brand-ink); }
+.eq { display: inline-flex; align-items: flex-end; gap: 3px; height: 16px; margin-left: 4px; }
+.eq i { width: 3px; height: 100%; background: currentColor; border-radius: 2px; animation: eqbar .9s ease-in-out infinite; }
+.eq i:nth-child(2) { animation-delay: .15s; }
+.eq i:nth-child(3) { animation-delay: .3s; }
+
+/* Dori's hint, beside the bear */
+.hint-row { display: flex; align-items: center; gap: 14px; margin-top: 20px; }
+.hint-bubble { position: relative; background: var(--cream); color: var(--cream-ink);
+  border-radius: var(--radius); padding: 16px 20px; font-size: 1.05em; flex: 1; }
+.hint-bubble::before { content: ''; position: absolute; left: -9px; top: 50%; width: 18px; height: 18px;
+  background: var(--cream); transform: translateY(-50%) rotate(45deg); border-radius: 3px; }
+:root[data-contrast='high'] .hint-bubble { border: 2px solid var(--line); }
+
+.feedback { display: flex; align-items: center; gap: 16px; }
+
+/* ================= Confetti ================= */
+.confetti-layer { position: fixed; inset: 0; pointer-events: none; z-index: 60; overflow: hidden; }
+.confetti-piece { position: absolute; left: 50%; top: 44%; width: 9px; height: 14px; border-radius: 2px;
+  animation: confetti 1.5s cubic-bezier(.15,.7,.4,1) forwards; }
+
+/* Reading passage */
+.passage { background: var(--surface-2); border: 1.5px solid var(--line); border-radius: var(--radius);
+  padding: 20px 24px; margin-bottom: 20px; font-size: 1.12em; line-height: 1.7; }
+.passage-title { font-size: .78em; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 8px; }
+.read-note { font-size: .9em; margin: 6px 0 0; }

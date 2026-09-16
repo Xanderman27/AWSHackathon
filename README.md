@@ -1,6 +1,6 @@
-# AWS Hackathon: Adaptive Learning Platform
+# Dori
 
-Accessible check-ins for elementary students with IEPs and 504 plans, teacher-approved next steps, and plain-language progress for families.
+Accessible check-ins for K-12 students with IEPs and 504 plans, teacher-approved next steps, and plain-language progress for families. Dori is the bear who guides the learner.
 
 - Product requirements: [docs/PRD.md](docs/PRD.md)
 - Tech stack: [docs/TECH_STACK.md](docs/TECH_STACK.md)
@@ -15,7 +15,7 @@ Requires Node 20+ and Python 3.12+.
 cd services/api
 python -m venv .venv
 .venv/Scripts/python -m pip install -r requirements.txt     # macOS/Linux: .venv/bin/python
-.venv/Scripts/python -m uvicorn app.main:app --port 8000 --reload
+.venv/Scripts/python -m uvicorn app.main:app --port 8010 --reload
 ```
 
 ```bash
@@ -25,15 +25,19 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173. Pick a role on the home page; the demo uses synthetic accounts (Sam is `student-01`, the teacher owns class 4A, `parent-01` is linked to Sam).
+Open http://localhost:5173. The API runs on port 8010. Pick a role on the home page; the demo uses synthetic accounts (Sam is `student-01`, the teacher owns class 4A, `parent-01` is linked to Sam).
 
 - `python scripts/build_items.py` regenerates the item bank from the authored list.
-- `POST http://localhost:8000/demo/reset` restores the seeded state.
+- `POST http://localhost:8010/demo/reset` restores the seeded state.
 - Tests: `cd services/api && .venv/Scripts/python -m pytest`.
 
 ## What works today
 
-- Student quest: adaptive item selection, hints, encouraging feedback, prerequisite routing after two easy misses, resume.
+- Landing page: animated, states who it is for, and links the frameworks the product follows.
+- Student portal: Quests (adaptive assessments) and Games (free play, placeholders for now).
+- Student quest: adaptive item selection, prerequisite routing, resume, reading passages that are not read aloud so the item still measures reading.
+- One play/pause button per question that highlights each word as it is spoken, and light confetti on a correct answer.
+- Dori appears beside the question and delivers the hint in a speech bubble.
 - Accessibility bar: read-aloud (browser speech engine as a stand-in for Polly), high contrast, three text sizes, reduced motion, keyboard focus.
 - Teacher dashboard: class counts in neutral language, learner table with band and confidence, per-student item evidence with route reasons.
 - Parent view: linked children only, plain-language "what we practiced," authorization enforced at the API.

@@ -93,5 +93,101 @@ items = [
          "Try dividing the top and bottom of each fraction by the same number.", "4/6 divided by 2 is 2/3, and 6/9 divided by 3 is 2/3. They are equal."),
 ]
 
+# --- main_idea (Grade 4 reading, CCSS RI.4.2) ---
+# The passage itself is never read aloud: reading the text to the child would change what the
+# item measures (PRD FR-07). The question and the choices may always be read aloud.
+def ritem(id, diff, passage, prompt, choices, answer, hint, explanation):
+    return {
+        "id": id, "skill_id": "main_idea", "prerequisite_skill_id": None,
+        "difficulty": diff, "irt_a": 1.0, "irt_b": B[diff],
+        "prompt": prompt, "image_alt": None,
+        "choices": [{"id": c[0], "text": c[1], "misconception": c[2] if len(c) > 2 else None} for c in choices],
+        "answer": answer, "hint": hint, "explanation": explanation,
+        "passage": passage, "passage_read_aloud_allowed": False, "approved": True,
+    }
+
+
+# detail_for_main: picks a small detail instead of the big idea.
+# off_topic: picks something the passage never says.
+# too_broad: picks a statement wider than the passage.
+items += [
+    ritem("mi-01", 1,
+          "Bees live together in a hive. Each bee has a job. Some bees look for flowers. Some bees "
+          "take care of the baby bees. Some bees guard the door. Working together keeps the hive safe.",
+          "What is this passage mostly about?",
+          [("a", "Bees in a hive each have a job"), ("b", "Some bees guard the door", "detail_for_main"),
+           ("c", "Flowers grow in gardens", "off_topic"), ("d", "All insects work hard", "too_broad")], "a",
+          "Look for the idea that covers the whole passage, not just one sentence.",
+          "Every sentence is about the different jobs bees do, so that is the big idea."),
+    ritem("mi-02", 1,
+          "Rain helps plants grow. After it rains, the soil holds water. Roots drink the water. "
+          "Then the plant can make food from sunlight.",
+          "What is the big idea of this passage?",
+          [("a", "Rain helps plants grow"), ("b", "Roots drink water", "detail_for_main"),
+           ("c", "Sunlight is warm", "off_topic"), ("d", "Weather changes every day", "too_broad")], "a",
+          "The first sentence often tells you the big idea. Check if the rest of the passage matches it.",
+          "The passage explains how rain helps a plant grow, step by step."),
+    ritem("mi-03", 2,
+          "Sea otters float on their backs. They wrap themselves in seaweed so they do not drift away "
+          "while they sleep. They also hold hands with other otters. Both tricks keep the group together.",
+          "Which detail supports the big idea that otters keep from drifting away?",
+          [("a", "They wrap themselves in seaweed"), ("b", "Sea otters float on their backs", "detail_for_main"),
+           ("c", "Otters eat shellfish", "off_topic"), ("d", "Ocean animals are clever", "too_broad")], "a",
+          "Find the sentence that shows HOW they stop drifting.",
+          "Wrapping in seaweed is what holds an otter in place, so it supports that idea."),
+    ritem("mi-04", 2,
+          "Long ago, people told time using the sun. A sundial has a stick in the middle. The stick makes "
+          "a shadow. As the sun moves across the sky, the shadow moves too. People read the time from "
+          "where the shadow falls.",
+          "What is this passage mostly about?",
+          [("a", "How a sundial shows the time"), ("b", "A sundial has a stick", "detail_for_main"),
+           ("c", "The sun is very hot", "off_topic"), ("d", "People invented many machines", "too_broad")], "a",
+          "Ask yourself: what is the passage explaining from beginning to end?",
+          "Each sentence adds one step in how a sundial tells time."),
+    ritem("mi-05", 3,
+          "Some frogs can freeze in winter. Ice forms inside their bodies, and their hearts stop beating. "
+          "Sugar in their blood protects them from harm. When spring comes, they thaw out and hop away.",
+          "Which sentence best states the main idea?",
+          [("a", "Some frogs survive winter by freezing and thawing"),
+           ("b", "Ice forms inside their bodies", "detail_for_main"),
+           ("c", "Frogs eat insects in the spring", "off_topic"),
+           ("d", "Animals do amazing things", "too_broad")], "a",
+          "A main idea sentence should cover the beginning AND the end of the passage.",
+          "The passage covers freezing in winter and thawing in spring, which choice A states."),
+    ritem("mi-06", 3,
+          "City planners are adding gardens to rooftops. The plants soak up rain, so less water floods the "
+          "streets. The leaves also cool the building below, so people use less power in summer. Birds and "
+          "bees find new places to visit.",
+          "What is the main idea of this passage?",
+          [("a", "Rooftop gardens help cities in several ways"),
+           ("b", "Leaves cool the building below", "detail_for_main"),
+           ("c", "Bees make honey", "off_topic"),
+           ("d", "Cities are growing quickly", "too_broad")], "a",
+          "Count how many different benefits the passage lists. What do they all have in common?",
+          "Flooding, cooling, and wildlife are all ways rooftop gardens help, so choice A covers them."),
+    ritem("mi-07", 4,
+          "Paper was once made only by hand, one sheet at a time. A worker dipped a screen into wet pulp, "
+          "lifted it, and let the water drain. Then the sheet was pressed and hung to dry. A skilled worker "
+          "might finish a few hundred sheets in a day. Today a machine can make that many in a second.",
+          "Which statement best captures the main idea?",
+          [("a", "Making paper changed from slow handwork to fast machines"),
+           ("b", "A worker dipped a screen into wet pulp", "detail_for_main"),
+           ("c", "Paper is made from trees", "off_topic"),
+           ("d", "Machines changed the world", "too_broad")], "a",
+          "The last sentence compares old and new. Does your answer include both?",
+          "The passage contrasts the slow hand process with fast machines, which choice A states."),
+    ritem("mi-08", 4,
+          "Desert plants save water in clever ways. A cactus stores water in its thick stem. Some plants "
+          "grow roots that spread wide and shallow to catch rain fast. Others drop their leaves in dry months "
+          "so they lose less water to the air.",
+          "Which detail best supports the main idea?",
+          [("a", "A cactus stores water in its thick stem"),
+           ("b", "Desert plants save water in clever ways", "detail_for_main"),
+           ("c", "Deserts are hot during the day", "off_topic"),
+           ("d", "Plants need water to live", "too_broad")], "a",
+          "The main idea is already given. Which choice is an EXAMPLE of it?",
+          "Storing water in a stem is one clever way a desert plant saves water."),
+]
+
 OUT.write_text(json.dumps(items, indent=2), encoding="utf-8")
 print(f"wrote {len(items)} items to {OUT}")

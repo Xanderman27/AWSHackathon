@@ -2,7 +2,11 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
 import { AccessibilityBar, PrefsProvider } from './a11y'
+import Bear from './components/Bear'
 import Home from './pages/Home'
+import StudentLayout from './pages/StudentLayout'
+import StudentAssessments from './pages/StudentAssessments'
+import StudentGames from './pages/StudentGames'
 import StudentQuest from './pages/StudentQuest'
 import TeacherDashboard from './pages/TeacherDashboard'
 import ParentLayout from './pages/ParentLayout'
@@ -15,13 +19,20 @@ function Shell() {
     <div className="shell">
       <a href="#main" className="visually-hidden">Skip to main content</a>
       <header className="topbar">
-        <Link to="/" className="brand"><span className="dot" aria-hidden="true" />Learning Quest</Link>
+        <Link to="/" className="brand">
+          <Bear size={38} mood="happy" />
+          Dori
+        </Link>
         <AccessibilityBar />
       </header>
       <main id="main">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/student" element={<StudentQuest />} />
+          <Route path="/student" element={<StudentLayout />}>
+            <Route index element={<StudentAssessments />} />
+            <Route path="games" element={<StudentGames />} />
+          </Route>
+          <Route path="/student/quest/:skillId" element={<StudentQuest />} />
           <Route path="/teacher" element={<TeacherDashboard />} />
           <Route path="/parent" element={<ParentLayout />}>
             <Route index element={<ParentProgress />} />
@@ -30,10 +41,6 @@ function Shell() {
           </Route>
         </Routes>
       </main>
-      <footer className="site-foot">
-        <span>This tool supports learning. It does not make eligibility, placement, or IEP decisions.</span>
-        <span>Synthetic demo data</span>
-      </footer>
     </div>
   )
 }
