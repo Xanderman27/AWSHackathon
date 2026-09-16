@@ -1,4 +1,4 @@
-// Quests tab: only what the teacher has assigned (PRD FR-02). Free practice lives on My path.
+// Quizzes tab: only what the teacher has assigned (PRD FR-02). Free practice lives on My path.
 
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -21,15 +21,15 @@ export default function StudentAssessments() {
   useEffect(() => { api<Assigned[]>('/student/assignments').then(setQuests).catch((e) => setErr(String(e))) }, [])
 
   if (err) return <p role="alert">Something went wrong. {err}</p>
-  if (quests === null) return <p>Finding your quests…</p>
+  if (quests === null) return <p>Finding your quizzes…</p>
 
   return (
     <div className="stack">
-      <h2 className="section-title">Quests from your teacher</h2>
+      <h2 className="section-title">Quizzes from your teacher</h2>
       {quests.length === 0 ? (
         <div className="card celebrate" style={{ padding: 32 }}>
           <div className="big" aria-hidden="true">🌟</div>
-          <h2>No quests right now</h2>
+          <h2>No quizzes right now</h2>
           <p className="muted" style={{ margin: 0 }}>Your teacher will send one when it is ready. You can practice on your path any time!</p>
         </div>
       ) : (

@@ -318,12 +318,12 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 
 /* Teacher-assigned collaborative activities */
 .group-activity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
-.group-activity-card { display: grid; grid-template-columns: auto 1fr; gap: 14px 18px; align-items: start; }
+.group-activity-card { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr auto; gap: 14px 18px; align-items: start; height: 100%; box-sizing: border-box; }
 .group-activity-card h3 { margin: 8px 0 4px; font-size: 1.45em; }
 .group-activity-card p { margin: 0; }
 .group-activity-art { width: 66px; height: 66px; display: grid; place-items: center; border-radius: 20px;
   background: var(--surface); font-size: 2.2em; grid-row: span 2; }
-.assigned-team { display: grid; gap: 2px; padding: 12px 14px; border-radius: 14px; background: color-mix(in srgb, var(--surface) 72%, transparent); }
+.assigned-team { display: grid; gap: 2px; padding: 12px 14px; border-radius: 14px; background: color-mix(in srgb, var(--surface) 72%, transparent); grid-column: 1 / -1; align-self: start; }
 .assigned-team span { font-size: .9em; }
 .group-join { grid-column: 1 / -1; justify-content: center; text-decoration: none; }
 .group-empty, .group-loading { display: flex; align-items: center; gap: 18px; }
@@ -1169,3 +1169,8 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .class-code-counts { font-size: .92em; }
 @media (max-width: 620px) { .code-value { font-size: 1.8em; } }
 .join-card { max-width: 640px; }
+/* Team chip takes the hue of the card behind it (same wash as the team box). */
+.group-activity-card .team-chip { background: color-mix(in srgb, var(--surface) 55%, transparent); color: inherit; }
+:root[data-contrast='high'] .group-activity-card .team-chip { background: #000; color: var(--ink); border: 1.5px solid var(--line); }
+/* Star count in the top bar, beside the student's name. */
+.stars-mini { font-size: .92em; padding: 6px 13px; box-shadow: 0 3px 0 var(--duo-gold-edge); }

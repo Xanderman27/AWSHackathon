@@ -31,13 +31,12 @@ const OFFSETS = [0, -62, -88, -62, 0, 58]
 export default function StudentPath() {
   const nav = useNavigate()
   const [tracks, setTracks] = useState<Track[]>([])
-  const [stars, setStars] = useState(0)
   const [subject, setSubject] = useState<string>('english')
   const [err, setErr] = useState<string | null>(null)
 
   useEffect(() => {
     api<{ tracks: Track[]; stars: number }>('/student/path')
-      .then((d) => { setTracks(d.tracks); setStars(d.stars) })
+      .then((d) => setTracks(d.tracks))
       .catch((e) => setErr(String(e)))
   }, [])
 
@@ -58,10 +57,7 @@ export default function StudentPath() {
 
   return (
     <div className="stack">
-      <div className="row between">
-        <h2 className="section-title" style={{ margin: 0 }}>My path</h2>
-        <span className="stars-chip" aria-label={`${stars} stars earned`}>⭐ {stars}</span>
-      </div>
+      <h2 className="section-title" style={{ margin: 0 }}>My path</h2>
 
       <div className="path-layout">
         <nav className="subject-rail" aria-label="Subjects">

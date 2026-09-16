@@ -56,7 +56,7 @@ export default function GameShell({ meta, participants, connection, error, ready
           <span className="eyebrow">{meta.glyph} {meta.groupName ?? 'On your own'}</span>
           <h2>{meta.title}</h2>
           <p className="muted">
-            {meta.solo ? 'Playing on your own. Nothing here is graded.' : `You are working with ${names(meta.teammates)}.`}
+            {meta.solo ? 'Playing on your own. Nothing here is graded.' : `You are working with your classmates ${names(meta.teammates)}.`}
           </p>
         </div>
         <Link className="btn" to="/student/games">← Back to activities</Link>

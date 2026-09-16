@@ -98,13 +98,13 @@ export default function StudentQuest() {
           <Capy size={126} mood="cheer" float />
           <h1 style={{ marginTop: 12 }}>You did it!</h1>
           <p style={{ fontSize: '1.2em' }}>{next.summary}</p>
-          <button type="button" className="btn-primary btn-lg" onClick={leave}>Back to quests</button>
+          <button type="button" className="btn-primary btn-lg" onClick={leave}>Back to my path</button>
         </div>
       </div>
     )
   }
 
-  if (!item || !next) return <p>Getting your quest ready…</p>
+  if (!item || !next) return <p>Getting your quiz ready…</p>
   const { position: pos, total } = next
   const playing = narrator.state === 'playing'
 
@@ -113,7 +113,7 @@ export default function StudentQuest() {
       <Confetti burst={burst} />
       <div className="card quest-card-main">
         <div className="quest-head">
-          <button type="button" className="btn-ghost back" onClick={leave}>← Quests</button>
+          <button type="button" className="btn-ghost back" onClick={leave}>← Back</button>
           <div className="progress" role="img" aria-label={`Question ${pos} of ${total}`}>
             {Array.from({ length: total }, (_, i) => (
               <i key={i} className={i + 1 < pos ? 'done' : i + 1 === pos ? 'now' : ''} />
@@ -156,7 +156,7 @@ export default function StudentQuest() {
             )}
             {narrator.available && item.passage && !item.passage_read_aloud_allowed && (
               <p className="muted read-note" style={{ textAlign: 'center' }}>
-                This one is a reading quest, so the story stays for your eyes. Capy will read the
+                This one is a reading quiz, so the story stays for your eyes. Capy will read the
                 question and the answers.
               </p>
             )}
@@ -205,7 +205,7 @@ export default function StudentQuest() {
           </div>
         )}
       </div>
-      {skill && <p className="muted quest-foot">Quest: {skill.child_name}</p>}
+      {skill && <p className="muted quest-foot">{skill.child_name}</p>}
     </div>
   )
 }

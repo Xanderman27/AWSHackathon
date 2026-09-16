@@ -91,7 +91,7 @@ export default function SortItOut() {
                   </label>
                   {bin.created_by && (
                     <span className="bin-author" style={{ '--editor-color': editorColor(people, bin.created_by) ?? 'var(--brand)' } as CSSProperties}>
-                      made by {editorName(people, bin.created_by) || 'a teammate'}
+                      made by {editorName(people, bin.created_by) || 'a classmate'}
                     </span>
                   )}
                   <button type="button" className="drop-here" disabled={!live || !held}
