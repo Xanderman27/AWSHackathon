@@ -6,6 +6,7 @@ import { api } from '../api'
 import { MasteryGauge, OutcomeTrack } from '../components/MasteryGauge'
 import Avatar, { type AvatarSpec } from '../components/Avatar'
 import ClassPhoto from '../components/ClassPhoto'
+import JoinClass from '../components/JoinClass'
 import { localDate, photoDate, type ClassPhotoRow } from '../components/ClassPhotoManager'
 import {
   BoltIcon, BulbIcon, FlagIcon, GlobeIcon, StarIcon, TeamIcon, TreasureMapIcon,
@@ -52,7 +53,7 @@ function activityDate(raw: string) {
 }
 
 export default function ParentProgress() {
-  const [children, setChildren] = useState<Child[]>([])
+  const [children, setChildren] = useState<Child[] | null>(null)
   const [progress, setProgress] = useState<Progress | null>(null)
   const [err, setErr] = useState<string | null>(null)
   const [photos, setPhotos] = useState<ClassPhotoRow[]>([])
@@ -66,6 +67,13 @@ export default function ParentProgress() {
   }, [])
 
   if (err) return <p role="alert">{err}</p>
+  if (children !== null && children.length === 0) {
+    return (
+      <section className="card join-card">
+        <JoinClass onJoined={() => window.location.reload()} />
+      </section>
+    )
+  }
   if (!progress) return <p>Loading…</p>
 
   const { student, next_steps: next, mastery, average_score: avg, stats, achievements, group_activities: groups } = progress
@@ -79,9 +87,9 @@ export default function ParentProgress() {
 
   return (
     <div className="stack">
-      {children.length > 1 && (
+      {(children?.length ?? 0) > 1 && (
         <div className="row" role="group" aria-label="Choose a child">
-          {children.map((c) => (
+          {(children ?? []).map((c) => (
             <button key={c.id} type="button" aria-pressed={student.id === c.id}
               onClick={() => api<Progress>(`/parent/children/${c.id}/progress`).then(setProgress)}>
               {c.display_name}

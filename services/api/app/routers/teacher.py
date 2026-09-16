@@ -7,6 +7,7 @@ import uuid
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
+from .. import classcode
 from ..models import now
 
 from ..auth import Actor, require_role, require_student_access
@@ -184,3 +185,47 @@ def remove_assignment(assignment_id: str, actor: Actor = Depends(require_role("t
     store.append("audit", {"actor": actor.user_id, "action": "assignment.remove",
                            "object_id": assignment_id, "at": now()})
     return {"ok": True}
+
+
+# --- Class code --------------------------------------------------------------------------
+# The code a teacher reads out so families can find this classroom. It is the only thing
+# standing between a stranger and a sign-up form, so the teacher can replace it at any time
+# and old codes stop working the moment they do.
+
+
+def _my_class(actor: Actor) -> dict:
+    klass = classcode.class_for_teacher(actor.user_id, actor.class_ids)
+    if klass is None:
+        raise HTTPException(404, "no class found for this teacher")
+    return klass
+
+
+def _code_payload(klass: dict) -> dict:
+    students_in_class = {s["id"] for s in store.read("students") if s["class_id"] == klass["id"]}
+    linked_parents = {
+        link["parent_id"] for link in store.read("links") if link["student_id"] in students_in_class
+    }
+    waiting = sum(1 for p in store.read("parents") if p.get("pending_class_id") == klass["id"])
+    return {
+        "class_id": klass["id"],
+        "class_name": klass.get("name", klass["id"]),
+        "code": klass.get("code", ""),
+        "families_joined": len(linked_parents),
+        "families_choosing": waiting,
+    }
+
+
+@router.get("/class-code")
+def class_code(actor: Actor = Depends(require_role("teacher"))):
+    return _code_payload(_my_class(actor))
+
+
+@router.post("/class-code/rotate")
+def rotate_class_code(actor: Actor = Depends(require_role("teacher"))):
+    """Issue a new code. Families already joined keep their access; the old code stops working."""
+    klass = _my_class(actor)
+    klass["code"] = classcode.generate()
+    store.upsert("classes", klass)
+    store.append("audit", {"actor": actor.user_id, "action": "class_code.rotate",
+                           "object_id": klass["id"], "at": now()})
+    return _code_payload(klass)

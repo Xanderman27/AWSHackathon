@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
 
 from ..auth import Actor, require_role, require_student_access
 from ..mastery import bkt
+from ..models import now
 from ..storage import store
 
 router = APIRouter(prefix="/parent", tags=["parent"])
@@ -40,6 +42,60 @@ def _peer(student: dict) -> dict:
 @router.get("/children")
 def children(actor: Actor = Depends(require_role("parent"))):
     return [_safe(s) for s in store.read("students") if s["id"] in actor.student_ids]
+
+
+# --- Joining a classroom -----------------------------------------------------------------
+# A class code says which classroom, never which child, so choosing the child is its own
+# authorised step. The candidate list is scoped to the class the code let this family into,
+# and it disappears the moment they pick, so it is never a browsable class roster.
+
+
+class ClaimIn(BaseModel):
+    student_id: str
+
+
+def _me(actor: Actor) -> dict | None:
+    return next((p for p in store.read("parents") if p["id"] == actor.user_id), None)
+
+
+@router.get("/join")
+def join_state(actor: Actor = Depends(require_role("parent"))):
+    """Whether this family still has a child to choose, and who is on offer."""
+    me = _me(actor) or {}
+    pending = me.get("pending_class_id")
+    if not pending or actor.student_ids:
+        return {"needs_child": False, "class_name": None, "candidates": []}
+    klass = next((c for c in store.read("classes") if c["id"] == pending), {})
+    return {
+        "needs_child": True,
+        "class_name": klass.get("name", "your class"),
+        "candidates": [
+            {"id": s["id"], "display_name": s["display_name"],
+             "photo": s.get("photo"), "avatar": s.get("avatar")}
+            for s in store.read("students") if s["class_id"] == pending
+        ],
+    }
+
+
+@router.post("/join")
+def claim_child(body: ClaimIn, actor: Actor = Depends(require_role("parent"))):
+    me = _me(actor)
+    pending = (me or {}).get("pending_class_id")
+    if not me or not pending:
+        raise HTTPException(409, "This account has already joined a class.")
+    student = next((s for s in store.read("students") if s["id"] == body.student_id), None)
+    # The child must be in the class the code opened. Anything else is not this family's.
+    if student is None or student["class_id"] != pending:
+        raise HTTPException(403, "not permitted")
+
+    store.append("links", {"parent_id": actor.user_id, "student_id": student["id"]})
+    me.pop("pending_class_id", None)
+    me["class_id"] = pending
+    me["joined_at"] = now()
+    store.upsert("parents", me)
+    store.append("audit", {"actor": actor.user_id, "action": "parent.link.claim",
+                           "object_id": student["id"], "at": now()})
+    return {"ok": True, "student": _safe(student)}
 
 
 @router.get("/children/{student_id}/progress")

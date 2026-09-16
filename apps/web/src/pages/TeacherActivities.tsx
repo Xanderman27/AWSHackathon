@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { api, type Skill } from '../api'
 import GroupActivityManager from '../components/GroupActivityManager'
 import ClassPhotoManager from '../components/ClassPhotoManager'
+import ClassCodeCard from '../components/ClassCodeCard'
 
 interface Assignment { id: string; skill_name: string; subject: string; who: string; at: string }
 interface Student { id: string; display_name: string }
@@ -94,6 +95,7 @@ export default function TeacherActivities() {
         )}
       </section>
 
+      <ClassCodeCard />
       <GroupActivityManager />
       <ClassPhotoManager />
     </div>

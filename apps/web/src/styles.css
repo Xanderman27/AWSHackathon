@@ -1140,3 +1140,32 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 @media (prefers-reduced-motion: reduce) { .land-blob, .land-drift { animation: none !important; } }
 :root[data-contrast='high'] .land-blob { display: none; }
 :root[data-contrast='high'] .land-pill { border-color: var(--line); box-shadow: none; color: var(--ink); }
+
+/* ---------- Sign-up and the class code --------------------------------------- */
+
+.code-input { text-transform: uppercase; letter-spacing: .14em; font-weight: 700; }
+.link-button { background: none; border: 0; padding: 0; min-height: 0; font: inherit;
+  color: var(--brand); font-weight: 700; text-decoration: underline; cursor: pointer; }
+.link-button:hover { transform: none; }
+
+/* Choosing which child is yours, right after signing up. */
+.join-step { display: grid; gap: 14px; }
+.join-grid { list-style: none; margin: 0; padding: 0; display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; max-height: 44vh; overflow-y: auto; }
+.join-child { width: 100%; display: grid; justify-items: center; gap: 6px; padding: 12px 6px;
+  border-radius: var(--radius); border-width: 2px; background: var(--surface); font-size: .86em; font-weight: 700; }
+.join-child[aria-pressed='true'] { border-color: var(--brand); background: var(--brand-soft);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 22%, transparent); }
+
+/* The teacher's copy of the code. */
+.class-code-card { display: grid; gap: 14px; }
+.class-code-card h2 { margin: 8px 0 4px; }
+.class-code-card p { margin: 0; max-width: 62ch; }
+.code-block { display: flex; flex-wrap: wrap; gap: 16px; align-items: center;
+  padding: 16px 20px; border-radius: var(--radius); background: var(--surface-2); border: 2px dashed var(--line); }
+.code-value { font-size: 2.4em; font-weight: 800; letter-spacing: .18em; line-height: 1;
+  font-variant-numeric: tabular-nums; }
+.rotate-confirm { gap: 8px; }
+.class-code-counts { font-size: .92em; }
+@media (max-width: 620px) { .code-value { font-size: 1.8em; } }
+.join-card { max-width: 640px; }

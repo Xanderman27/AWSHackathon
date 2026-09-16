@@ -39,7 +39,14 @@ Open http://localhost:5173. The API runs on port 8010. Sign in with a demo accou
 
 ## What works today
 
-- Landing page: a Duolingo-style hero with Capy waving; both buttons open the login dialog. Students use the login their teacher set; teachers and parents have their own.
+- Landing page: a Duolingo-style hero with Capy. "Get started" opens a family sign-up (name,
+  email, password, class code) — the code decides which classroom they join, and a second step
+  asks which child is theirs. "I already have an account" is the login. Students use the login
+  their teacher set. Seeded demo logins stay plaintext so judges can read them off the screen;
+  anything a real person types at sign-up is salted and hashed with PBKDF2.
+- Class code: the teacher's Activities tab shows the code (seeded `BRIGHT4`), copies it, and can
+  issue a new one, which stops the old code working. Codes skip characters people confuse
+  (no O/0, I/1/L) and are matched ignoring case, spaces, and dashes.
 - Student portal: a Duolingo-style practice path (3D step nodes per skill, earned from the same mastery estimate the teacher sees, never shown as a number), plus Quests (assigned adaptive assessments) and Games (collaborative activities and free play) tabs.
 - Student quest: adaptive item selection, prerequisite routing, resume, reading passages that are not read aloud so the item still measures reading.
 - One play/pause button per question that highlights each word as it is spoken, and light confetti on a correct answer.

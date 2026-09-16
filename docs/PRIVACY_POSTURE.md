@@ -52,6 +52,24 @@ confirm the photo exists. `tests/test_class_photos.py` covers each of these.
 parent-side report button, retention limits, and EXIF stripping (an uploaded photo may carry
 GPS coordinates; the demo stores the file as received).
 
+## 3. A class code shows a new family the class roster once
+
+**What ships.** Someone who signs up with a valid class code is shown the first names and
+portraits of every learner in that class, so they can pick their own child.
+
+**Why.** A class code says which classroom, never which child. Something has to bridge that
+gap, and asking the family is one step instead of a teacher-side review queue.
+
+**What limits it.** The roster is only reachable with a valid code, only for the class that
+code belongs to, and only while the family has no child linked — `GET /parent/join` returns
+an empty list the moment they choose, so it is not a browsable class list. Picking a learner
+outside the joined class is refused, and the choice is written to the audit log.
+
+**What a real district needs first.** A teacher-side review of new families, and the ability
+to correct a wrong choice. Today a family that picks the wrong child would need the teacher
+to edit the link by hand. Rotating the code (teacher Activities tab) is the only revocation
+that exists.
+
 ## Related
 
 `apps/web/public/faces/CREDITS.md` covers the seeded learner portraits, which are stock

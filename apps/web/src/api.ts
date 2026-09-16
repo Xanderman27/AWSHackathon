@@ -53,6 +53,27 @@ export async function login(username: string, password: string): Promise<Session
   return s
 }
 
+export interface SignUpResult extends Session { class_name: string; needs_child: boolean }
+
+/** Create a family account from a class code, and sign them straight in. */
+export async function signUp(input: { name: string; email: string; password: string; classCode: string }): Promise<SignUpResult> {
+  const res = await fetch('/api/auth/signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: input.name, email: input.email, password: input.password, class_code: input.classCode,
+    }),
+  })
+  if (!res.ok) {
+    const detail = await res.json().catch(() => null)
+    throw new Error(detail?.detail ?? 'We could not create that account. Please try again.')
+  }
+  const d = (await res.json()) as { role: Role; user_id: string; display_name: string; class_name: string; needs_child: boolean }
+  const session: Session = { role: d.role, userId: d.user_id, name: d.display_name }
+  setSession(session)
+  return { ...session, class_name: d.class_name, needs_child: d.needs_child }
+}
+
 /** Fetch bytes rather than JSON, carrying the same role headers every other call does. */
 export async function apiBlob(path: string): Promise<Blob> {
   const session = getSession()
