@@ -4,6 +4,7 @@ import Avatar from '../components/Avatar'
 import type { AvatarSpec } from '../components/Avatar'
 import MessagesWidget from '../components/MessagesWidget'
 import GroupActivityManager from '../components/GroupActivityManager'
+import ClassPhotoManager from '../components/ClassPhotoManager'
 import RoleGate from './RoleGate'
 import { BoltIcon, FlagIcon, StarIcon, TeamIcon } from '../components/PathArt'
 
@@ -119,6 +120,7 @@ export default function TeacherDashboard() {
       )}
 
       <GroupActivityManager />
+      <ClassPhotoManager />
       <MessagesWidget />
 
       <div className="card" style={{ background: 'var(--surface-2)' }}>

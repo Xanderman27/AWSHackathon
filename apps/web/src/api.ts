@@ -53,6 +53,19 @@ export async function login(username: string, password: string): Promise<Session
   return s
 }
 
+/** Fetch bytes rather than JSON, carrying the same role headers every other call does. */
+export async function apiBlob(path: string): Promise<Blob> {
+  const session = getSession()
+  const headers: Record<string, string> = {}
+  if (session) {
+    headers['X-Role'] = session.role
+    headers['X-User-Id'] = session.userId
+  }
+  const res = await fetch(`/api${path}`, { headers })
+  if (!res.ok) throw new Error(`${res.status}`)
+  return res.blob()
+}
+
 export interface Choice { id: string; text: string }
 export interface Item {
   id: string; prompt: string; image_alt?: string | null; choices: Choice[]; hint: string

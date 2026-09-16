@@ -16,12 +16,18 @@ STATE = ROOT / "data" / "state"
 
 COLLECTIONS = ["skills", "items", "students", "links", "attempts", "mastery", "audit",
                "recommendations", "conference_slots", "conference_requests",
-               "teachers", "parents", "message_threads", "messages", "group_activities", "accounts"]
+               "teachers", "parents", "message_threads", "messages", "group_activities", "accounts",
+               "class_photos"]
+
+# Binary uploads (classroom photos) sit next to the JSON rather than inside it.
+SEED_UPLOADS = SEED / "uploads"
+UPLOADS = STATE / "uploads"
 
 
 class LocalStore:
     def __init__(self) -> None:
         STATE.mkdir(parents=True, exist_ok=True)
+        UPLOADS.mkdir(parents=True, exist_ok=True)
         for name in COLLECTIONS:
             if not (STATE / f"{name}.json").exists():
                 src = SEED / f"{name}.json"
@@ -71,7 +77,22 @@ class LocalStore:
         rows.append(row)
         self._write(name, rows)
 
+    def upload_path(self, filename: str) -> Path:
+        """Resolve a stored filename, refusing anything that climbs out of the folder."""
+        candidate = (UPLOADS / filename).resolve()
+        if candidate.parent != UPLOADS.resolve():
+            raise ValueError("bad upload path")
+        return candidate
+
     def reset(self) -> None:
+        # Wipe uploads and restore the seeded ones, so a reset really is a clean classroom.
+        if UPLOADS.exists():
+            shutil.rmtree(UPLOADS)
+        UPLOADS.mkdir(parents=True, exist_ok=True)
+        if SEED_UPLOADS.exists():
+            for src in SEED_UPLOADS.iterdir():
+                if src.is_file():
+                    shutil.copy(src, UPLOADS / src.name)
         for name in COLLECTIONS:
             src = SEED / f"{name}.json"
             if src.exists():

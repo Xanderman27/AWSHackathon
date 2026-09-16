@@ -46,7 +46,12 @@ Open http://localhost:5173. The API runs on port 8010. Sign in with a demo accou
 - Dori appears beside the question and delivers the hint in a speech bubble.
 - Accessibility bar: read-aloud (browser speech engine as a stand-in for Polly), high contrast, three text sizes, reduced motion, keyboard focus.
 - Teacher dashboard: class counts, classwide statistics with per-subject averages, learner table with band and confidence, per-student item evidence with route reasons.
-- Parent view: a Duolingo-profile-style page for the linked child — statistics, calculated achievements, group activities, mastery gauge and outcomes, teacher-approved next steps, and a rights library in a popup.
+- Parent view: the classroom photo feed, "Who <child> works with" showing each team activity's
+  teammates by name and face, and a Duolingo-profile-style page for the linked child — statistics, calculated achievements, group activities, mastery gauge and outcomes, teacher-approved next steps, and a rights library in a popup.
+- Classroom photos: a teacher shares a photo and a sentence, and it appears on the dashboard of
+  every family in that class. Image bytes go through an authorised route, not a public folder.
+  Who sees what, and what a district would need before this ships, is in
+  [docs/PRIVACY_POSTURE.md](docs/PRIVACY_POSTURE.md).
 - Messages: a corner panel on the parent and teacher views. A parent can only reach their child's teacher; a teacher can only reach families in their own class. The server decides the pairing, not the client.
 - Faces: each seeded learner has a portrait (`apps/web/public/faces/`, credits and a caveat in
   `CREDITS.md` there) with an illustrated fallback in `components/Avatar.tsx` for anyone without
@@ -74,10 +79,10 @@ apps/web          React + Vite + TypeScript (student, teacher, parent routes)
 services/api      FastAPI: mastery model, selection, authorization, local JSON storage
   app/mastery     Layer 1 BKT (item-aware) and Layer 2 adaptive selection
   app/games       Activity registry and one module per game (state + apply)
-data/seed         Skills, items, students, links, seeded mastery
-data/state        Runtime state (gitignored; reset copies seed over it)
+data/seed         Skills, items, students, links, seeded mastery; uploads/ holds seeded photos
+data/state        Runtime state (gitignored; reset copies seed over it, uploads included)
 scripts           build_items.py; fit_*.py and simulate.py to come
-docs              PRD, tech stack, learner model
+docs              PRD, tech stack, learner model, privacy posture
 ```
 
 ## Next

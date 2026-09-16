@@ -23,7 +23,18 @@ NEXT_STEP_FIELDS = ("id", "title", "why", "minutes", "materials", "steps", "appr
 
 def _safe(student: dict) -> dict:
     """Parents see name and grade. No class, no goal-link marker (PRD §6)."""
-    return {"id": student["id"], "display_name": student["display_name"], "grade": student["grade"]}
+    return {"id": student["id"], "display_name": student["display_name"], "grade": student["grade"],
+            "photo": student.get("photo"), "avatar": student.get("avatar")}
+
+
+def _peer(student: dict) -> dict:
+    """Another family's child, as seen by this parent: a first name and a face, nothing more.
+
+    Deliberately narrower than _safe. No grade, no class, no goal marker, no progress of any
+    kind — a teammate is someone your child works with, not someone you get a report on.
+    """
+    return {"id": student["id"], "display_name": student["display_name"],
+            "photo": student.get("photo"), "avatar": student.get("avatar")}
 
 
 @router.get("/children")
@@ -100,12 +111,18 @@ def _profile_extras(student_id: str, skills: dict) -> dict:
             subjects.add(sk["subject"])
 
     groups = []
-    students = {st["id"]: st["display_name"] for st in store.read("students")}
+    students = {st["id"]: st for st in store.read("students")}
     for g in store.read("group_activities"):
         if g.get("status") == "published" and student_id in g.get("member_ids", []):
             groups.append({
                 "id": g["id"], "title": g["title"], "group_name": g["group_name"],
-                "teammates": [students.get(m, "A classmate") for m in g["member_ids"] if m != student_id],
+                "published_at": g.get("published_at"),
+                # The teacher's reason for pairing these learners stays with the teacher
+                # (PRD §12); a parent gets the who, never the why.
+                "teammates": [
+                    _peer(students[m]) for m in g["member_ids"]
+                    if m != student_id and m in students
+                ],
             })
 
     stats = {"stars": stars, "checkins": responses, "quests_done": quests_done,

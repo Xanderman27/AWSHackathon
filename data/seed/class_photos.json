@@ -1,0 +1,35 @@
+[
+  {
+    "id": "photo-seed-01",
+    "class_id": "class-4a",
+    "filename": "seed-fraction-day.jpg",
+    "content_type": "image/jpeg",
+    "caption": "Fraction strips day. The teams found three different ways to cover one half.",
+    "taken_on": "2026-09-16",
+    "uploaded_by": "teacher-01",
+    "uploaded_by_name": "Ms. Rivera",
+    "uploaded_at": "2026-09-16T21:10:00+00:00"
+  },
+  {
+    "id": "photo-seed-02",
+    "class_id": "class-4a",
+    "filename": "seed-quest-morning.jpg",
+    "content_type": "image/jpeg",
+    "caption": "Quiet check-in time on Monday. Everyone had a turn at the main idea quest.",
+    "taken_on": "2026-09-14",
+    "uploaded_by": "teacher-01",
+    "uploaded_by_name": "Ms. Rivera",
+    "uploaded_at": "2026-09-14T16:40:00+00:00"
+  },
+  {
+    "id": "photo-seed-03",
+    "class_id": "class-4a",
+    "filename": "seed-friday-outside.jpg",
+    "content_type": "image/jpeg",
+    "caption": "Friday outside. We warmed up with parachute games before team time.",
+    "taken_on": "2026-09-11",
+    "uploaded_by": "teacher-01",
+    "uploaded_by_name": "Ms. Rivera",
+    "uploaded_at": "2026-09-11T20:05:00+00:00"
+  }
+]
