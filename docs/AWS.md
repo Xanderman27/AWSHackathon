@@ -134,3 +134,30 @@ request payload rather than by reading the code.
 | DynamoDB | local JSON today; `LocalStore` is the seam |
 | Cognito | header auth today; would rework the sign-up flow |
 | AgentCore | `generate.propose` is the graph, written as functions |
+
+## The site updates itself
+
+`dori-update.timer` runs `scripts/autoupdate.sh` on the instance every two minutes. It fetches
+`origin/main`, and if nothing changed it exits immediately. If something did:
+
+1. reset to the new commit
+2. reinstall Python deps **only if** `requirements.txt` changed
+3. rebuild the front end **only if** anything under `apps/web/` changed
+4. refuse to restart unless the new code imports
+5. restart, then poll `/api/health` for 20 seconds
+
+If the build fails, the import fails, or the service does not come back healthy, it resets the
+working tree to the commit that was serving a minute ago, rebuilds that, and restarts. An
+auto-updating demo site is only a good idea if it can undo itself.
+
+```bash
+# what it has done
+sudo tail -40 /var/log/dori-update.log
+# force a check now
+sudo systemctl start dori-update.service
+# stop auto-updating (e.g. while rehearsing)
+sudo systemctl disable --now dori-update.timer
+```
+
+It pulls a **public** GitHub repo, so no deploy key or token exists anywhere on the instance,
+and it touches AWS only through the instance role.

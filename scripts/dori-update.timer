@@ -1,0 +1,10 @@
+[Unit]
+Description=Check main for new commits every two minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=2min
+AccuracySec=15s
+
+[Install]
+WantedBy=timers.target

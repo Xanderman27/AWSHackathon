@@ -1,0 +1,7 @@
+[Unit]
+Description=Pull main and restart Dori if it changed
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/dori/scripts/autoupdate.sh

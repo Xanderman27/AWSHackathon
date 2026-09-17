@@ -31,7 +31,7 @@ set -xeuo pipefail
 exec > >(tee /var/log/dori-boot.log) 2>&1
 
 dnf -y update
-dnf -y install python3.11 python3.11-pip git tar gzip
+dnf -y install python3.11 python3.11-pip git tar gzip nodejs22
 
 cd /opt
 git clone --depth 1 {repo} dori
@@ -41,8 +41,8 @@ python3.11 -m venv .venv
 .venv/bin/pip install --quiet --upgrade pip
 .venv/bin/pip install --quiet -r services/api/requirements.txt
 
-# The built front end comes from S3 rather than being compiled here: no Node on the box,
-# and a boot that cannot fail on a JavaScript toolchain.
+# First boot takes the prebuilt bundle from S3 so launch never waits on a JavaScript
+# toolchain. From then on scripts/autoupdate.sh rebuilds in place when apps/web changes.
 aws s3 cp s3://{bucket}/deploy/web-dist.tar.gz /tmp/web-dist.tar.gz
 mkdir -p apps/web && tar -xzf /tmp/web-dist.tar.gz -C apps/web
 
@@ -69,8 +69,14 @@ RestartSec=3
 WantedBy=multi-user.target
 UNIT
 
+# Poll main every two minutes and redeploy itself, rolling back if the new code will not
+# import or does not come back healthy.
+install -m 0644 /opt/dori/scripts/dori-update.service /etc/systemd/system/dori-update.service
+install -m 0644 /opt/dori/scripts/dori-update.timer /etc/systemd/system/dori-update.timer
+
 systemctl daemon-reload
 systemctl enable --now dori
+systemctl enable --now dori-update.timer
 
 # Seed DynamoDB and S3 on first boot only, so a redeploy never wipes live demo state.
 sleep 8
