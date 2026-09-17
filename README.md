@@ -6,6 +6,7 @@ Accessible check-ins for K-12 students with IEPs and 504 plans, teacher-approved
 - Tech stack: [docs/TECH_STACK.md](docs/TECH_STACK.md)
 - Learner model: [docs/LEARNER_MODEL.md](docs/LEARNER_MODEL.md)
 - Going live on AWS: [docs/AWS.md](docs/AWS.md)
+- Guidelines (learning, disability, collaboration, grouping, UI standards): [docs/GUIDELINES.md](docs/GUIDELINES.md)
 
 ## Run it locally
 
@@ -105,7 +106,7 @@ services/api      FastAPI: mastery model, selection, authorization, local JSON s
 data/seed         Skills, items, students, links, seeded mastery; uploads/ holds seeded photos
 data/state        Runtime state (gitignored; reset copies seed over it, uploads included)
 scripts           build_items.py; fit_*.py and simulate.py to come
-docs              PRD, tech stack, learner model, privacy posture
+docs              PRD, tech stack, learner model, privacy posture, guidelines
 ```
 
 ## Next
