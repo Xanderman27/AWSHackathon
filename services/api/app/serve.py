@@ -20,7 +20,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.responses import Response
 from starlette.staticfiles import StaticFiles
 
-from .main import app as api
+from .main import app as api, seed_new_collections
 
 DIST = Path(__file__).resolve().parents[3] / "apps" / "web" / "dist"
 
@@ -43,6 +43,15 @@ class SinglePageApp(StaticFiles):
 
 root = FastAPI(title="Dori", docs_url=None, redoc_url=None)
 root.mount("/api", api)
+
+# Startup work belongs to whichever app owns the lifespan, and that is this one. A mounted
+# sub-application is only handed http and websocket scopes; Starlette never sends it the
+# lifespan scope, so anything the API registers with on_event silently does not run here.
+# The seeding that keeps a long-lived instance's collections in step with the repository
+# seed is exactly that kind of work, so it is registered again on the root.
+@root.on_event("startup")
+def _seed_on_start() -> None:
+    seed_new_collections()
 
 if DIST.is_dir():
     root.mount("/", SinglePageApp(directory=DIST, html=True), name="web")

@@ -35,12 +35,23 @@ app.include_router(login.router)
 app.include_router(support.router)
 
 
-@app.on_event("startup")
 def seed_new_collections() -> None:
-    """Top up anything the seed gained since this environment was first created."""
+    """Top up anything the seed gained since this environment was first created.
+
+    Registered on this app for local development, and separately on the root app in
+    serve.py for production. It has to be both: in production this app is *mounted* at
+    /api, and a mounted sub-application never receives lifespan events — only the app
+    that owns the lifespan does. Registering it here alone meant the fix ran on every
+    laptop and on no deployed instance, which is the failure it was written to prevent.
+    """
     filled = store.seed_missing()
     if filled:
         print("seeded empty collections: " + ", ".join(filled))
+
+
+@app.on_event("startup")
+def _seed_on_start() -> None:
+    seed_new_collections()
 
 
 @app.get("/health")
