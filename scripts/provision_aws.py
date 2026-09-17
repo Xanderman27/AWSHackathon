@@ -83,7 +83,10 @@ def ensure_role(iam, account: str, bucket: str) -> str:
     policy = {"Version": "2012-10-17", "Statement": [
         {"Sid": "Bedrock", "Effect": "Allow",
          "Action": ["bedrock:InvokeModel", "bedrock:InvokeModelWithResponseStream",
-                    "bedrock:Converse", "bedrock:ConverseStream"],
+                    "bedrock:Converse", "bedrock:ConverseStream",
+                    # Converse with a guardrailConfig needs this separately; without it the
+                    # call is denied and the pipeline quietly falls back to cached drafts.
+                    "bedrock:ApplyGuardrail"],
          "Resource": "*"},
         {"Sid": "Uploads", "Effect": "Allow",
          "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
