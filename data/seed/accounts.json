@@ -1,7 +1,44 @@
 [
-  {"username": "sam", "password": "otter123", "role": "student", "user_id": "student-01", "display_name": "Sam"},
-  {"username": "ava", "password": "otter123", "role": "student", "user_id": "student-02", "display_name": "Ava"},
-  {"username": "rivera", "password": "teach123", "role": "teacher", "user_id": "teacher-01", "display_name": "Ms. Rivera"},
-  {"username": "jordan", "password": "family123", "role": "parent", "user_id": "parent-01", "display_name": "Jordan Bell"},
-  {"username": "priya", "password": "family123", "role": "parent", "user_id": "parent-02", "display_name": "Priya Raman"}
+  {
+    "username": "sam",
+    "password": "otter123",
+    "role": "student",
+    "user_id": "student-01",
+    "display_name": "Sam"
+  },
+  {
+    "username": "ava",
+    "password": "otter123",
+    "role": "student",
+    "user_id": "student-02",
+    "display_name": "Ava"
+  },
+  {
+    "username": "mia",
+    "password": "otter123",
+    "role": "student",
+    "user_id": "student-04",
+    "display_name": "Mia"
+  },
+  {
+    "username": "rivera",
+    "password": "teach123",
+    "role": "teacher",
+    "user_id": "teacher-01",
+    "display_name": "Ms. Rivera"
+  },
+  {
+    "username": "jordan",
+    "password": "family123",
+    "role": "parent",
+    "user_id": "parent-01",
+    "display_name": "Jordan Bell"
+  },
+  {
+    "username": "priya",
+    "password": "family123",
+    "role": "parent",
+    "user_id": "parent-02",
+    "display_name": "Priya Raman"
+  }
 ]

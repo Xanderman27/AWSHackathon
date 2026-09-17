@@ -4,7 +4,7 @@
 // The roster shows every seat in the group, not only the people currently connected, so a
 // child can see they are working with Kai and Leo and Zoe before any of them have arrived.
 
-import { type CSSProperties, type ReactNode } from 'react'
+import { useRef, type CSSProperties, type PointerEvent, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import Avatar from './Avatar'
 import type { ActivityMeta, Connection, Participant } from '../games/room'
@@ -17,7 +17,54 @@ interface Props {
   ready: boolean
   studentId: string
   tip?: string
+  /** Teammates' live pointers (normalized 0..1) from the room snapshot. */
+  cursors?: Record<string, [number, number]>
+  /** Called (throttled) with this player's own normalized pointer position. */
+  onCursor?: (x: number, y: number) => void
   children: ReactNode
+}
+
+/** Wraps the play area: reports your pointer, draws everyone else's. */
+function CursorField({ cursors, onCursor, participants, studentId, children }: {
+  cursors?: Record<string, [number, number]>
+  onCursor?: (x: number, y: number) => void
+  participants: Participant[]
+  studentId: string
+  children: ReactNode
+}) {
+  const field = useRef<HTMLDivElement>(null)
+  const lastSent = useRef(0)
+
+  function report(event: PointerEvent<HTMLDivElement>) {
+    if (!onCursor || !field.current) return
+    const at = performance.now()
+    if (at - lastSent.current < 66) return // ~15 updates a second is plenty
+    lastSent.current = at
+    const box = field.current.getBoundingClientRect()
+    if (box.width < 1 || box.height < 1) return
+    onCursor((event.clientX - box.left) / box.width, (event.clientY - box.top) / box.height)
+  }
+
+  const others = Object.entries(cursors ?? {}).filter(([id]) => id !== studentId)
+  return (
+    <div className="cursor-field" ref={field} onPointerMove={report}>
+      {children}
+      {others.map(([id, [x, y]]) => {
+        const who = participants.find((person) => person.id === id)
+        if (!who) return null
+        return (
+          <div key={id} className="peer-cursor"
+            style={{ left: `${x * 100}%`, top: `${y * 100}%`, '--player-color': who.color } as CSSProperties}
+            aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path d="M4 2 L20 11 L12.5 12.8 L9.5 20 Z" fill="var(--player-color)" stroke="#fff" strokeWidth="1.6" />
+            </svg>
+            <span className="peer-cursor-name">{who.name}</span>
+          </div>
+        )
+      })}
+    </div>
+  )
 }
 
 function names(list: { display_name: string }[]) {
@@ -26,7 +73,7 @@ function names(list: { display_name: string }[]) {
   return `${all.slice(0, -1).join(', ')} and ${all[all.length - 1]}`
 }
 
-export default function GameShell({ meta, participants, connection, error, ready, studentId, tip, children }: Props) {
+export default function GameShell({ meta, participants, connection, error, ready, studentId, tip, cursors, onCursor, children }: Props) {
   if (!ready || !meta) {
     return (
       <div className="beat-page stack">
@@ -99,7 +146,9 @@ export default function GameShell({ meta, participants, connection, error, ready
       )}
       {error && <div className="feedback try" role="alert">{error}</div>}
 
-      {children}
+      <CursorField cursors={cursors} onCursor={onCursor} participants={participants} studentId={studentId}>
+        {children}
+      </CursorField>
 
       <div className="beat-footer row between">
         <p className="muted">{tip ?? 'Take your time. Nothing here is graded.'}</p>

@@ -27,6 +27,7 @@ export default function MemoryMeadow() {
   return (
     <GameShell
       meta={meta} participants={people} connection={connection}
+      cursors={snapshot?.cursors} onCursor={(x, y) => send({ type: 'cursor', x, y })}
       error={metaError || error} ready={Boolean(meta && board)} studentId={studentId}
       tip="Say the spot out loud when you see a card. Remembering together is the whole game."
     >

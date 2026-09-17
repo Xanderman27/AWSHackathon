@@ -66,6 +66,7 @@ export default function ShapeShift() {
   return (
     <GameShell
       meta={meta} participants={people} connection={connection}
+      cursors={snapshot?.cursors} onCursor={(x, y) => send({ type: 'cursor', x, y })}
       error={metaError || error} ready={Boolean(meta && game)} studentId={studentId}
       tip="If a piece will not fit, turn it a quarter turn and try the same spot again."
     >

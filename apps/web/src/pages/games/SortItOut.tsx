@@ -39,6 +39,7 @@ export default function SortItOut() {
   return (
     <GameShell
       meta={meta} participants={people} connection={connection}
+      cursors={snapshot?.cursors} onCursor={(x, y) => send({ type: 'cursor', x, y })}
       error={metaError || error} ready={Boolean(meta && game)} studentId={studentId}
       tip="There is no right answer here. If you can say why a card belongs, it belongs."
     >

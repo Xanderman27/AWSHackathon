@@ -104,6 +104,7 @@ export default function CheckersCorner() {
   return (
     <GameShell
       meta={meta} participants={people} connection={connection}
+      cursors={snapshot?.cursors} onCursor={(x, y) => send({ type: 'cursor', x, y })}
       error={metaError || error} ready={Boolean(meta && state)} studentId={studentId}
       tip="Talk about your moves! Saying a plan out loud is half the fun."
     >

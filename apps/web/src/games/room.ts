@@ -29,6 +29,8 @@ export interface RoomSnapshot<S> {
   revision: number
   state: S
   participants: Participant[]
+  /** Teammates' live pointers, normalized 0..1 over the shared play surface. */
+  cursors?: Record<string, [number, number]>
 }
 
 export type Connection = 'connecting' | 'live' | 'lost'

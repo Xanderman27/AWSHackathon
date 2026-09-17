@@ -6,6 +6,7 @@ Routing rules (PRD §9.4) are explicit here, not learned.
 from __future__ import annotations
 
 import math
+import zlib
 from typing import Optional
 
 from ..models import Item, ItemResponse
@@ -33,18 +34,32 @@ def should_route_to_prerequisite(responses: list[ItemResponse], items_by_id: dic
     )
 
 
+VARIETY_TOP = 3
+
+
 def next_item(
     estimate: float,
     skill_id: str,
     bank: list[Item],
     seen_ids: set[str],
+    variety_key: str = "",
 ) -> Optional[Item]:
+    """Most informative item the learner has a fair shot at.
+
+    `variety_key` breaks ties among the top few near-equally-informative items with a stable
+    hash instead of always taking the single maximum. It must be the same for every call
+    within one selection (the answer endpoint re-derives the served item), which is why it
+    is a caller-supplied key and not a random draw.
+    """
     th = theta(estimate)
     candidates = [i for i in bank if i.skill_id == skill_id and i.approved and i.id not in seen_ids]
     if not candidates:
         return None
     above_floor = [i for i in candidates if p_correct(th, i.irt_a, i.irt_b) >= SUCCESS_FLOOR]
-    pool = above_floor or candidates  # if nothing meets the floor, take the easiest available
     if not above_floor:
-        return min(pool, key=lambda i: i.irt_b)
-    return max(pool, key=lambda i: information(th, i.irt_a, i.irt_b))
+        return min(candidates, key=lambda i: i.irt_b)  # nothing meets the floor: easiest available
+    ranked = sorted(above_floor, key=lambda i: information(th, i.irt_a, i.irt_b), reverse=True)
+    if not variety_key:
+        return ranked[0]
+    top = ranked[:VARIETY_TOP]
+    return top[zlib.crc32(variety_key.encode()) % len(top)]

@@ -1408,6 +1408,19 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 @keyframes gm-found-water { 0%, 100% { fill: rgba(88,204,2,.18); } 50% { fill: rgba(88,204,2,.32); } }
 @keyframes gm-right { 0% { transform: scale(.92); } 55% { transform: scale(1.08) rotate(1.5deg); } 100% { transform: none; } }
 
+/* Live teammate cursors over the play area. */
+.cursor-field { position: relative; display: grid; gap: 16px; }
+.peer-cursor { position: absolute; z-index: 30; pointer-events: none; transform: translate(-2px, -2px);
+  transition: left .12s linear, top .12s linear; filter: drop-shadow(0 2px 3px rgba(11,18,28,.3)); }
+.peer-cursor-name { display: inline-block; margin: -4px 0 0 12px; padding: 2px 9px; border-radius: 999px;
+  background: var(--player-color); color: #fff; font-size: .74em; font-weight: 800; white-space: nowrap; }
+
+/* Globe Trotters team votes */
+.gm-vote-initial { font-size: 13px; font-weight: 800; fill: #fff; text-anchor: middle; }
+.gm-vote { animation: pop .25s ease; }
+.globe-vote-note { margin: 8px 0 0; font-weight: 700; font-size: .95em; color: var(--duo-blue); }
+
+:root[data-motion='reduced'] .peer-cursor { transition: none; }
 :root[data-motion='reduced'] .checkers-count.up, :root[data-motion='reduced'] .checker.landed,
 :root[data-motion='reduced'] .checker.ghost, :root[data-motion='reduced'] .checker .crown,
 :root[data-motion='reduced'] .hint-dot, :root[data-motion='reduced'] .gm-wave,

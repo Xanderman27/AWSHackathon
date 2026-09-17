@@ -45,6 +45,42 @@ def _save_attempt(a: Attempt) -> None:
     store.upsert("attempts", a.model_dump())
 
 
+def _fresh_exclusions(a: Attempt, items: dict[str, Item], seen_now: set[str]) -> set[str]:
+    """Items to avoid because the learner met them in recent quizzes.
+
+    The most recently seen items are excluded first, but never so many that the bank runs
+    dry - with a small bank this rotates the questions instead of repeating them, and with a
+    big bank every quiz feels new. Deterministic, because the answer endpoint re-derives the
+    served item and must land on the same one.
+    """
+    bank_size = sum(
+        1 for i in items.values() if i.skill_id == a.current_skill_id and i.approved
+    )
+    room = bank_size - len(seen_now) - 1  # always leave at least one candidate
+    if room <= 0:
+        return set()
+    rows = [r for r in store.read("attempts")
+            if r["student_id"] == a.student_id and r["id"] != a.id and r["responses"]]
+    rows.sort(key=lambda r: r["started_at"], reverse=True)
+    avoid: set[str] = set()
+    for row in rows:
+        for resp in reversed(row["responses"]):
+            item_id = resp["item_id"]
+            if item_id in seen_now or item_id in avoid:
+                continue
+            avoid.add(item_id)
+            if len(avoid) >= room:
+                return avoid
+    return avoid
+
+
+def _pick(a: Attempt, items: dict[str, Item], estimate: float) -> Item | None:
+    seen = {r.item_id for r in a.responses}
+    exclude = seen | _fresh_exclusions(a, items, seen)
+    return next_item(estimate, a.current_skill_id, list(items.values()), exclude,
+                     variety_key=f"{a.id}:{len(a.responses)}")
+
+
 def _next(a: Attempt) -> NextItem:
     items = _items()
     skills = _skills()
@@ -62,8 +98,7 @@ def _next(a: Attempt) -> NextItem:
             summary=f"You practiced {skill.child_name}.",
         )
     est = _mastery(a.student_id, a.current_skill_id).estimate
-    seen = {r.item_id for r in a.responses}
-    item = next_item(est, a.current_skill_id, list(items.values()), seen)
+    item = _pick(a, items, est)
     if item is None:
         a.completed = True
         _save_attempt(a)
@@ -104,8 +139,7 @@ def answer(attempt_id: str, body: AnswerIn, actor: Actor = Depends(get_actor)) -
         raise HTTPException(409, "attempt is complete")
     items = _items()
     est_state = _mastery(a.student_id, a.current_skill_id)
-    seen = {r.item_id for r in a.responses}
-    item = next_item(est_state.estimate, a.current_skill_id, list(items.values()), seen)
+    item = _pick(a, items, est_state.estimate)
     if item is None:
         raise HTTPException(409, "no item pending")
     correct = body.choice_id == item.answer

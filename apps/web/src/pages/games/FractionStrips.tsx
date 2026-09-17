@@ -48,6 +48,7 @@ export default function FractionStrips() {
   return (
     <GameShell
       meta={meta} participants={people} connection={connection}
+      cursors={snapshot?.cursors} onCursor={(x, y) => send({ type: 'cursor', x, y })}
       error={metaError || error} ready={Boolean(meta && wall)} studentId={studentId}
       tip="Two rows that cover the same amount are equivalent fractions, even when the pieces look different."
     >

@@ -95,6 +95,7 @@ def _fresh(state: dict[str, Any]) -> None:
         "total": ROUND_COUNT,
         "score": 0,
         "missed": [],       # tile ids dimmed this round
+        "votes": {},        # player id -> tile id; the round resolves when everyone agrees
         "solved": False,
         "solved_by": None,
         "first_try": True,
@@ -114,18 +115,28 @@ def apply(state: dict[str, Any], action: dict[str, Any], player_id: str) -> bool
     kind = action.get("type")
 
     if kind == "guess":
+        # A guess is a vote. The round only resolves when every player in the room has
+        # picked the SAME place - so the team has to talk it out, not race each other.
         tile = action.get("tile")
         if state["done"] or state["solved"] or tile not in TILE_IDS or tile in state["missed"]:
             return False
+        state["votes"][player_id] = tile
+        present = state.get("present_ids") or [player_id]
+        votes = {pid: state["votes"][pid] for pid in present if pid in state["votes"]}
+        agreed = len(votes) == len(present) and len(set(votes.values())) == 1
+        if not agreed:
+            return True  # broadcast the votes so everyone sees where teammates lean
         if tile == _current(state)["answer"]:
             state["solved"] = True
             state["solved_by"] = player_id
             if state["first_try"]:
                 state["score"] += 1
+            state["votes"] = {}
             state["round"] = _public_round(state)
             state["wake_at"] = now_ms() + CELEBRATE_MS
         else:
             state["missed"].append(tile)
+            state["votes"] = {}
             state["first_try"] = False
         return True
 
@@ -146,6 +157,7 @@ def wake(state: dict[str, Any]) -> bool:
         return True
     state["index"] += 1
     state["missed"] = []
+    state["votes"] = {}
     state["solved"] = False
     state["solved_by"] = None
     state["first_try"] = True

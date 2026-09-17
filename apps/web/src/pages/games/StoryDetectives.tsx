@@ -39,6 +39,7 @@ export default function StoryDetectives() {
   return (
     <GameShell
       meta={meta} participants={people} connection={connection}
+      cursors={snapshot?.cursors} onCursor={(x, y) => send({ type: 'cursor', x, y })}
       error={metaError || error} ready={Boolean(meta && game)} studentId={studentId}
       tip="The big idea is what the whole story is about. A detail is one true piece that backs it up."
     >

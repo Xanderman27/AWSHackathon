@@ -15,6 +15,7 @@ interface GlobeState {
   total: number
   score: number
   missed: string[]
+  votes: Record<string, string>
   solved: boolean
   solved_by: string | null
   done: boolean
@@ -67,8 +68,9 @@ const WAVES: [number, number][] = [
   [120, 240], [70, 380], [390, 130], [395, 330], [610, 320], [700, 420], [920, 130], [930, 320], [180, 460], [800, 470],
 ]
 
-function WorldMap({ state, live, onPick }: {
+function WorldMap({ state, live, onPick, voters }: {
   state: GlobeState; live: boolean; onPick: (id: string) => void
+  voters: { id: string; name: string; color: string; tile: string }[]
 }) {
   const pickable = live && !state.solved && !state.done
   return (
@@ -124,6 +126,19 @@ function WorldMap({ state, live, onPick }: {
           </g>
         )
       })}
+      {/* Vote pins: each teammate's current pick, in their color, next to that region's tag. */}
+      {voters.map((voter, index) => {
+        const region = REGIONS.find((r) => r.id === voter.tile)
+        if (!region) return null
+        const x = region.at[0] - 30 + index * 30
+        const y = region.at[1] + (region.at[1] < 64 ? 18 : 28)
+        return (
+          <g key={voter.id} className="gm-vote" aria-hidden="true">
+            <circle cx={x} cy={y} r="11" fill={voter.color} stroke="#fff" strokeWidth="2.5" />
+            <text x={x} y={y + 5} className="gm-vote-initial">{voter.name.charAt(0)}</text>
+          </g>
+        )
+      })}
     </svg>
   )
 }
@@ -144,9 +159,18 @@ export default function GlobeTrotters() {
     ? (state.solved_by === studentId ? 'You' : editorName(people, state.solved_by) || 'A teammate')
     : ''
 
+  // Everyone in the room has to pick the same place before the round resolves.
+  const voters = Object.entries(state?.votes ?? {}).map(([id, tile]) => {
+    const who = people.find((person) => person.id === id)
+    return { id, tile, name: who?.name ?? '?', color: who?.color ?? 'var(--duo-blue)' }
+  })
+  const needAgreement = people.length > 1
+  const waiting = needAgreement && voters.length > 0 && !state?.solved
+
   return (
     <GameShell
       meta={meta} participants={people} connection={connection}
+      cursors={snapshot?.cursors} onCursor={(x, y) => send({ type: 'cursor', x, y })}
       error={metaError || error} ready={Boolean(meta && state)} studentId={studentId}
       tip="Read the clue out loud together before anyone taps."
     >
@@ -180,7 +204,17 @@ export default function GlobeTrotters() {
                   <p className="globe-fact">{state.round.fact}</p>
                 </>
               ) : (
-                <p className="globe-clue-text">{state.round.clue}</p>
+                <>
+                  <p className="globe-clue-text">{state.round.clue}</p>
+                  {needAgreement && (
+                    <p className="globe-vote-note">
+                      {waiting
+                        ? voters.map((voter) => `${voter.id === studentId ? 'You' : voter.name} picked ${LABEL[voter.tile]}`).join(' · ')
+                          + ' — everyone has to agree!'
+                        : 'Talk it out — you all have to pick the same place.'}
+                    </p>
+                  )}
+                </>
               )}
             </div>
             <div className="globe-score" aria-label={`${state.score} first-try stars so far`}>
@@ -189,7 +223,8 @@ export default function GlobeTrotters() {
           </section>
 
           <section className="card globe-map-card">
-            <WorldMap state={state} live={live} onPick={(id) => send({ type: 'guess', tile: id })} />
+            <WorldMap state={state} live={live} voters={voters}
+              onPick={(id) => send({ type: 'guess', tile: id })} />
           </section>
         </>
       )}

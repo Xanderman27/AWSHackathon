@@ -111,6 +111,16 @@ async def activity_socket(
             action = await websocket.receive_json()
             if not isinstance(action, dict):
                 continue
+            # Live cursors are presence, not game state: no revision bump, no game logic.
+            if action.get("type") == "cursor":
+                x, y = action.get("x"), action.get("y")
+                if isinstance(x, (int, float)) and isinstance(y, (int, float)):
+                    room.cursors[student_id] = [max(0.0, min(1.0, float(x))),
+                                                max(0.0, min(1.0, float(y)))]
+                    await broadcast(room)
+                continue
+            # Games that need agreement (Globe Trotters) see who is in the room right now.
+            room.state["present_ids"] = sorted(room.participants)
             if module.apply(room.state, action, student_id):
                 room.revision += 1
                 await broadcast(room)
@@ -124,6 +134,7 @@ async def activity_socket(
         if room.connections.get(student_id) is websocket:
             room.connections.pop(student_id, None)
             room.participants.pop(student_id, None)
+            room.cursors.pop(student_id, None)
             await broadcast(room)
             # An empty solo room is worth dropping; a group room is kept so teammates who
             # step away and come back find the work they left behind.

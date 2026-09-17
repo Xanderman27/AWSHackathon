@@ -121,6 +121,7 @@ export default function BeatTogether() {
   return (
     <GameShell
       meta={meta} participants={snapshot?.participants ?? []} connection={connection}
+      cursors={snapshot?.cursors} onCursor={(x, y) => send({ type: 'cursor', x, y })}
       error={metaError || error} ready={Boolean(meta && beat)} studentId={studentId}
       tip="Try this: one person makes the drums while another adds bass and bells."
     >

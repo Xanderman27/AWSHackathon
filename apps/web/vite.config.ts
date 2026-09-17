@@ -6,6 +6,9 @@ export default defineConfig({
   base: '/',
   plugins: [react()],
   server: {
+    // Listen on the network too, so two students on different computers on the same
+    // Wi-Fi can both open the app (http://<this-machine's-ip>:5173).
+    host: true,
     port: 5173,
     proxy: {
       '/api': {

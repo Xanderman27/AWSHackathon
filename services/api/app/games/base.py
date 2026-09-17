@@ -74,6 +74,9 @@ class Room:
     revision: int = 0
     participants: dict[str, Participant] = field(default_factory=dict)
     connections: dict[str, WebSocket] = field(default_factory=dict)
+    # Live pointer positions, normalized 0..1 over the shared play surface. Presence sugar,
+    # not game state: games never read it and reconnects start clean.
+    cursors: dict[str, list[float]] = field(default_factory=dict)
     waker: Optional[asyncio.Task] = None
 
     def snapshot(self) -> dict[str, Any]:
@@ -83,6 +86,7 @@ class Room:
             "game_id": self.game_id,
             "revision": self.revision,
             "state": self.state,
+            "cursors": self.cursors,
             "participants": [
                 {"id": person.id, "name": person.name, "color": person.color,
                  "photo": person.photo, "avatar": person.avatar}
