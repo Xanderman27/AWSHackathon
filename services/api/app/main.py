@@ -44,7 +44,16 @@ def seed_new_collections() -> None:
     that owns the lifespan does. Registering it here alone meant the fix ran on every
     laptop and on no deployed instance, which is the failure it was written to prevent.
     """
-    filled = store.seed_missing()
+    try:
+        filled = store.seed_missing()
+    except Exception as problem:  # noqa: BLE001 - startup must survive anything here
+        # Seeding is a convenience: it repairs a store whose collections predate a seed file.
+        # It is never worth refusing to serve over. The deploy script treats a service that
+        # cannot answer /api/health as a bad release and rolls the instance back, so an
+        # exception raised here would silently revert a good deploy and leave no trace on
+        # the site itself — the hardest possible failure to diagnose from the outside.
+        print(f"seeding skipped: {type(problem).__name__}: {problem}")
+        return
     if filled:
         print("seeded empty collections: " + ", ".join(filled))
 

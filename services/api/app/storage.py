@@ -192,8 +192,11 @@ class DynamoStore:
             page = self.table.query(KeyConditionExpression=Key("pk").eq(name), Limit=1)
             if page.get("Items"):
                 continue
-            for row in seed:
-                self._put(name, row)
+            # Batched, not a put per row. This runs inside the startup handler, and the
+            # deploy script gives the service about twenty seconds to answer /api/health
+            # before it decides the release is bad and rolls back — a few hundred
+            # sequential round trips is enough to lose that race on a cold table.
+            self.write_all(name, seed)
             filled.append(f"{name}={len(seed)}")
         return filled
 
