@@ -212,7 +212,39 @@ GAMES = [
     ("sort-it-out", "Sort It Out", "Harbour Crew", 3),
     ("story-detectives", "Story Detectives", "Lantern Group", 4),
     ("shape-shift", "Shape Shift", "Kite Table", 3),
+    ("fraction-strips", "Fraction Strips", "Ribbon Crew", 3),
 ]
+
+
+# The demo logins on the landing page. Judges sign in as these, so they are put on the same
+# team for every game rather than left to whatever the rotation happened to deal them.
+# Checkers Corner seats exactly two, so the pair is the guaranteed unit and the third demo
+# login joins wherever the game has room.
+DEMO_PAIR = ["student-01", "student-04"]      # Sam, Mia
+DEMO_THIRD = "student-02"                     # Ava
+
+
+def build_demo_groups(games):
+    """One published group per game containing the demo logins, so judges always find
+    each other in the same room whichever game they open."""
+    rows = []
+    for game_id, title, _stem, size in games:
+        members = DEMO_PAIR if size < 3 else [*DEMO_PAIR, DEMO_THIRD][:size]
+        rows.append({
+            "id": f"group-activity-demo-{game_id}",
+            "class_id": "class-4a",
+            "game_id": game_id,
+            "title": title,
+            "group_name": "Demo Table",
+            "member_ids": members,
+            "rationale": "The demo logins, seated together so anyone trying the app can play "
+                         "a game against someone else straight away.",
+            "status": "published",
+            "created_by": "teacher-01",
+            "published_at": stamp(0.5),
+            "generated": True,
+        })
+    return rows
 
 
 def build_group_activities(students, existing):
@@ -227,6 +259,8 @@ def build_group_activities(students, existing):
     ids = [s["id"] for s in students]
     rows = [r for r in existing if not r.get("generated")]
     seen = {r["id"] for r in rows}
+
+    rows.extend(build_demo_groups(GAMES))
 
     # Never deal the same people the same game twice; the rotation can land on a repeat.
     dealt = {(r["game_id"], frozenset(r.get("member_ids", []))) for r in rows}

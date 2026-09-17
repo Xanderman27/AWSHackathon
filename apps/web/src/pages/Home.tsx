@@ -211,10 +211,9 @@ export default function Home() {
                 <tbody>
                   <tr><td>Student</td><td><code>sam</code></td><td><code>otter123</code></td></tr>
                   <tr><td>Student</td><td><code>mia</code></td><td><code>otter123</code></td></tr>
+                  <tr><td>Student</td><td><code>ava</code></td><td><code>otter123</code></td></tr>
                   <tr><td>Teacher</td><td><code>rivera</code></td><td><code>teach123</code></td></tr>
                   <tr><td>Parent</td><td><code>jordan</code></td><td><code>family123</code></td></tr>
-                  {/* Four seats at one table, so judges can open a team game against each other. */}
-                  <tr><td>Judges</td><td><code>judge1</code>–<code>judge4</code></td><td><code>judge123</code></td></tr>
                 </tbody>
               </table>
             </details>
