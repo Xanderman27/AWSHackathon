@@ -93,6 +93,10 @@ def ensure_role(iam, account: str, bucket: str) -> str:
          "Resource": f"arn:aws:s3:::{bucket}/*"},
         {"Sid": "UploadsList", "Effect": "Allow",
          "Action": ["s3:ListBucket"], "Resource": f"arn:aws:s3:::{bucket}"},
+        {"Sid": "ServiceIds", "Effect": "Allow",
+         # Guardrail ids live in Parameter Store so rotating one needs no redeploy.
+         "Action": ["ssm:GetParameter", "ssm:GetParameters", "ssm:GetParametersByPath"],
+         "Resource": f"arn:aws:ssm:{REGION}:{account}:parameter/dori/*"},
         {"Sid": "State", "Effect": "Allow",
          "Action": ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:DeleteItem",
                     "dynamodb:Query", "dynamodb:BatchWriteItem", "dynamodb:DescribeTable"],

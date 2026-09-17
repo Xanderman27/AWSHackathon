@@ -46,30 +46,17 @@ python3.11 -m venv .venv
 aws s3 cp s3://{bucket}/deploy/web-dist.tar.gz /tmp/web-dist.tar.gz
 mkdir -p apps/web && tar -xzf /tmp/web-dist.tar.gz -C apps/web
 
-cat > /etc/systemd/system/dori.service <<UNIT
-[Unit]
-Description=Dori
-After=network-online.target
+cat > /etc/dori.env <<ENVFILE
+STORAGE_BACKEND=aws
+STATE_TABLE=dori-state
+UPLOADS_BUCKET={bucket}
+AWS_REGION={region}
+DEMO_OFFLINE=0
+BEDROCK_MODEL_ID=us.anthropic.claude-sonnet-4-6
+ENVFILE
+chmod 0644 /etc/dori.env
 
-[Service]
-WorkingDirectory=/opt/dori/services/api
-Environment=STORAGE_BACKEND=aws
-Environment=STATE_TABLE=dori-state
-Environment=UPLOADS_BUCKET={bucket}
-Environment=AWS_REGION={region}
-Environment=DEMO_OFFLINE=0
-Environment=BEDROCK_MODEL_ID=us.anthropic.claude-sonnet-4-6
-Environment=BEDROCK_GUARDRAIL_ID=034sglgf5163
-Environment=BEDROCK_GUARDRAIL_VERSION=3
-Environment=BEDROCK_TEACHER_GUARDRAIL_ID=paln06prd5pz
-Environment=BEDROCK_TEACHER_GUARDRAIL_VERSION=1
-ExecStart=/opt/dori/.venv/bin/python -m uvicorn app.serve:root --host 0.0.0.0 --port {port}
-Restart=always
-RestartSec=3
-
-[Install]
-WantedBy=multi-user.target
-UNIT
+install -m 0644 /opt/dori/scripts/dori.service /etc/systemd/system/dori.service
 
 # Poll main every two minutes and redeploy itself, rolling back if the new code will not
 # import or does not come back healthy.

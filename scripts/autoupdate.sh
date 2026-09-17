@@ -27,8 +27,25 @@ echo "=== $(date -Is) ${WAS:0:8} -> ${NOW:0:8} ==="
 CHANGED=$(git diff --name-only "$WAS" "$NOW")
 WEB_CHANGED=$(grep -cE '^apps/web/' <<<"$CHANGED" || true)
 
+# Unit files ship with the code, so a change to how the service runs reaches the instance the
+# same way a change to the code does. Previously they only updated on a full redeploy, which
+# is how the guardrail ids on this box went stale.
+install_units() {
+  local changed=0
+  for unit in dori.service dori-update.service dori-update.timer; do
+    if ! cmp -s "$REPO/scripts/$unit" "/etc/systemd/system/$unit"; then
+      install -m 0644 "$REPO/scripts/$unit" "/etc/systemd/system/$unit"
+      echo "installed $unit"
+      changed=1
+    fi
+  done
+  [ "$changed" = 1 ] && systemctl daemon-reload
+  return 0
+}
+
 build() {
   git reset --hard --quiet "$1"
+  install_units
   if grep -q 'services/api/requirements.txt' <<<"$CHANGED"; then
     "$REPO/.venv/bin/pip" install --quiet -r "$REPO/services/api/requirements.txt" || return 1
   fi

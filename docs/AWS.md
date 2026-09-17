@@ -135,6 +135,24 @@ request payload rather than by reading the code.
 | Cognito | header auth today; would rework the sign-up flow |
 | AgentCore | `generate.propose` is the graph, written as functions |
 
+## Guardrail ids are not configuration you edit
+
+`provision_guardrail.py` writes them to Parameter Store under `/dori/bedrock/`, and the app
+reads them at startup:
+
+```
+explicit environment variable  →  Parameter Store  →  none
+```
+
+So rotating a guardrail is one command and nothing else. No unit file to edit, no redeploy,
+and no way to be left pointing at a stale version — which is exactly what happened when the
+ids lived in the systemd unit.
+
+Unit files (`scripts/dori.service`, `dori-update.*`) now ship in the repo, and the auto-updater
+reinstalls them whenever they differ from what is on the instance, so a change to *how* the
+service runs reaches the box the same way a change to the code does. Account-specific values
+(bucket, table, model) live in `/etc/dori.env`, written at deploy.
+
 ## Two guardrails, because the audiences differ
 
 | | `dori-guardrail` (family) | `dori-guardrail-teacher` |

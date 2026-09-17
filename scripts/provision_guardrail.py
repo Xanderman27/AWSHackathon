@@ -18,6 +18,7 @@ import boto3
 from botocore.exceptions import ClientError
 
 REGION = "us-east-1"
+PARAM_PREFIX = "/dori/bedrock"
 FAMILY = "dori-guardrail"
 TEACHER = "dori-guardrail-teacher"
 
@@ -141,6 +142,20 @@ def provision(client, name: str, topics: list[dict], description: str) -> tuple[
     return guardrail_id, version
 
 
+def publish(params: dict[str, str]) -> None:
+    """Write the ids where every machine can read them.
+
+    Baking a guardrail id into a systemd unit means rotating the guardrail silently leaves
+    the deployment pointing at the old version, and nothing tells you. Parameter Store is the
+    single source TECH_STACK already asks for; the app reads it at startup.
+    """
+    ssm = boto3.client("ssm", region_name=REGION)
+    for name, value in params.items():
+        ssm.put_parameter(Name=f"{PARAM_PREFIX}/{name}", Value=value, Type="String",
+                          Overwrite=True, Description="Written by scripts/provision_guardrail.py")
+    print(f"[  ok   ] wrote {len(params)} parameters under {PARAM_PREFIX}/")
+
+
 def main() -> int:
     client = boto3.client("bedrock", region_name=REGION)
     try:
@@ -154,11 +169,23 @@ def main() -> int:
               f"{problem.response['Error']['Message'][:220]}")
         return 1
 
+    try:
+        publish({
+            "guardrail_id": family[0], "guardrail_version": family[1],
+            "teacher_guardrail_id": teacher[0], "teacher_guardrail_version": teacher[1],
+        })
+    except ClientError as problem:
+        print(f"[ warn  ] could not write to Parameter Store "
+              f"({problem.response['Error']['Code']}); export the values by hand instead")
+
     print(f"""
-  export BEDROCK_GUARDRAIL_ID={family[0]}
-  export BEDROCK_GUARDRAIL_VERSION={family[1]}
-  export BEDROCK_TEACHER_GUARDRAIL_ID={teacher[0]}
-  export BEDROCK_TEACHER_GUARDRAIL_VERSION={teacher[1]}
+  Deployed instances pick these up on their next restart. Nothing to edit.
+
+  For a local shell:
+    export BEDROCK_GUARDRAIL_ID={family[0]}
+    export BEDROCK_GUARDRAIL_VERSION={family[1]}
+    export BEDROCK_TEACHER_GUARDRAIL_ID={teacher[0]}
+    export BEDROCK_TEACHER_GUARDRAIL_VERSION={teacher[1]}
 """)
     return 0
 

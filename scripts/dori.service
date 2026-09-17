@@ -1,0 +1,17 @@
+[Unit]
+Description=Dori
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=/opt/dori/services/api
+# Account-specific values (bucket, table, model) are written by deploy_ec2.py. Guardrail ids
+# are deliberately absent: the app reads those from Parameter Store at startup, so rotating a
+# guardrail needs no change here and cannot leave the deployment on a stale version.
+EnvironmentFile=/etc/dori.env
+ExecStart=/opt/dori/.venv/bin/python -m uvicorn app.serve:root --host 0.0.0.0 --port 8000
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

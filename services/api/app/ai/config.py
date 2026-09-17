@@ -68,15 +68,40 @@ def _credentials_present() -> bool:
         return False
 
 
+PARAM_PREFIX = "/dori/bedrock"
+
+
+@lru_cache(maxsize=1)
+def _parameters() -> dict[str, str]:
+    """Guardrail ids from Parameter Store, so rotating one needs no config change anywhere.
+
+    Read once at startup. If the parameters are absent or unreadable this returns nothing and
+    the explicit environment variables take over, so a laptop with no AWS is unaffected.
+    """
+    try:
+        import boto3
+        page = boto3.client("ssm", region_name=os.getenv("AWS_REGION", "us-east-1")) \
+            .get_parameters_by_path(Path=PARAM_PREFIX)
+        return {p["Name"].rsplit("/", 1)[-1]: p["Value"] for p in page.get("Parameters", [])}
+    except Exception:
+        return {}
+
+
+def _setting(env_name: str, param_name: str, default: str | None = None) -> str | None:
+    """An explicit environment variable always wins; Parameter Store is the fallback."""
+    return os.getenv(env_name) or _parameters().get(param_name) or default
+
+
 @lru_cache(maxsize=1)
 def settings() -> Settings:
     return Settings(
         region=os.getenv("AWS_REGION", "us-east-1"),
         model_id=os.getenv("BEDROCK_MODEL_ID", "us.anthropic.claude-sonnet-4-6"),
-        guardrail_id=os.getenv("BEDROCK_GUARDRAIL_ID") or None,
-        guardrail_version=os.getenv("BEDROCK_GUARDRAIL_VERSION", "DRAFT"),
-        teacher_guardrail_id=os.getenv("BEDROCK_TEACHER_GUARDRAIL_ID") or None,
-        teacher_guardrail_version=os.getenv("BEDROCK_TEACHER_GUARDRAIL_VERSION", "DRAFT"),
+        guardrail_id=_setting("BEDROCK_GUARDRAIL_ID", "guardrail_id"),
+        guardrail_version=_setting("BEDROCK_GUARDRAIL_VERSION", "guardrail_version", "DRAFT"),
+        teacher_guardrail_id=_setting("BEDROCK_TEACHER_GUARDRAIL_ID", "teacher_guardrail_id"),
+        teacher_guardrail_version=_setting(
+            "BEDROCK_TEACHER_GUARDRAIL_VERSION", "teacher_guardrail_version", "DRAFT"),
         # No credentials means offline, whatever the flag says: a failed Converse call on
         # stage is worse than an honest cached draft.
         offline=_flag("DEMO_OFFLINE", default=True) or not _credentials_present(),
@@ -92,4 +117,5 @@ def status() -> dict:
         "region": None if current.offline else current.region,
         "guardrail": bool(current.guardrail) and not current.offline,
         "teacher_guardrail": bool(current.teacher_guardrail) and not current.offline,
+        "guardrail_version": current.guardrail_version if current.guardrail else None,
     }

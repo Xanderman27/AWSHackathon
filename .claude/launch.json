@@ -18,11 +18,7 @@
       "env": {
         "DEMO_OFFLINE": "0",
         "BEDROCK_MODEL_ID": "us.anthropic.claude-sonnet-4-6",
-        "AWS_REGION": "us-east-1",
-        "BEDROCK_GUARDRAIL_ID": "034sglgf5163",
-        "BEDROCK_GUARDRAIL_VERSION": "3",
-        "BEDROCK_TEACHER_GUARDRAIL_ID": "paln06prd5pz",
-        "BEDROCK_TEACHER_GUARDRAIL_VERSION": "1"
+        "AWS_REGION": "us-east-1"
       }
     },
     {
@@ -42,11 +38,7 @@
       "env": {
         "DEMO_OFFLINE": "0",
         "BEDROCK_MODEL_ID": "us.anthropic.claude-sonnet-4-6",
-        "AWS_REGION": "us-east-1",
-        "BEDROCK_GUARDRAIL_ID": "034sglgf5163",
-        "BEDROCK_GUARDRAIL_VERSION": "3",
-        "BEDROCK_TEACHER_GUARDRAIL_ID": "paln06prd5pz",
-        "BEDROCK_TEACHER_GUARDRAIL_VERSION": "1"
+        "AWS_REGION": "us-east-1"
       }
     },
     {
