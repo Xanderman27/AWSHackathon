@@ -1366,32 +1366,47 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
   0%, 100% { transform: translateX(0); opacity: .5; }
   50% { transform: translateX(14px); opacity: 1; }
 }
-.gm-region { cursor: pointer; transform-box: fill-box; transform-origin: center; }
-.gm-region .gm-shape { stroke: rgba(255,255,255,.9); stroke-width: 3; transition: filter .15s ease; }
-.gm-region.ocean .gm-shape { stroke: rgba(255,255,255,.5); stroke-dasharray: 7 7; }
-.gm-region.continent { animation: gm-bob 4.5s ease-in-out infinite; }
-@keyframes gm-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-.gm-region:hover:not(.missed) .gm-shape, .gm-region:focus-visible .gm-shape {
-  filter: brightness(1.12) drop-shadow(0 4px 6px rgba(11,18,28,.25)); }
-.gm-region:focus-visible { outline: none; }
-.gm-region:focus-visible .gm-shape { stroke: #fff; stroke-width: 6; stroke-dasharray: none; }
-.gm-label { font-weight: 800; font-size: 16px; text-anchor: middle; fill: #23445c;
-  paint-order: stroke; stroke: rgba(255,255,255,.85); stroke-width: 4px; pointer-events: none;
+.gm-region { cursor: pointer; }
+.gm-region .gm-shape { transition: filter .15s ease, fill .15s ease; }
+/* Continents: real coastlines, gentle bob. */
+.gm-region.continent .gm-shape { stroke: rgba(255,255,255,.95); stroke-width: 1.4; stroke-linejoin: round; }
+.gm-region.continent { animation: gm-bob 4.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes gm-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+/* Oceans: no drawn shape at all - the open water itself is the tap target, and only the
+   floating label shows where each ocean lives. Hovering breathes a soft glow over the area. */
+.gm-region.ocean .gm-shape { fill: transparent; stroke: none; }
+.gm-region.ocean:hover:not(.missed) .gm-shape, .gm-region.ocean:focus-visible .gm-shape {
+  fill: rgba(255, 255, 255, .14); }
+.gm-region.continent:hover:not(.missed) .gm-shape, .gm-region.continent:focus-visible .gm-shape {
+  filter: brightness(1.12) drop-shadow(0 4px 6px rgba(11,18,28,.3)); }
+.gm-region:focus, .gm-region:focus-visible { outline: none; }
+.gm-region.continent:focus-visible .gm-shape { stroke: #fff; stroke-width: 4; }
+.gm-tag { pointer-events: none; }
+.gm-region.ocean .gm-tag { animation: gm-sway 6s ease-in-out infinite; }
+@keyframes gm-sway { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(8px); } }
+.gm-label { font-weight: 800; font-size: 17px; text-anchor: middle; fill: #23445c;
+  paint-order: stroke; stroke: rgba(255,255,255,.88); stroke-width: 4px;
   font-family: inherit; }
-.gm-glyph { font-size: 22px; text-anchor: middle; pointer-events: none; }
+.gm-region.ocean .gm-label { fill: #0d3a5c; stroke: rgba(255,255,255,.75); }
+.gm-glyph { font-size: 22px; text-anchor: middle; }
 .gm-region[aria-disabled='true'] { cursor: default; }
 
-.gm-region.missed { animation: gm-shake .45s ease; opacity: .4; }
+.gm-region.missed .gm-tag { animation: gm-shake .45s ease; opacity: .45; }
+.gm-region.missed.continent { animation: gm-shake .45s ease; opacity: .45; }
 .gm-region.missed .gm-shape { filter: grayscale(.9); }
+.gm-region.missed.ocean .gm-shape { fill: rgba(11, 18, 28, .12); }
 @keyframes gm-shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-7px) rotate(-1deg); }
   75% { transform: translateX(7px) rotate(1deg); }
 }
-.gm-region.right { animation: gm-right .6s ease; }
-.gm-region.right .gm-shape { stroke: #fff; stroke-width: 7; stroke-dasharray: none;
+.gm-region.right.continent { animation: gm-right .6s ease; }
+.gm-region.right .gm-tag { animation: gm-right .6s ease; transform-box: fill-box; transform-origin: center; }
+.gm-region.right.continent .gm-shape { stroke: #fff; stroke-width: 4;
   filter: drop-shadow(0 0 10px rgba(88, 204, 2, .9)); }
-@keyframes gm-right { 0% { transform: scale(.92); } 55% { transform: scale(1.1) rotate(1.5deg); } 100% { transform: none; } }
+.gm-region.right.ocean .gm-shape { fill: rgba(88, 204, 2, .25); animation: gm-found-water 1.2s ease-in-out infinite; }
+@keyframes gm-found-water { 0%, 100% { fill: rgba(88,204,2,.18); } 50% { fill: rgba(88,204,2,.32); } }
+@keyframes gm-right { 0% { transform: scale(.92); } 55% { transform: scale(1.08) rotate(1.5deg); } 100% { transform: none; } }
 
 :root[data-motion='reduced'] .checkers-count.up, :root[data-motion='reduced'] .checker.landed,
 :root[data-motion='reduced'] .checker.ghost, :root[data-motion='reduced'] .checker .crown,
