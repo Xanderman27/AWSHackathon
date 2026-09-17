@@ -149,7 +149,19 @@ def propose(plan: dict, mastery_rows: list[dict], skills: dict[str, dict]) -> Pl
             use = block.get("toolUse")
             if use and use.get("name") == TOOL_NAME:
                 payload = use.get("input")
-        draft = PlanUpdateDraft(**(payload or {}))
+        # Coerce before validating: models capitalise section names and run long, and neither
+        # is a reason to throw away an otherwise grounded draft.
+        payload = dict(payload or {})
+        payload["section"] = str(payload.get("section", "accommodations")).strip().lower()
+        if payload["section"] not in ("accommodations", "goals", "services"):
+            payload["section"] = "accommodations"
+        payload["change"] = str(payload.get("change", ""))[:300]
+        payload["rationale"] = str(payload.get("rationale", ""))[:500]
+        cites = payload.get("citations")
+        payload["citations"] = [str(c) for c in cites] if isinstance(cites, list) else []
+        if not payload["citations"]:
+            payload["citations"] = [s.id for s in sources[:2]] or ["unverified"]
+        draft = PlanUpdateDraft(**payload)
     except (ValidationError, Exception) as problem:  # noqa: BLE001 - demo must not 500
         path.append("rules_fallback")
         draft = _rules_draft(plan, mastery_rows, skills)
