@@ -22,6 +22,18 @@ export interface Goal {
   status: 'proposed' | 'active' | 'declined' | 'met'
   created_by: string; created_by_name: string; created_by_role: string
   at: string; decided_by: string | null
+  progress_note?: string; progress_noted_on?: string
+}
+
+/** What the agent came back with, before a teacher has decided to send it. */
+interface NoteDraft {
+  statement: string
+  evidence_cited: string[]
+  sufficiency: 'enough' | 'thin'
+  origin: string
+  looked_at: string[]
+  turns: number
+  warning: string
 }
 export interface PlanRequest {
   id: string; student_id: string; text: string
@@ -97,10 +109,96 @@ export function PlanDoc({ plan }: { plan: Plan }) {
   )
 }
 
-export function GoalList({ goals, canDecide, onDecide }: {
+/** Draft, edit and send the periodic progress note for one goal (FR-25).
+ *
+ * IDEA asks for periodic reports on progress toward annual goals. The teacher stays the
+ * author: the agent assembles the evidence and proposes wording, and nothing reaches the
+ * family until the teacher has read it and pressed send.
+ */
+function ProgressNote({ goal, onSent }: { goal: Goal; onSent: () => void }) {
+  const [draft, setDraft] = useState<NoteDraft | null>(null)
+  const [text, setText] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState('')
+
+  async function makeDraft() {
+    setBusy(true); setErr('')
+    try {
+      const made = await api<NoteDraft>(`/support/goals/${goal.id}/progress-note/draft`, { method: 'POST' })
+      setDraft(made)
+      setText(made.statement)
+    } catch {
+      setErr('The draft could not be written. You can still write the note yourself.')
+    } finally { setBusy(false) }
+  }
+
+  async function send() {
+    setBusy(true); setErr('')
+    try {
+      await api(`/support/goals/${goal.id}/progress-note`, {
+        method: 'POST', body: JSON.stringify({ statement: text }),
+      })
+      setDraft(null)
+      onSent()
+    } catch {
+      setErr('That note could not be sent.')
+    } finally { setBusy(false) }
+  }
+
+  if (goal.progress_note && !draft) {
+    return (
+      <div className="progress-note sent">
+        <p className="muted note-label">Progress note sent to the family</p>
+        <p className="note-body">{goal.progress_note}</p>
+        <button type="button" disabled={busy} onClick={makeDraft}>
+          {busy ? 'Drafting…' : 'Draft a new one'}
+        </button>
+      </div>
+    )
+  }
+
+  if (!draft) {
+    return (
+      <div className="row" style={{ marginTop: 8 }}>
+        <button type="button" disabled={busy} onClick={makeDraft}
+          title="An agent gathers the evidence behind this goal and proposes the wording">
+          {busy ? 'Gathering the evidence…' : 'Draft progress note'}
+        </button>
+        {err && <span className="muted" role="alert">{err}</span>}
+      </div>
+    )
+  }
+
+  return (
+    <div className="progress-note">
+      <div className="row between">
+        <p className="muted note-label">Draft for the family — your words before it sends</p>
+        <span className={`chip ${draft.sufficiency === 'enough' ? 'mint' : 'cream'}`}>
+          {draft.sufficiency === 'enough' ? 'evidence supports this' : 'evidence is thin'}
+        </span>
+      </div>
+      <textarea value={text} rows={4} maxLength={900} onChange={(e) => setText(e.target.value)} />
+      <p className="agent-trace muted">
+        {draft.origin === 'bedrock'
+          ? `agent read ${draft.looked_at.join(', ')} · ${draft.turns} steps`
+          : draft.warning}
+      </p>
+      <div className="row">
+        <button type="button" className="btn-primary" disabled={busy || text.trim().length < 20} onClick={send}>
+          {busy ? 'Sending…' : 'Send to the family'}
+        </button>
+        <button type="button" disabled={busy} onClick={() => setDraft(null)}>Discard</button>
+      </div>
+      {err && <p className="muted" role="alert">{err}</p>}
+    </div>
+  )
+}
+
+export function GoalList({ goals, canDecide, onDecide, onChanged }: {
   goals: Goal[]
   canDecide: boolean
   onDecide?: (id: string, action: 'approve' | 'decline' | 'complete') => void
+  onChanged?: () => void
 }) {
   if (goals.length === 0) return <p className="muted" style={{ margin: 0 }}>No shared goals yet.</p>
   return (
@@ -126,6 +224,15 @@ export function GoalList({ goals, canDecide, onDecide }: {
           {canDecide && onDecide && goal.status === 'active' && (
             <div className="row" style={{ marginTop: 8 }}>
               <button type="button" onClick={() => onDecide(goal.id, 'complete')}>Mark met 🎉</button>
+            </div>
+          )}
+          {canDecide && goal.status === 'active' && (
+            <ProgressNote goal={goal} onSent={() => onChanged?.()} />
+          )}
+          {!canDecide && goal.progress_note && (
+            <div className="progress-note sent">
+              <p className="muted note-label">From {goal.created_by_name}</p>
+              <p className="note-body">{goal.progress_note}</p>
             </div>
           )}
         </li>
@@ -244,7 +351,7 @@ export function TeacherSupport({ studentId, studentName }: { studentId: string; 
 
       <section className="card" aria-labelledby="goals-title">
         <h3 id="goals-title" style={{ marginTop: 0 }}>Goals with the family</h3>
-        <GoalList goals={data.goals} canDecide onDecide={decideGoal} />
+        <GoalList goals={data.goals} canDecide onDecide={decideGoal} onChanged={reload} />
         <GoalForm studentId={studentId} role="teacher" onSaved={reload} />
       </section>
     </>

@@ -24,6 +24,61 @@ from ..storage import store
 router = APIRouter(prefix="/support", tags=["support"])
 
 
+class NoteDecision(BaseModel):
+    """A teacher either sends the drafted note to the family, or edits it first."""
+
+    statement: str = Field(min_length=20, max_length=900)
+
+
+@router.post("/goals/{goal_id}/progress-note/draft")
+def draft_progress_note(goal_id: str, actor: Actor = Depends(require_role("teacher"))):
+    """Draft the periodic progress note for one goal (PRD FR-25, IDEA 34 CFR 300.320(a)(3)).
+
+    Nothing is saved. The teacher reads the draft, edits it, and only then publishes.
+    """
+    from ..ai import progress
+
+    goal = next((g for g in store.read("goals") if g["id"] == goal_id), None)
+    if goal is None or goal["student_id"] not in actor.student_ids:
+        raise HTTPException(404, "unknown goal")
+
+    result = progress.draft(
+        goal["title"], goal["student_id"], store.read("mastery"),
+        {s["id"]: s for s in store.read("skills")}, store.read("recommendations"),
+    )
+    store.append("audit", {"actor": actor.user_id, "action": "goal.progress_note.drafted",
+                           "object_id": goal_id, "at": now()})
+    return {
+        "goal_id": goal_id,
+        "goal_title": goal["title"],
+        "statement": result.note.statement if result.note else "",
+        "evidence_cited": result.note.evidence_cited if result.note else [],
+        "sufficiency": result.note.sufficiency if result.note else "thin",
+        "origin": result.origin,
+        "looked_at": result.looked_at,
+        "turns": result.turns,
+        "warning": result.warning,
+    }
+
+
+@router.post("/goals/{goal_id}/progress-note")
+def publish_progress_note(goal_id: str, body: NoteDecision,
+                          actor: Actor = Depends(require_role("teacher"))):
+    """Publish the note the teacher approved. The text stored is theirs, edits and all."""
+    rows = store.read("goals")
+    goal = next((g for g in rows if g["id"] == goal_id), None)
+    if goal is None or goal["student_id"] not in actor.student_ids:
+        raise HTTPException(404, "unknown goal")
+
+    goal["progress_note"] = body.statement.strip()
+    goal["progress_noted_on"] = now()
+    goal["progress_noted_by"] = actor.user_id
+    store.upsert("goals", goal)
+    store.append("audit", {"actor": actor.user_id, "action": "goal.progress_note.published",
+                           "object_id": goal_id, "at": goal["progress_noted_on"]})
+    return goal
+
+
 class GoalIn(BaseModel):
     title: str = Field(min_length=1, max_length=140)
     why: str = Field(default="", max_length=600)

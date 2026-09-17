@@ -1488,3 +1488,12 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .group-explained .watch { margin: 0; font-size: .92em; }
 .agent-trace { margin: 2px 0 0; font-size: .78em; font-family: ui-monospace, monospace; }
 .agent-thinking { margin: 0; font-size: .9em; font-style: italic; }
+
+/* The periodic progress note: drafted by an agent, sent by the teacher. */
+.progress-note { display: grid; gap: 8px; margin-top: 10px; padding: 12px 14px;
+  border-radius: 12px; background: var(--surface-2); border-left: 4px solid var(--brand); }
+.progress-note.sent { border-left-color: var(--zone-green); }
+.progress-note textarea { width: 100%; font-family: inherit; font-size: .95em; line-height: 1.5;
+  border: 2px solid var(--line); border-radius: 10px; padding: 10px; resize: vertical; background: var(--surface); color: inherit; }
+.note-label { margin: 0; font-size: .8em; font-weight: 700; }
+.note-body { margin: 0; line-height: 1.55; }

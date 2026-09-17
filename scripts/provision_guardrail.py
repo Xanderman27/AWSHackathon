@@ -91,8 +91,18 @@ CONTENT_FILTERS = [
     {"type": t, "inputStrength": "HIGH", "outputStrength": "HIGH"}
     for t in ("SEXUAL", "VIOLENCE", "HATE", "INSULTS", "MISCONDUCT")
 ] + [
-    # Prompt attacks are only assessed on input.
-    {"type": "PROMPT_ATTACK", "inputStrength": "HIGH", "outputStrength": "NONE"},
+    # Prompt attacks are only assessed on input, and at LOW deliberately.
+    #
+    # Nothing a user types reaches a prompt anywhere in this product: the corpus is authored
+    # and gated by us, learner summaries are generated, and tool results are ours. Messages,
+    # captions, conference agendas and a goal's free-text "why" are all excluded by design.
+    # So this filter guards text we wrote, and at HIGH it was blocking our own instructions —
+    # "find the evidence, then submit the note" reads as an injection at MEDIUM confidence —
+    # which silently dropped agents to their fallbacks while looking like they worked.
+    #
+    # Put this back to HIGH the moment any user-supplied free text enters a prompt, and wrap
+    # that text in Converse `guardContent` blocks so only the untrusted part is assessed.
+    {"type": "PROMPT_ATTACK", "inputStrength": "LOW", "outputStrength": "NONE"},
 ]
 
 # A family activity never needs a real person's contact details. NAME is left alone: the
