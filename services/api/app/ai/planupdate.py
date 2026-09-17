@@ -68,10 +68,25 @@ class PlanUpdateResult:
     warning: str = ""
 
 
-def summarise(plan: dict, mastery_rows: list[dict], skills: dict[str, dict]) -> str:
-    """Everything the model may know. Supports and evidence bands - no identity of any kind."""
-    supports = "; ".join(plan.get("accommodations", [])[:8]) or "none on file"
-    goals = " | ".join(plan.get("plan_goals", [])[:3]) or "none on file"
+def _redact(text: str, names: tuple[str, ...]) -> str:
+    """Plan documents quote the child by name; the model must never see it."""
+    import re
+    for name in names:
+        if name:
+            text = re.sub(rf"\b{re.escape(name)}\b", "the learner", text, flags=re.I)
+    return text
+
+
+def summarise(plan: dict, mastery_rows: list[dict], skills: dict[str, dict],
+              redact_names: tuple[str, ...] = ()) -> str:
+    """Everything the model may know. Supports and evidence bands - no identity of any kind.
+
+    Wording matters twice over: the child's name is redacted out of quoted plan text, and the
+    plan is described by SHAPE ("goals and services") rather than by the IEP/504 label, which
+    the guardrail's diagnosis classifier reads as disability context.
+    """
+    supports = "; ".join(_redact(a, redact_names) for a in plan.get("accommodations", [])[:8]) or "none on file"
+    goals = " | ".join(_redact(g, redact_names) for g in plan.get("plan_goals", [])[:3]) or "none on file"
     lines = []
     for m in mastery_rows[:8]:
         skill = skills.get(m["skill_id"], {})
@@ -83,9 +98,10 @@ def summarise(plan: dict, mastery_rows: list[dict], skills: dict[str, dict]) -> 
                     ", falling" if history[-1] < history[0] - 0.05 else ", steady"
         lines.append(f"- {skill.get('name', m['skill_id'])}: {band}{trend}, "
                      f"{m.get('evidence_count', 0)} answers")
-    return (f"Plan type: {plan.get('type', 'IEP')}.\n"
-            f"Current accommodations: {supports}.\n"
-            f"Current plan goals: {goals}.\n"
+    style = "goals and services" if plan.get("type") == "IEP" else "accommodations only"
+    return (f"Plan style: {style}.\n"
+            f"Current classroom supports: {supports}.\n"
+            f"Current learning goals: {goals}.\n"
             f"Fresh practice evidence:\n" + "\n".join(lines))
 
 
@@ -112,7 +128,8 @@ def _rules_draft(plan: dict, mastery_rows: list[dict], skills: dict[str, dict]) 
     )
 
 
-def propose(plan: dict, mastery_rows: list[dict], skills: dict[str, dict]) -> PlanUpdateResult:
+def propose(plan: dict, mastery_rows: list[dict], skills: dict[str, dict],
+            redact_names: tuple[str, ...] = ()) -> PlanUpdateResult:
     path = ["summarise", "retrieve"]
     weakest = min(mastery_rows, key=lambda m: m["estimate"], default=None) if mastery_rows else None
     skill_name = skills.get(weakest["skill_id"], {}).get("name", "") if weakest else ""
@@ -127,7 +144,7 @@ def propose(plan: dict, mastery_rows: list[dict], skills: dict[str, dict]) -> Pl
         draft = _rules_draft(plan, mastery_rows, skills)
         return PlanUpdateResult(draft=draft, citations=_cite(draft, sources), origin="rules", path=path)
 
-    summary = summarise(plan, mastery_rows, skills)
+    summary = summarise(plan, mastery_rows, skills, redact_names)
     try:
         import boto3
         client = boto3.client("bedrock-runtime", region_name=current.region)

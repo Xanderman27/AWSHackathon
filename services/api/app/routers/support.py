@@ -198,7 +198,9 @@ def plan_suggestion(student_id: str, actor: Actor = Depends(require_role("teache
         raise HTTPException(404, "no plan on file")
     mastery = [m for m in store.read("mastery") if m["student_id"] == student_id]
     skills = {s["id"]: s for s in store.read("skills")}
-    result = planupdate.propose(plan, mastery, skills)
+    student = next((s for s in store.read("students") if s["id"] == student_id), {})
+    result = planupdate.propose(plan, mastery, skills,
+                                redact_names=(student.get("display_name", ""),))
     store.append("audit", {"actor": actor.user_id, "action": "plan_suggestion.draft",
                            "object_id": student_id, "at": now()})
     if result.draft is None:
