@@ -23,7 +23,7 @@
     "photo": "/faces/student-02.jpg",
     "avatar": {
       "skin": 2,
-      "hair": "curly",
+      "hair": "bun",
       "hair_color": 1,
       "shirt": 4
     }
@@ -51,7 +51,7 @@
     "photo": "/faces/student-04.jpg",
     "avatar": {
       "skin": 4,
-      "hair": "coily",
+      "hair": "puffs",
       "hair_color": 0,
       "shirt": 2
     }
@@ -108,7 +108,7 @@
     "photo": "/faces/student-08.jpg",
     "avatar": {
       "skin": 2,
-      "hair": "curly",
+      "hair": "wavy",
       "hair_color": 5,
       "shirt": 2,
       "freckles": true

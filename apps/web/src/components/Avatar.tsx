@@ -8,6 +8,7 @@ import { useState } from 'react'
 
 export type HairStyle =
   | 'short' | 'buzz' | 'curly' | 'coily' | 'long' | 'bob' | 'ponytail' | 'bun' | 'braids' | 'wavy'
+  | 'puffs'
 
 export interface AvatarSpec {
   skin: number
@@ -135,6 +136,13 @@ function backHair(style: HairStyle, hair: { fill: string; line: string }) {
       )
     case 'ponytail':
       return <path d="M76 36 C90 40 92 58 84 70 C80 60 74 52 70 46 Z" fill={hair.fill} {...stroke} />
+    case 'puffs':
+      return (
+        <g fill={hair.fill} {...stroke}>
+          <circle cx="14" cy="34" r="13" />
+          <circle cx="86" cy="34" r="13" />
+        </g>
+      )
     default:
       return null
   }
@@ -158,6 +166,14 @@ function frontHair(style: HairStyle, hair: { fill: string; line: string }) {
       return (
         <g fill={hair.fill} {...stroke}>
           {puffs.map(([cx, cy], i) => <circle key={i} cx={cx} cy={cy} r={r} />)}
+        </g>
+      )
+    }
+    case 'puffs': {
+      const puffs: Array<[number, number]> = [[30, 33], [40, 25], [50, 22], [60, 25], [70, 33]]
+      return (
+        <g fill={hair.fill} {...stroke}>
+          {puffs.map(([cx, cy], i) => <circle key={i} cx={cx} cy={cy} r={9} />)}
         </g>
       )
     }
