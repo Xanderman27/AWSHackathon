@@ -210,6 +210,7 @@ export default function Home() {
               <table>
                 <tbody>
                   <tr><td>Student</td><td><code>sam</code></td><td><code>otter123</code></td></tr>
+                  <tr><td>Student</td><td><code>mia</code></td><td><code>otter123</code></td></tr>
                   <tr><td>Teacher</td><td><code>rivera</code></td><td><code>teach123</code></td></tr>
                   <tr><td>Parent</td><td><code>jordan</code></td><td><code>family123</code></td></tr>
                 </tbody>
