@@ -1573,7 +1573,6 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .topbar-tools .tools { gap: 6px; }
 .topbar-tools .tool { min-height: 36px; padding: 4px 10px; border-bottom-width: 2px; }
 .topbar-tools .tool.zoom input[type='range'] { width: 78px; }
-@media (max-width: 640px) { .topbar-tools .tool.zoom { display: none; } }
 
 /* Links out to the regulators, at the bottom of the resources library. */
 .reg-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; }
@@ -1775,4 +1774,30 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
      checker. The padding is worth more as board: this buys roughly 5px on every square, and
      the board stays centred with a margin still around it. */
   .checkers-wrap { padding-left: 10px; padding-right: 10px; }
+}
+
+/* The zoom slider is not decoration that can be dropped when the top bar runs out of room:
+   it is the display control a learner who needs larger text reaches for on every page, and
+   this product exists for learners with IEPs and 504 plans. It was hidden under 640px
+   because the bar could not fit brand, tools, stars and log out on one line.
+
+   So give it a line. Below 640px the right-hand group drops under the brand and takes the
+   full width, which leaves the tools, the star count and log out sitting comfortably in
+   about 316px of the 351px available on a 375px phone. Only the student's bar moves — the
+   :has() keeps teacher and parent bars, which carry no tools, on a single line. */
+@media (max-width: 640px) {
+  .topbar .row:has(.topbar-tools) { flex: 1 1 100%; justify-content: flex-start; }
+
+  /* A range track is 16px tall, which is a poor thing to catch with a thumb. Height on the
+     input grows the hit area without thickening the track the browser draws inside it. */
+  .tool.zoom input[type='range'] { height: 44px; }
+}
+
+@media (max-width: 360px) {
+  /* At 320px the tools, the stars and Log out together need more than the 296px the row has,
+     so Log out fell to a third line. The slider is the one piece that can give up width
+     without losing anything: it is a seven-step control that is dragged, not aimed at, and
+     the 44px height that makes it easy to catch is untouched. 360px rather than 400px because
+     the full-width slider still fits on a 375px phone, which is the common case. */
+  .topbar-tools .tool.zoom input[type='range'] { width: 56px; }
 }
