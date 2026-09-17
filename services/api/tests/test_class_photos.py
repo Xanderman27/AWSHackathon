@@ -8,6 +8,7 @@ from unittest.mock import patch
 import pytest
 from fastapi.testclient import TestClient
 
+from app.blobs import LocalBlobs, check_name
 from app.main import app
 from app.storage import store
 
@@ -25,7 +26,7 @@ PNG = bytes.fromhex(
 @pytest.fixture
 def client(tmp_path):
     """Route uploads to a temp folder so tests never touch the demo's own photos."""
-    with patch.object(store, "upload_path", lambda name: tmp_path / name):
+    with patch.object(store, "blobs", LocalBlobs(tmp_path)):
         yield TestClient(app)
 
 
@@ -84,10 +85,18 @@ def test_only_real_images_are_accepted(client):
     ).status_code == 400
 
 
-def test_a_stored_filename_cannot_climb_out_of_the_uploads_folder():
-    for attempt in ("../../students.json", "../secrets", "a/../../b"):
+def test_a_stored_filename_cannot_climb_out_of_the_uploads_folder(tmp_path):
+    """Stored names are generated server-side, so anything else is refused by both back ends
+    before it can become a path or an S3 key."""
+    local = LocalBlobs(tmp_path)
+    for attempt in ("../../students.json", "../secrets", "a/../../b", "notes.pdf",
+                    "", "..", "photo.jpg/../../x.jpg"):
         with pytest.raises(ValueError):
-            store.upload_path(attempt)
+            check_name(attempt)
+        with pytest.raises(ValueError):
+            local.get(attempt)
+    # The shape we actually generate is accepted.
+    assert check_name("0123456789abcdef0123456789abcdef.jpg")
 
 
 def test_a_parent_sees_a_teammates_face_and_nothing_else_about_them():

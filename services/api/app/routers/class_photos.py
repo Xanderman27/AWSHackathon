@@ -18,8 +18,7 @@ from __future__ import annotations
 
 from uuid import uuid4
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
-from fastapi.responses import FileResponse
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Response, UploadFile
 
 from ..auth import Actor, get_actor, require_role
 from ..models import now
@@ -76,7 +75,7 @@ async def upload_photo(
 
     # The stored name is ours, never the client's: an uploaded filename is untrusted input.
     stored = f"{uuid4().hex}{ALLOWED[file.content_type]}"
-    store.upload_path(stored).write_bytes(payload)
+    store.blobs.put(stored, payload, file.content_type)
 
     teacher = next((t for t in store.read("teachers") if t["id"] == actor.user_id), {})
     row = {
@@ -122,10 +121,12 @@ def photo_file(photo_id: str, actor: Actor = Depends(get_actor)):
     # Same answer whether the photo does not exist or is not this caller's to see.
     if row is None or row["class_id"] not in allowed:
         raise HTTPException(404, "unknown photo")
-    path = store.upload_path(row["filename"])
-    if not path.exists():
+    data = store.blobs.get(row["filename"])
+    if data is None:
         raise HTTPException(404, "unknown photo")
-    return FileResponse(path, media_type=row["content_type"])
+    # Private either way: these bytes only leave here for a caller the check above allowed.
+    return Response(content=data, media_type=row["content_type"],
+                    headers={"Cache-Control": "private, max-age=300"})
 
 
 @router.delete("/teacher/class-photos/{photo_id}")
@@ -135,8 +136,7 @@ def delete_photo(photo_id: str, actor: Actor = Depends(require_role("teacher")))
     if row is None or row["class_id"] not in actor.class_ids:
         raise HTTPException(404, "unknown photo")
     store.write_all("class_photos", [r for r in rows if r["id"] != photo_id])
-    path = store.upload_path(row["filename"])
-    path.unlink(missing_ok=True)
+    store.blobs.delete(row["filename"])
     store.append("audit", {"actor": actor.user_id, "action": "class_photo.delete",
                            "object_id": photo_id, "at": now()})
     return {"ok": True}
