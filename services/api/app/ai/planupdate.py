@@ -139,12 +139,13 @@ def propose(plan: dict, mastery_rows: list[dict], skills: dict[str, dict]) -> Pl
             "toolConfig": _tool_config(),
             "inferenceConfig": {"maxTokens": 1400, "temperature": 0.2},
         }
-        # The FAMILY guardrail denies exactly this topic (recommending accommodations /
-        # IEP content), so attaching it here can only ever block the draft. This pipeline
-        # is teacher-facing: the teacher guardrail applies when configured, and otherwise
-        # the system rules + citation verification + human adoption are the guard.
-        if current.teacher_guardrail:
-            request["guardrailConfig"] = current.teacher_guardrail
+        # This surface gets its own guardrail (dori-guardrail-plan): diagnosis and
+        # medication stay denied, but proposing a support for the team is allowed -
+        # the family/teacher guardrails deny that very topic and would block every
+        # draft. Provisioned by scripts/provision_guardrail.py's plan variant and
+        # read from Parameter Store like the others.
+        if current.plan_guardrail:
+            request["guardrailConfig"] = current.plan_guardrail
         path.append("bedrock")
         response = client.converse(**request)
         stop_reason = response.get("stopReason", "?")

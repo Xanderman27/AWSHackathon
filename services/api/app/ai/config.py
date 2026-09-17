@@ -36,6 +36,10 @@ class Settings:
     # Optional: with none set, teacher text falls back to the stricter family guardrail.
     teacher_guardrail_id: str | None = None
     teacher_guardrail_version: str = "DRAFT"
+    # For the plan-drafting surface: diagnosis and medication stay denied, but proposing a
+    # support for the team to consider is allowed - that is the surface's purpose.
+    plan_guardrail_id: str | None = None
+    plan_guardrail_version: str = "DRAFT"
 
     @property
     def guardrail(self) -> dict | None:
@@ -51,6 +55,16 @@ class Settings:
             return {"guardrailIdentifier": self.teacher_guardrail_id,
                     "guardrailVersion": self.teacher_guardrail_version}
         return self.guardrail
+
+    @property
+    def plan_guardrail(self) -> dict | None:
+        """No fallback to the other two on purpose: both deny 'recommending accommodations
+        or IEP content', which is this surface's entire job. Unset means unguarded drafting
+        behind the system rules, citation verification and the human adoption step."""
+        if self.plan_guardrail_id:
+            return {"guardrailIdentifier": self.plan_guardrail_id,
+                    "guardrailVersion": self.plan_guardrail_version}
+        return None
 
 
 def _credentials_present() -> bool:
@@ -102,6 +116,9 @@ def settings() -> Settings:
         teacher_guardrail_id=_setting("BEDROCK_TEACHER_GUARDRAIL_ID", "teacher_guardrail_id"),
         teacher_guardrail_version=_setting(
             "BEDROCK_TEACHER_GUARDRAIL_VERSION", "teacher_guardrail_version", "DRAFT"),
+        plan_guardrail_id=_setting("BEDROCK_PLAN_GUARDRAIL_ID", "plan_guardrail_id"),
+        plan_guardrail_version=_setting(
+            "BEDROCK_PLAN_GUARDRAIL_VERSION", "plan_guardrail_version", "DRAFT"),
         # No credentials means offline, whatever the flag says: a failed Converse call on
         # stage is worse than an honest cached draft.
         offline=_flag("DEMO_OFFLINE", default=True) or not _credentials_present(),
