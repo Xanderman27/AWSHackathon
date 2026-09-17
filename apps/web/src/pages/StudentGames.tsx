@@ -21,7 +21,10 @@ export default function StudentGames() {
       .catch(() => setError('Your activities could not load. Try again in a moment.'))
   }, [])
 
-  const solo = catalog.filter((game) => game.solo)
+  // A game the teacher already assigned as a team activity stays out of the solo list,
+  // so the same game never shows up in both sections.
+  const teamGameIds = new Set((activities ?? []).map((activity) => activity.game_id))
+  const solo = catalog.filter((game) => game.solo && !teamGameIds.has(game.id))
 
   return (
     <div className="stack">

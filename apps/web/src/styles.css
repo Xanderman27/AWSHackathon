@@ -324,7 +324,8 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 :root[data-contrast='high'] .game-card { border-color: var(--line); }
 
 /* Teacher-assigned collaborative activities */
-.group-activity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.group-activity-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+@media (max-width: 700px) { .group-activity-grid { grid-template-columns: 1fr; } }
 .group-activity-card { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto 1fr auto; gap: 14px 18px; align-items: start; height: 100%; box-sizing: border-box; }
 .group-activity-card h3 { margin: 8px 0 4px; font-size: 1.45em; }
 .group-activity-card p { margin: 0; min-height: 3.1em; } /* equal text zones keep the team boxes level across cards */
@@ -1287,3 +1288,132 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 }
 @media (prefers-reduced-motion: reduce) { .bench-go { animation: none; } }
 :root[data-motion='reduced'] .bench-go { animation: none; }
+
+/* ================= Checkers Corner ================= */
+.checkers-head { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.checkers-head > div[aria-live] { flex: 1; min-width: 200px; }
+.checkers-score { display: grid; gap: 6px; }
+.checkers-count { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: .92em;
+  padding: 4px 12px; border-radius: 10px; border: 2px solid transparent; }
+.checkers-count i { width: 14px; height: 14px; border-radius: 50%; background: var(--seat-color);
+  box-shadow: inset 0 -3px 0 rgba(0,0,0,.2); }
+.checkers-count.up { border-color: var(--seat-color); animation: checkers-turn 1.4s ease-in-out infinite; }
+@keyframes checkers-turn { 0%, 100% { transform: none; } 50% { transform: scale(1.05); } }
+
+.checkers-wrap { display: grid; place-items: center; }
+.checkers-board { display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr);
+  width: min(560px, 100%); aspect-ratio: 1; border-radius: 16px; overflow: hidden; border: 4px solid #b98a5a;
+  box-shadow: 0 6px 0 #96694043; }
+.checkers-board.flipped { transform: rotate(180deg); }
+.checkers-board.flipped .crown { display: inline-block; transform: rotate(180deg); }
+.checkers-cell { position: relative; border: 0; border-radius: 0; padding: 0; min-height: 0;
+  display: grid; place-items: center; box-shadow: none; cursor: pointer; }
+.checkers-cell.light { background: #f6e3c5; }
+.checkers-cell.dark { background: #b98a5a; }
+.checkers-cell.hint { background: #8fb763; }
+.checkers-cell:disabled { cursor: default; opacity: 1; }
+.checkers-cell:focus-visible { outline: 3px solid var(--focus); outline-offset: -3px; z-index: 1; }
+
+.checker { width: 76%; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--seat-color) 55%, #fff), var(--seat-color) 70%);
+  box-shadow: inset 0 -5px 0 rgba(0,0,0,.25), 0 3px 4px rgba(0,0,0,.25);
+  transition: transform .18s ease, box-shadow .18s ease; }
+.checker.mine { cursor: grab; }
+.checkers-cell:not(:disabled):hover .checker.mine { transform: translateY(-3px); }
+.checker.picked { transform: translateY(-4px) scale(1.08);
+  box-shadow: inset 0 -5px 0 rgba(0,0,0,.25), 0 8px 12px rgba(0,0,0,.3), 0 0 0 4px #fff; }
+/* The landing piece slides from its old square, hops at the peak, and settles. */
+.checker.landed { animation: checker-slide .5s cubic-bezier(.3, 1.1, .5, 1); }
+@keyframes checker-slide {
+  0% { transform: translate(var(--sdx, 0), var(--sdy, 0)); box-shadow: inset 0 -5px 0 rgba(0,0,0,.25), 0 3px 4px rgba(0,0,0,.25); }
+  55% { transform: translate(calc(var(--sdx, 0) * .3), calc(var(--sdy, 0) * .3)) scale(1.18); box-shadow: inset 0 -5px 0 rgba(0,0,0,.25), 0 14px 18px rgba(0,0,0,.3); }
+  100% { transform: none; }
+}
+/* A captured checker spins away instead of vanishing. */
+.checker.ghost { position: absolute; inset: 12%; width: 76%; pointer-events: none;
+  animation: checker-poof .5s ease forwards; }
+@keyframes checker-poof {
+  0% { transform: none; opacity: 1; }
+  100% { transform: scale(0) rotate(140deg); opacity: 0; }
+}
+.checker .crown { font-style: normal; font-size: 1.1em; animation: crown-pop .5s ease; filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
+@keyframes crown-pop { 0% { transform: scale(0) rotate(-30deg); } 70% { transform: scale(1.3); } 100% { transform: none; } }
+.hint-dot { width: 30%; aspect-ratio: 1; border-radius: 50%; background: rgba(255,255,255,.85);
+  animation: hint-blink 1s ease-in-out infinite; }
+@keyframes hint-blink { 0%, 100% { transform: scale(.85); opacity: .7; } 50% { transform: scale(1.1); opacity: 1; } }
+
+/* ================= Globe Trotters ================= */
+.globe-clue { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.globe-clue > div[aria-live] { flex: 1; min-width: 220px; }
+.globe-clue.found { background: var(--mint); color: var(--mint-ink); border-color: transparent; }
+.globe-clue-text { margin: 8px 0 0; font-size: 1.22em; font-weight: 600; line-height: 1.5; }
+.globe-answer { margin: 8px 0 4px; animation: pop .35s ease; }
+.globe-fact { margin: 0; font-size: 1.02em; }
+.globe-score { text-align: center; display: grid; line-height: 1.15; }
+.globe-score strong { font-size: 2em; }
+.globe-score span { font-size: .82em; color: var(--muted); font-weight: 600; }
+.globe-clue.found .globe-score span { color: inherit; }
+
+.globe-done { position: relative; }
+
+/* The world map. Continents bob, waves drift, and each region is a big tappable button. */
+.globe-map-card { padding: 14px; }
+.globe-map { display: block; width: 100%; height: auto; }
+.gm-sea { fill: #4aa8e8; }
+.gm-wave { fill: none; stroke: rgba(255,255,255,.55); stroke-width: 3; stroke-linecap: round;
+  pointer-events: none; animation: gm-drift 5s ease-in-out infinite; }
+@keyframes gm-drift {
+  0%, 100% { transform: translateX(0); opacity: .5; }
+  50% { transform: translateX(14px); opacity: 1; }
+}
+.gm-region { cursor: pointer; }
+.gm-region .gm-shape { transition: filter .15s ease, fill .15s ease; }
+/* Continents: real coastlines, gentle bob. */
+.gm-region.continent .gm-shape { stroke: rgba(255,255,255,.95); stroke-width: 1.4; stroke-linejoin: round; }
+.gm-region.continent { animation: gm-bob 4.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes gm-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+/* Oceans: no drawn shape at all - the open water itself is the tap target, and only the
+   floating label shows where each ocean lives. Hovering breathes a soft glow over the area. */
+.gm-region.ocean .gm-shape { fill: transparent; stroke: none; }
+.gm-region.ocean:hover:not(.missed) .gm-shape, .gm-region.ocean:focus-visible .gm-shape {
+  fill: rgba(255, 255, 255, .14); }
+.gm-region.continent:hover:not(.missed) .gm-shape, .gm-region.continent:focus-visible .gm-shape {
+  filter: brightness(1.12) drop-shadow(0 4px 6px rgba(11,18,28,.3)); }
+.gm-region:focus, .gm-region:focus-visible { outline: none; }
+.gm-region.continent:focus-visible .gm-shape { stroke: #fff; stroke-width: 4; }
+.gm-tag { pointer-events: none; }
+.gm-region.ocean .gm-tag { animation: gm-sway 6s ease-in-out infinite; }
+@keyframes gm-sway { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(8px); } }
+.gm-label { font-weight: 800; font-size: 17px; text-anchor: middle; fill: #23445c;
+  paint-order: stroke; stroke: rgba(255,255,255,.88); stroke-width: 4px;
+  font-family: inherit; }
+.gm-region.ocean .gm-label { fill: #0d3a5c; stroke: rgba(255,255,255,.75); }
+.gm-glyph { font-size: 22px; text-anchor: middle; }
+.gm-region[aria-disabled='true'] { cursor: default; }
+
+.gm-region.missed .gm-tag { animation: gm-shake .45s ease; opacity: .45; }
+.gm-region.missed.continent { animation: gm-shake .45s ease; opacity: .45; }
+.gm-region.missed .gm-shape { filter: grayscale(.9); }
+.gm-region.missed.ocean .gm-shape { fill: rgba(11, 18, 28, .12); }
+@keyframes gm-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-7px) rotate(-1deg); }
+  75% { transform: translateX(7px) rotate(1deg); }
+}
+.gm-region.right.continent { animation: gm-right .6s ease; }
+.gm-region.right .gm-tag { animation: gm-right .6s ease; transform-box: fill-box; transform-origin: center; }
+.gm-region.right.continent .gm-shape { stroke: #fff; stroke-width: 4;
+  filter: drop-shadow(0 0 10px rgba(88, 204, 2, .9)); }
+.gm-region.right.ocean .gm-shape { fill: rgba(88, 204, 2, .25); animation: gm-found-water 1.2s ease-in-out infinite; }
+@keyframes gm-found-water { 0%, 100% { fill: rgba(88,204,2,.18); } 50% { fill: rgba(88,204,2,.32); } }
+@keyframes gm-right { 0% { transform: scale(.92); } 55% { transform: scale(1.08) rotate(1.5deg); } 100% { transform: none; } }
+
+:root[data-motion='reduced'] .checkers-count.up, :root[data-motion='reduced'] .checker.landed,
+:root[data-motion='reduced'] .checker.ghost, :root[data-motion='reduced'] .checker .crown,
+:root[data-motion='reduced'] .hint-dot, :root[data-motion='reduced'] .gm-wave,
+:root[data-motion='reduced'] .gm-region, :root[data-motion='reduced'] .globe-answer { animation: none !important; }
+:root[data-contrast='high'] .checkers-cell.light { background: #ccc; }
+:root[data-contrast='high'] .checkers-cell.dark { background: #444; }
+:root[data-contrast='high'] .checkers-cell.hint { background: var(--brand); }
+:root[data-contrast='high'] .gm-sea { fill: #10202e; }
+:root[data-contrast='high'] .gm-label { fill: #0b121c; stroke: #fff; }

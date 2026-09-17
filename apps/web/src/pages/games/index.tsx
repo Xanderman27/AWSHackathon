@@ -3,7 +3,9 @@
 
 import { useParams } from 'react-router-dom'
 import BeatTogether from './BeatTogether'
+import CheckersCorner from './CheckersCorner'
 import FractionStrips from './FractionStrips'
+import GlobeTrotters from './GlobeTrotters'
 import MemoryMeadow from './MemoryMeadow'
 import ShapeShift from './ShapeShift'
 import SortItOut from './SortItOut'
@@ -16,6 +18,8 @@ const SCREENS: Record<string, () => React.JSX.Element> = {
   'memory-meadow': MemoryMeadow,
   'sort-it-out': SortItOut,
   'shape-shift': ShapeShift,
+  'checkers': CheckersCorner,
+  'globe-trotters': GlobeTrotters,
 }
 
 export default function GameRoute() {
