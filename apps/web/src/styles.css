@@ -1257,6 +1257,24 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .blog-caption { margin: 0; line-height: 1.55; max-width: 62ch; }
 .blog-foot { margin-top: 6px; font-size: .85em; }
 @media (max-width: 700px) { .blog-post { grid-template-columns: 1fr; } }
+
+/* ---------- Family updates: a note home about one learner --------------------- */
+
+
+.update-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+.update-card { display: grid; gap: 10px; position: relative; }
+.update-head { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; }
+.update-head > div:not([class]) { min-width: 0; }
+.update-head h3 { margin: 0; font-size: 1.15em; }
+.update-meta { margin: 2px 0 0; font-size: .85em; }
+.update-note { margin: 0; line-height: 1.55; max-width: 62ch; }
+.update-foot { font-size: .85em; }
+/* An unread note is marked by a border and a word, never by colour alone (SC 1.4.1). */
+.update-card.is-new { border-color: var(--brand); }
+.update-new-flag { justify-self: end; align-self: start; font-size: .78em; font-weight: 700; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--brand-deep); background: var(--brand-soft);
+  padding: 3px 10px; border-radius: 8px; }
+@media (max-width: 560px) { .update-head { grid-template-columns: 1fr; } }
 .feed-item figcaption .feed-date { font-size: .82em; font-weight: 700; }
 .feed-item figcaption strong { font-size: 1.02em; line-height: 1.3; }
 
