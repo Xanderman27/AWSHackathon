@@ -139,9 +139,12 @@ def propose(plan: dict, mastery_rows: list[dict], skills: dict[str, dict]) -> Pl
             "toolConfig": _tool_config(),
             "inferenceConfig": {"maxTokens": 700, "temperature": 0.2},
         }
-        guardrail = current.teacher_guardrail or current.guardrail
-        if guardrail:
-            request["guardrailConfig"] = guardrail
+        # The FAMILY guardrail denies exactly this topic (recommending accommodations /
+        # IEP content), so attaching it here can only ever block the draft. This pipeline
+        # is teacher-facing: the teacher guardrail applies when configured, and otherwise
+        # the system rules + citation verification + human adoption are the guard.
+        if current.teacher_guardrail:
+            request["guardrailConfig"] = current.teacher_guardrail
         path.append("bedrock")
         response = client.converse(**request)
         payload = None
