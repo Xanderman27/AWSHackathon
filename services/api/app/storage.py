@@ -27,7 +27,8 @@ STATE = ROOT / "data" / "state"
 COLLECTIONS = ["skills", "items", "students", "links", "attempts", "mastery", "audit",
                "recommendations", "conference_slots", "conference_requests",
                "teachers", "parents", "message_threads", "messages", "group_activities", "accounts",
-               "assignments", "class_photos", "classes", "benchmarks", "plans", "goals", "plan_requests"]
+               "assignments", "class_photos", "classes", "benchmarks", "plans", "goals",
+               "plan_requests", "family_updates"]
 
 SEED_UPLOADS = SEED / "uploads"
 UPLOADS = STATE / "uploads"

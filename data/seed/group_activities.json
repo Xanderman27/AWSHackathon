@@ -79,5 +79,481 @@
     "status": "published",
     "created_by": "teacher-01",
     "published_at": "2026-09-16T18:12:00+00:00"
+  },
+  {
+    "id": "group-activity-beat-together-00",
+    "class_id": "class-4a",
+    "game_id": "beat-together",
+    "title": "Beat Together",
+    "group_name": "Blue Note Crew",
+    "member_ids": [
+      "student-01",
+      "student-02",
+      "student-03"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-05T10:51:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-beat-together-01",
+    "class_id": "class-4a",
+    "game_id": "beat-together",
+    "title": "Beat Together",
+    "group_name": "Blue Note Crew 2",
+    "member_ids": [
+      "student-04",
+      "student-05",
+      "student-06"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-05T12:25:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-beat-together-02",
+    "class_id": "class-4a",
+    "game_id": "beat-together",
+    "title": "Beat Together",
+    "group_name": "Blue Note Crew 3",
+    "member_ids": [
+      "student-07",
+      "student-08",
+      "student-09"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-05T11:41:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-beat-together-03",
+    "class_id": "class-4a",
+    "game_id": "beat-together",
+    "title": "Beat Together",
+    "group_name": "Blue Note Crew 4",
+    "member_ids": [
+      "student-10",
+      "student-11",
+      "student-12"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-05T14:45:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-globe-trotters-10",
+    "class_id": "class-4a",
+    "game_id": "globe-trotters",
+    "title": "Globe Trotters",
+    "group_name": "Compass Club",
+    "member_ids": [
+      "student-02",
+      "student-08",
+      "student-02"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-06T14:35:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-globe-trotters-11",
+    "class_id": "class-4a",
+    "game_id": "globe-trotters",
+    "title": "Globe Trotters",
+    "group_name": "Compass Club 2",
+    "member_ids": [
+      "student-08",
+      "student-02",
+      "student-08"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-06T13:59:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-globe-trotters-12",
+    "class_id": "class-4a",
+    "game_id": "globe-trotters",
+    "title": "Globe Trotters",
+    "group_name": "Compass Club 3",
+    "member_ids": [
+      "student-02",
+      "student-08",
+      "student-02"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-06T09:14:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-globe-trotters-13",
+    "class_id": "class-4a",
+    "game_id": "globe-trotters",
+    "title": "Globe Trotters",
+    "group_name": "Compass Club 4",
+    "member_ids": [
+      "student-08",
+      "student-02",
+      "student-08"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-06T09:36:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-checkers-20",
+    "class_id": "class-4a",
+    "game_id": "checkers",
+    "title": "Checkers Corner",
+    "group_name": "Otter Table",
+    "member_ids": [
+      "student-03",
+      "student-02",
+      "student-01"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-08T14:51:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-checkers-21",
+    "class_id": "class-4a",
+    "game_id": "checkers",
+    "title": "Checkers Corner",
+    "group_name": "Otter Table 2",
+    "member_ids": [
+      "student-12",
+      "student-11",
+      "student-10"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-08T13:49:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-checkers-22",
+    "class_id": "class-4a",
+    "game_id": "checkers",
+    "title": "Checkers Corner",
+    "group_name": "Otter Table 3",
+    "member_ids": [
+      "student-09",
+      "student-08",
+      "student-07"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-08T14:47:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-checkers-23",
+    "class_id": "class-4a",
+    "game_id": "checkers",
+    "title": "Checkers Corner",
+    "group_name": "Otter Table 4",
+    "member_ids": [
+      "student-06",
+      "student-05",
+      "student-04"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-08T12:18:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-memory-meadow-30",
+    "class_id": "class-4a",
+    "game_id": "memory-meadow",
+    "title": "Memory Meadow",
+    "group_name": "Maple Group",
+    "member_ids": [
+      "student-04",
+      "student-08",
+      "student-12"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-10T12:40:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-memory-meadow-31",
+    "class_id": "class-4a",
+    "game_id": "memory-meadow",
+    "title": "Memory Meadow",
+    "group_name": "Maple Group 2",
+    "member_ids": [
+      "student-04",
+      "student-08",
+      "student-12"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-10T12:21:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-memory-meadow-32",
+    "class_id": "class-4a",
+    "game_id": "memory-meadow",
+    "title": "Memory Meadow",
+    "group_name": "Maple Group 3",
+    "member_ids": [
+      "student-04",
+      "student-08",
+      "student-12"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-10T11:18:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-memory-meadow-33",
+    "class_id": "class-4a",
+    "game_id": "memory-meadow",
+    "title": "Memory Meadow",
+    "group_name": "Maple Group 4",
+    "member_ids": [
+      "student-04",
+      "student-08",
+      "student-12"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-10T12:06:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-sort-it-out-40",
+    "class_id": "class-4a",
+    "game_id": "sort-it-out",
+    "title": "Sort It Out",
+    "group_name": "Harbour Crew",
+    "member_ids": [
+      "student-05",
+      "student-02",
+      "student-11"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-11T09:55:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-sort-it-out-41",
+    "class_id": "class-4a",
+    "game_id": "sort-it-out",
+    "title": "Sort It Out",
+    "group_name": "Harbour Crew 2",
+    "member_ids": [
+      "student-08",
+      "student-05",
+      "student-02"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-11T11:04:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-sort-it-out-42",
+    "class_id": "class-4a",
+    "game_id": "sort-it-out",
+    "title": "Sort It Out",
+    "group_name": "Harbour Crew 3",
+    "member_ids": [
+      "student-11",
+      "student-08",
+      "student-05"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-11T12:45:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-sort-it-out-43",
+    "class_id": "class-4a",
+    "game_id": "sort-it-out",
+    "title": "Sort It Out",
+    "group_name": "Harbour Crew 4",
+    "member_ids": [
+      "student-02",
+      "student-11",
+      "student-08"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-11T09:36:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-story-detectives-50",
+    "class_id": "class-4a",
+    "game_id": "story-detectives",
+    "title": "Story Detectives",
+    "group_name": "Lantern Group",
+    "member_ids": [
+      "student-06",
+      "student-08",
+      "student-10"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-13T14:32:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-story-detectives-51",
+    "class_id": "class-4a",
+    "game_id": "story-detectives",
+    "title": "Story Detectives",
+    "group_name": "Lantern Group 2",
+    "member_ids": [
+      "student-12",
+      "student-02",
+      "student-04"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-13T13:30:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-story-detectives-52",
+    "class_id": "class-4a",
+    "game_id": "story-detectives",
+    "title": "Story Detectives",
+    "group_name": "Lantern Group 3",
+    "member_ids": [
+      "student-06",
+      "student-08",
+      "student-10"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-13T09:06:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-story-detectives-53",
+    "class_id": "class-4a",
+    "game_id": "story-detectives",
+    "title": "Story Detectives",
+    "group_name": "Lantern Group 4",
+    "member_ids": [
+      "student-12",
+      "student-02",
+      "student-04"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-13T09:54:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-shape-shift-60",
+    "class_id": "class-4a",
+    "game_id": "shape-shift",
+    "title": "Shape Shift",
+    "group_name": "Kite Table",
+    "member_ids": [
+      "student-07",
+      "student-02",
+      "student-09"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-15T14:29:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-shape-shift-61",
+    "class_id": "class-4a",
+    "game_id": "shape-shift",
+    "title": "Shape Shift",
+    "group_name": "Kite Table 2",
+    "member_ids": [
+      "student-04",
+      "student-11",
+      "student-06"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-15T10:57:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-shape-shift-62",
+    "class_id": "class-4a",
+    "game_id": "shape-shift",
+    "title": "Shape Shift",
+    "group_name": "Kite Table 3",
+    "member_ids": [
+      "student-01",
+      "student-08",
+      "student-03"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-15T14:07:00+00:00",
+    "generated": true
+  },
+  {
+    "id": "group-activity-shape-shift-63",
+    "class_id": "class-4a",
+    "game_id": "shape-shift",
+    "title": "Shape Shift",
+    "group_name": "Kite Table 4",
+    "member_ids": [
+      "student-10",
+      "student-05",
+      "student-12"
+    ],
+    "rationale": "Recent evidence on the same classroom objective, and no pair here worked together in the last three activities.",
+    "status": "published",
+    "created_by": "teacher-01",
+    "published_at": "2026-09-15T11:41:00+00:00",
+    "generated": true
   }
 ]

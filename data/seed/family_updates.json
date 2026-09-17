@@ -1,0 +1,28 @@
+[
+  {
+    "id": "upd-seed000001",
+    "student_id": "student-01",
+    "class_id": "class-4a",
+    "teacher_id": "teacher-01",
+    "teacher_name": "Ms. Rivera",
+    "headline": "Sam explained her thinking to the whole table",
+    "note": "During the fraction wall activity Sam noticed two rows covered the same amount and showed the rest of her group how she checked it. She kept going when the first try did not line up. Worth hearing about at home.",
+    "happened_on": "2026-09-15",
+    "created_at": "2026-09-15T21:40:00+00:00",
+    "read_by": [
+      "parent-01"
+    ]
+  },
+  {
+    "id": "upd-seed000002",
+    "student_id": "student-01",
+    "class_id": "class-4a",
+    "teacher_id": "teacher-01",
+    "teacher_name": "Ms. Rivera",
+    "headline": "A rough start after lunch today",
+    "note": "Sam found the room loud after lunch and asked to work in the quiet corner for about fifteen minutes, which helped. She came back and finished the check-in. Nothing to worry about, but you may hear about it tonight and I would rather you hear it from me first.",
+    "happened_on": "2026-09-16",
+    "created_at": "2026-09-16T22:05:00+00:00",
+    "read_by": []
+  }
+]

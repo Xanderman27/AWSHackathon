@@ -15,7 +15,9 @@ export default function ParentLayout() {
         </div>
         <nav className="tabs" aria-label="Family sections">
           <NavLink to="/parent" end>📈 My child's progress</NavLink>
+          <NavLink to="/parent/updates">✉️ Updates from school</NavLink>
           <NavLink to="/parent/resources">📚 Resources</NavLink>
+          <NavLink to="/parent/report">🩺 For your doctor</NavLink>
         </nav>
       </div>
       <Outlet />

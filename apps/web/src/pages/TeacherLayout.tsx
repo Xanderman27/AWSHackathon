@@ -16,9 +16,8 @@ export default function TeacherLayout() {
         <nav className="tabs" aria-label="Teacher sections">
           <NavLink to="/teacher" end>🧑‍🎓 Learners</NavLink>
           <NavLink to="/teacher/activities">🎯 Activities</NavLink>
-          <NavLink to="/teacher/updates">📸 Family updates</NavLink>
+          <NavLink to="/teacher/updates">✉️ Family updates</NavLink>
           <NavLink to="/teacher/stats">📊 Class statistics</NavLink>
-          <NavLink to="/teacher/resources">📚 Resources</NavLink>
         </nav>
       </div>
       <Outlet />
