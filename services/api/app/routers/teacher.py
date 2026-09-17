@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import uuid
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
@@ -16,6 +17,9 @@ from ..storage import store
 
 router = APIRouter(prefix="/teacher", tags=["teacher"])
 
+# How many days of history the dashboard's activity series covers.
+DAILY_DAYS = 14
+
 BAND_LABEL = {"building": "Building foundations", "practicing": "Practicing", "extension": "Ready for extension"}
 
 
@@ -25,6 +29,7 @@ def class_summary(actor: Actor = Depends(require_role("teacher"))):
     mastery = store.read("mastery")
     attempts = store.read("attempts")
     skills = {s["id"]: s for s in store.read("skills")}
+    item_skill = {i["id"]: i["skill_id"] for i in store.read("items")}
     quests_done_map: dict = {}
     for a in attempts:
         if a.get("completed"):
@@ -35,7 +40,7 @@ def class_summary(actor: Actor = Depends(require_role("teacher"))):
         for m in mastery:
             if m["student_id"] != s["id"]:
                 continue
-            flags = _correct_flags(attempts, s["id"], m["skill_id"])
+            flags = _correct_flags(attempts, s["id"], m["skill_id"], item_skill)
             # Seeded mastery has history but no item log; treat it as consistent evidence.
             if len(flags) < m.get("evidence_count", 0):
                 flags = [True] * m["evidence_count"]
@@ -100,6 +105,7 @@ def class_summary(actor: Actor = Depends(require_role("teacher"))):
         "active_learners": len(active | {m["student_id"] for m in mastery if m["student_id"] in my_ids}),
         "avg_estimate": round(sum(ests) / len(ests), 2) if ests else None,
         "subjects": subject_stats,
+        **_depth(rows, attempts, my_ids, store.read("group_activities"), actor.class_ids),
     }
     return {"class_id": sorted(actor.class_ids)[0], "students": students, "mastery": rows,
             "counts": counts, "class_stats": class_stats}
@@ -187,13 +193,117 @@ def student_evidence(student_id: str, actor: Actor = Depends(require_role("teach
     }
 
 
-def _correct_flags(attempts, student_id, skill_id):
+def _depth(rows, attempts, my_ids, group_activities, class_ids):
+    """The deeper half of the class statistics, all aggregate and all neutral.
+
+    Three things docs/GUIDELINES.md asks a teacher dashboard to show, which class totals alone
+    cannot:
+
+    - **Confidence beside the estimate** (§7). A class average with no confidence mix invites a
+      decision the evidence cannot support, so the spread of low/medium/high is reported and
+      "needs more evidence" is a first-class number rather than an error state (§5.4).
+    - **Recent activity, not lifetime totals** (§5.4). Evidence older than a fortnight is not
+      evidence of where a learner is now, so the daily series and the "active this week" count
+      are both windowed.
+    - **Collaboration drift** (§5.9). A grouping feature can satisfy every composition rule on
+      any single run and still produce tracking over a term, so groupmate diversity, repeat
+      pairings and learners never grouped are surfaced to the teacher.
+
+    Nothing here ranks a learner or names one: this is the classwide tab, and an individual's
+    evidence lives on their own page.
+    """
+    today = datetime.now(timezone.utc).date()
+    window_start = today - timedelta(days=DAILY_DAYS - 1)
+
+    # ---- Accuracy, hints and the daily series, from responses inside the window ----
+    answered = correct = hinted = 0
+    per_day = {str(window_start + timedelta(days=i)): {"answers": 0, "quests": 0}
+               for i in range(DAILY_DAYS)}
+    active_week = set()
+    week_start = str(today - timedelta(days=6))
+
+    for a in attempts:
+        if a["student_id"] not in my_ids:
+            continue
+        for r in a["responses"]:
+            answered += 1
+            correct += bool(r.get("correct"))
+            hinted += bool(r.get("hint_used"))
+            day = (r.get("at") or "")[:10]
+            if day in per_day:
+                per_day[day]["answers"] += 1
+            if day >= week_start:
+                active_week.add(a["student_id"])
+        if a.get("completed"):
+            day = (a.get("started_at") or "")[:10]
+            if day in per_day:
+                per_day[day]["quests"] += 1
+
+    daily = [{"date": day, **counts} for day, counts in sorted(per_day.items())]
+
+    # ---- Confidence mix across every (learner, skill) row ----
+    mix = {"low": 0, "medium": 0, "high": 0}
+    for row in rows:
+        if row["confidence"] in mix:
+            mix[row["confidence"]] += 1
+
+    # ---- Collaboration: diversity, repeats, and who has been left out ----
+    partners: dict[str, set] = {}
+    pair_counts: dict[tuple, int] = {}
+    mine = [g for g in group_activities if g.get("class_id") in class_ids]
+    for g in mine:
+        members = [m for m in g.get("member_ids", []) if m in my_ids]
+        for member in members:
+            partners.setdefault(member, set()).update(x for x in members if x != member)
+        for i, one in enumerate(members):
+            for two in members[i + 1:]:
+                key = tuple(sorted((one, two)))
+                pair_counts[key] = pair_counts.get(key, 0) + 1
+
+    possible = max(len(my_ids) - 1, 1)
+    collaboration = {
+        "activities": len(mine),
+        "learners_grouped": len(partners),
+        "never_grouped": len(my_ids - set(partners)),
+        # Groupmate diversity: distinct partners as a share of the classmates available.
+        "diversity": round(sum(len(v) for v in partners.values()) / len(partners) / possible, 2)
+                     if partners else 0.0,
+        "repeat_pairs": sum(1 for n in pair_counts.values() if n > 1),
+    }
+
+    return {
+        "answered_window": answered,
+        "accuracy": round(correct / answered, 2) if answered else None,
+        "hint_rate": round(hinted / answered, 2) if answered else None,
+        "confidence_mix": mix,
+        "needs_more_evidence": mix["low"],
+        "active_this_week": len(active_week),
+        "daily": daily,
+        "collaboration": collaboration,
+    }
+
+
+def _correct_flags(attempts, student_id, skill_id, item_skill=None):
+    """This learner's correct/incorrect run *for one skill*.
+
+    Each response is attributed to the skill of the item that was answered, not to the skill
+    the quest was assigned under, because a quest that routes down to a prerequisite produces
+    evidence about the prerequisite (PRD §9.3). `current_skill_id` is the fallback when an
+    item is not in the bank any more.
+
+    Filtering by skill is the whole point: confidence gates definitive recommendations and
+    cohort placement (docs/GUIDELINES.md §5.4), so pooling a learner's entire answer log
+    across every subject would report high confidence on a skill they have barely touched.
+    """
+    item_skill = item_skill or {}
     flags = []
     for a in attempts:
         if a["student_id"] != student_id:
             continue
+        fallback = a.get("current_skill_id") or a.get("skill_id")
         for r in a["responses"]:
-            flags.append(r["correct"])
+            if item_skill.get(r["item_id"], fallback) == skill_id:
+                flags.append(r["correct"])
     return flags
 
 

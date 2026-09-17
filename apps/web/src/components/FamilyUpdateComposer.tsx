@@ -15,6 +15,14 @@ import Avatar, { type AvatarSpec } from './Avatar'
 
 interface Learner { id: string; display_name: string; photo?: string | null; avatar?: AvatarSpec | null }
 interface ClassSummary { students: Learner[] }
+interface Recipient { student_id: string; student_name: string; guardians: string[] }
+
+/** "Jordan Bell", or "Jordan Bell and Sam Bell" for two guardians. */
+function nameList(names: string[]) {
+  if (names.length === 0) return ''
+  if (names.length === 1) return names[0]
+  return `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`
+}
 
 export interface FamilyUpdate {
   id: string
@@ -37,6 +45,7 @@ export function updateDate(raw: string) {
 
 export default function FamilyUpdateComposer() {
   const [learners, setLearners] = useState<Learner[]>([])
+  const [recipients, setRecipients] = useState<Recipient[]>([])
   const [sent, setSent] = useState<FamilyUpdate[] | null>(null)
   const [studentId, setStudentId] = useState('')
   const [headline, setHeadline] = useState('')
@@ -50,12 +59,19 @@ export default function FamilyUpdateComposer() {
     api<ClassSummary>('/teacher/class')
       .then((data) => setLearners(data.students))
       .catch(() => setError('Your class list could not load.'))
+    api<Recipient[]>('/teacher/family-updates/recipients')
+      .then(setRecipients)
+      .catch(() => setError('The guardian list could not load.'))
     api<FamilyUpdate[]>('/teacher/family-updates')
       .then(setSent)
       .catch(() => setError('Your sent updates could not load.'))
   }, [])
 
   const chosen = useMemo(() => learners.find((l) => l.id === studentId) ?? null, [learners, studentId])
+  const chosenGuardians = useMemo(
+    () => recipients.find((r) => r.student_id === studentId)?.guardians ?? [],
+    [recipients, studentId],
+  )
   const ready = Boolean(studentId && headline.trim() && note.trim()) && !busy
 
   async function send() {
@@ -106,9 +122,15 @@ export default function FamilyUpdateComposer() {
             <span>Which learner?</span>
             <select value={studentId} onChange={(event) => setStudentId(event.target.value)}>
               <option value="">Choose a learner…</option>
-              {learners.map((learner) => (
-                <option key={learner.id} value={learner.id}>{learner.display_name}</option>
-              ))}
+              {learners.map((learner) => {
+                const guardians = recipients.find((r) => r.student_id === learner.id)?.guardians ?? []
+                return (
+                  <option key={learner.id} value={learner.id}>
+                    {learner.display_name}
+                    {guardians.length ? ` — to ${nameList(guardians)}` : ' — no family linked yet'}
+                  </option>
+                )
+              })}
             </select>
           </label>
 
@@ -143,9 +165,13 @@ export default function FamilyUpdateComposer() {
 
         <p className="muted photo-audience">
           <strong>Who sees this:</strong>{' '}
-          {chosen
-            ? <>{chosen.display_name}'s guardians. No other family, and not {chosen.display_name}.</>
-            : <>only the guardians linked to the learner you choose. Students never see these.</>}
+          {chosen && chosenGuardians.length > 0
+            ? <>{nameList(chosenGuardians)}, {chosen.display_name}'s
+                {chosenGuardians.length === 1 ? ' guardian' : ' guardians'}. No other family, and
+                not {chosen.display_name}.</>
+            : chosen
+              ? <>nobody yet — no family is linked to {chosen.display_name}.</>
+              : <>only the guardians linked to the learner you choose. Students never see these.</>}
         </p>
 
         {notice && <div className="feedback good" role="status">✓ {notice}</div>}

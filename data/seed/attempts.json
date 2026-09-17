@@ -1,0 +1,2856 @@
+[
+  {
+    "id": "att-seed0001",
+    "student_id": "student-01",
+    "skill_id": "animal_adaptations",
+    "current_skill_id": "animal_adaptations",
+    "responses": [
+      {
+        "item_id": "sc-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-05T12:13:00+00:00"
+      },
+      {
+        "item_id": "sc-05",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-05T09:03:00+00:00"
+      },
+      {
+        "item_id": "sc-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-05T12:07:00+00:00"
+      },
+      {
+        "item_id": "sc-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-05T14:19:00+00:00"
+      },
+      {
+        "item_id": "sc-06",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-05T11:36:00+00:00"
+      },
+      {
+        "item_id": "sc-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-05T11:58:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-05T11:15:00+00:00"
+  },
+  {
+    "id": "att-seed0002",
+    "student_id": "student-01",
+    "skill_id": "animal_adaptations",
+    "current_skill_id": "animal_adaptations",
+    "responses": [
+      {
+        "item_id": "sc-05",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-13T12:31:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-13T09:05:00+00:00"
+  },
+  {
+    "id": "att-seed0003",
+    "student_id": "student-01",
+    "skill_id": "fraction_equivalence",
+    "current_skill_id": "fraction_equivalence",
+    "responses": [
+      {
+        "item_id": "fe-02",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-13T09:59:00+00:00"
+      },
+      {
+        "item_id": "fe-07",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-13T10:39:00+00:00"
+      },
+      {
+        "item_id": "fe-05",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-13T13:01:00+00:00"
+      },
+      {
+        "item_id": "fe-11",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-13T13:38:00+00:00"
+      },
+      {
+        "item_id": "fe-08",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-13T09:49:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-13T12:12:00+00:00"
+  },
+  {
+    "id": "att-seed0004",
+    "student_id": "student-01",
+    "skill_id": "main_idea",
+    "current_skill_id": "main_idea",
+    "responses": [
+      {
+        "item_id": "mi-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-16T14:51:00+00:00"
+      },
+      {
+        "item_id": "mi-07",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-16T09:01:00+00:00"
+      },
+      {
+        "item_id": "mi-06",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-16T13:33:00+00:00"
+      },
+      {
+        "item_id": "mi-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-16T13:14:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-16T12:19:00+00:00"
+  },
+  {
+    "id": "att-seed0005",
+    "student_id": "student-01",
+    "skill_id": "maps_continents",
+    "current_skill_id": "maps_continents",
+    "responses": [
+      {
+        "item_id": "ge-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T11:29:00+00:00"
+      },
+      {
+        "item_id": "ge-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T10:54:00+00:00"
+      },
+      {
+        "item_id": "ge-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T10:03:00+00:00"
+      },
+      {
+        "item_id": "ge-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T14:13:00+00:00"
+      },
+      {
+        "item_id": "ge-05",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T12:14:00+00:00"
+      },
+      {
+        "item_id": "ge-06",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T10:14:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-11T10:15:00+00:00"
+  },
+  {
+    "id": "att-seed0006",
+    "student_id": "student-01",
+    "skill_id": "maps_continents",
+    "current_skill_id": "maps_continents",
+    "responses": [
+      {
+        "item_id": "ge-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T10:57:00+00:00"
+      },
+      {
+        "item_id": "ge-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T11:38:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-14T09:34:00+00:00"
+  },
+  {
+    "id": "att-seed0007",
+    "student_id": "student-01",
+    "skill_id": "sea_explorers",
+    "current_skill_id": "sea_explorers",
+    "responses": [
+      {
+        "item_id": "hi-05",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-14T13:11:00+00:00"
+      },
+      {
+        "item_id": "hi-01",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-14T13:13:00+00:00"
+      },
+      {
+        "item_id": "hi-02",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T12:56:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-14T10:39:00+00:00"
+  },
+  {
+    "id": "att-seed0008",
+    "student_id": "student-02",
+    "skill_id": "animal_adaptations",
+    "current_skill_id": "animal_adaptations",
+    "responses": [
+      {
+        "item_id": "sc-05",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-07T12:37:00+00:00"
+      },
+      {
+        "item_id": "sc-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-07T11:49:00+00:00"
+      },
+      {
+        "item_id": "sc-04",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-07T10:12:00+00:00"
+      },
+      {
+        "item_id": "sc-06",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-07T13:50:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-07T09:59:00+00:00"
+  },
+  {
+    "id": "att-seed0009",
+    "student_id": "student-02",
+    "skill_id": "fraction_equivalence",
+    "current_skill_id": "fraction_equivalence",
+    "responses": [
+      {
+        "item_id": "fe-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-13T12:22:00+00:00"
+      },
+      {
+        "item_id": "fe-07",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-13T11:14:00+00:00"
+      },
+      {
+        "item_id": "fe-05",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-13T09:13:00+00:00"
+      },
+      {
+        "item_id": "fe-09",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-13T14:37:00+00:00"
+      },
+      {
+        "item_id": "fe-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-13T13:37:00+00:00"
+      },
+      {
+        "item_id": "fe-06",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-13T13:23:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-13T09:43:00+00:00"
+  },
+  {
+    "id": "att-seed0010",
+    "student_id": "student-02",
+    "skill_id": "fraction_parts",
+    "current_skill_id": "fraction_parts",
+    "responses": [
+      {
+        "item_id": "fp-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-07T10:28:00+00:00"
+      },
+      {
+        "item_id": "fp-05",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-07T13:58:00+00:00"
+      },
+      {
+        "item_id": "fp-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-07T13:09:00+00:00"
+      },
+      {
+        "item_id": "fp-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-07T09:22:00+00:00"
+      },
+      {
+        "item_id": "fp-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-07T10:18:00+00:00"
+      },
+      {
+        "item_id": "fp-06",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-07T14:24:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-07T09:14:00+00:00"
+  },
+  {
+    "id": "att-seed0011",
+    "student_id": "student-02",
+    "skill_id": "fraction_parts",
+    "current_skill_id": "fraction_parts",
+    "responses": [
+      {
+        "item_id": "fp-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-13T12:55:00+00:00"
+      },
+      {
+        "item_id": "fp-06",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-13T11:14:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-13T10:01:00+00:00"
+  },
+  {
+    "id": "att-seed0012",
+    "student_id": "student-02",
+    "skill_id": "main_idea",
+    "current_skill_id": "main_idea",
+    "responses": [
+      {
+        "item_id": "mi-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T14:42:00+00:00"
+      },
+      {
+        "item_id": "mi-08",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-10T12:30:00+00:00"
+      },
+      {
+        "item_id": "mi-06",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T12:05:00+00:00"
+      },
+      {
+        "item_id": "mi-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T14:57:00+00:00"
+      },
+      {
+        "item_id": "mi-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T12:33:00+00:00"
+      },
+      {
+        "item_id": "mi-07",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T11:52:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-10T11:44:00+00:00"
+  },
+  {
+    "id": "att-seed0013",
+    "student_id": "student-02",
+    "skill_id": "main_idea",
+    "current_skill_id": "main_idea",
+    "responses": [
+      {
+        "item_id": "mi-05",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T10:02:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-14T12:12:00+00:00"
+  },
+  {
+    "id": "att-seed0014",
+    "student_id": "student-03",
+    "skill_id": "animal_adaptations",
+    "current_skill_id": "animal_adaptations",
+    "responses": [
+      {
+        "item_id": "sc-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T09:41:00+00:00"
+      },
+      {
+        "item_id": "sc-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T13:15:00+00:00"
+      },
+      {
+        "item_id": "sc-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-09T12:52:00+00:00"
+      },
+      {
+        "item_id": "sc-05",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T09:04:00+00:00"
+      },
+      {
+        "item_id": "sc-06",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T13:04:00+00:00"
+      },
+      {
+        "item_id": "sc-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T13:04:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-09T13:57:00+00:00"
+  },
+  {
+    "id": "att-seed0015",
+    "student_id": "student-03",
+    "skill_id": "animal_adaptations",
+    "current_skill_id": "animal_adaptations",
+    "responses": [
+      {
+        "item_id": "sc-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T10:39:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-14T10:55:00+00:00"
+  },
+  {
+    "id": "att-seed0016",
+    "student_id": "student-03",
+    "skill_id": "fraction_equivalence",
+    "current_skill_id": "fraction_equivalence",
+    "responses": [
+      {
+        "item_id": "fe-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T12:07:00+00:00"
+      },
+      {
+        "item_id": "fe-09",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T14:38:00+00:00"
+      },
+      {
+        "item_id": "fe-10",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-14T12:03:00+00:00"
+      },
+      {
+        "item_id": "fe-08",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T13:16:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-14T14:11:00+00:00"
+  },
+  {
+    "id": "att-seed0017",
+    "student_id": "student-03",
+    "skill_id": "fraction_parts",
+    "current_skill_id": "fraction_parts",
+    "responses": [
+      {
+        "item_id": "fp-04",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-14T12:22:00+00:00"
+      },
+      {
+        "item_id": "fp-05",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T14:13:00+00:00"
+      },
+      {
+        "item_id": "fp-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T12:21:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-14T12:57:00+00:00"
+  },
+  {
+    "id": "att-seed0018",
+    "student_id": "student-04",
+    "skill_id": "animal_adaptations",
+    "current_skill_id": "animal_adaptations",
+    "responses": [
+      {
+        "item_id": "sc-05",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-07T13:31:00+00:00"
+      },
+      {
+        "item_id": "sc-04",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-07T09:39:00+00:00"
+      },
+      {
+        "item_id": "sc-02",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-07T13:00:00+00:00"
+      },
+      {
+        "item_id": "sc-01",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-07T14:05:00+00:00"
+      },
+      {
+        "item_id": "sc-03",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-07T09:14:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-07T11:40:00+00:00"
+  },
+  {
+    "id": "att-seed0019",
+    "student_id": "student-04",
+    "skill_id": "fraction_equivalence",
+    "current_skill_id": "fraction_equivalence",
+    "responses": [
+      {
+        "item_id": "fe-08",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T10:31:00+00:00"
+      },
+      {
+        "item_id": "fe-12",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-10T13:14:00+00:00"
+      },
+      {
+        "item_id": "fe-10",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T12:24:00+00:00"
+      },
+      {
+        "item_id": "fe-03",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T10:46:00+00:00"
+      },
+      {
+        "item_id": "fe-05",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T11:51:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-10T10:33:00+00:00"
+  },
+  {
+    "id": "att-seed0020",
+    "student_id": "student-04",
+    "skill_id": "main_idea",
+    "current_skill_id": "main_idea",
+    "responses": [
+      {
+        "item_id": "mi-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-15T10:18:00+00:00"
+      },
+      {
+        "item_id": "mi-08",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-15T09:07:00+00:00"
+      },
+      {
+        "item_id": "mi-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-15T13:38:00+00:00"
+      },
+      {
+        "item_id": "mi-06",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-15T09:45:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-15T14:49:00+00:00"
+  },
+  {
+    "id": "att-seed0021",
+    "student_id": "student-04",
+    "skill_id": "maps_continents",
+    "current_skill_id": "maps_continents",
+    "responses": [
+      {
+        "item_id": "ge-06",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T11:55:00+00:00"
+      },
+      {
+        "item_id": "ge-03",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T10:25:00+00:00"
+      },
+      {
+        "item_id": "ge-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T14:58:00+00:00"
+      },
+      {
+        "item_id": "ge-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T12:00:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-14T14:59:00+00:00"
+  },
+  {
+    "id": "att-seed0022",
+    "student_id": "student-04",
+    "skill_id": "sea_explorers",
+    "current_skill_id": "sea_explorers",
+    "responses": [
+      {
+        "item_id": "hi-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T11:17:00+00:00"
+      },
+      {
+        "item_id": "hi-06",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-14T13:06:00+00:00"
+      },
+      {
+        "item_id": "hi-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T14:21:00+00:00"
+      },
+      {
+        "item_id": "hi-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T09:08:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-14T14:02:00+00:00"
+  },
+  {
+    "id": "att-seed0023",
+    "student_id": "student-05",
+    "skill_id": "animal_adaptations",
+    "current_skill_id": "animal_adaptations",
+    "responses": [
+      {
+        "item_id": "sc-02",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-08T11:24:00+00:00"
+      },
+      {
+        "item_id": "sc-05",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-08T13:33:00+00:00"
+      },
+      {
+        "item_id": "sc-01",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-08T14:15:00+00:00"
+      },
+      {
+        "item_id": "sc-04",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-08T12:51:00+00:00"
+      },
+      {
+        "item_id": "sc-06",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-08T13:39:00+00:00"
+      },
+      {
+        "item_id": "sc-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-08T14:58:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-08T13:24:00+00:00"
+  },
+  {
+    "id": "att-seed0024",
+    "student_id": "student-05",
+    "skill_id": "animal_adaptations",
+    "current_skill_id": "animal_adaptations",
+    "responses": [
+      {
+        "item_id": "sc-06",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T13:17:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-14T09:45:00+00:00"
+  },
+  {
+    "id": "att-seed0025",
+    "student_id": "student-05",
+    "skill_id": "fraction_equivalence",
+    "current_skill_id": "fraction_equivalence",
+    "responses": [
+      {
+        "item_id": "fe-10",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T09:29:00+00:00"
+      },
+      {
+        "item_id": "fe-06",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T10:40:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-10T10:01:00+00:00"
+  },
+  {
+    "id": "att-seed0026",
+    "student_id": "student-05",
+    "skill_id": "maps_continents",
+    "current_skill_id": "maps_continents",
+    "responses": [
+      {
+        "item_id": "ge-04",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-05T12:01:00+00:00"
+      },
+      {
+        "item_id": "ge-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-05T13:36:00+00:00"
+      },
+      {
+        "item_id": "ge-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-05T14:56:00+00:00"
+      },
+      {
+        "item_id": "ge-05",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-05T12:24:00+00:00"
+      },
+      {
+        "item_id": "ge-06",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-05T14:16:00+00:00"
+      },
+      {
+        "item_id": "ge-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-05T13:42:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-05T14:20:00+00:00"
+  },
+  {
+    "id": "att-seed0027",
+    "student_id": "student-05",
+    "skill_id": "maps_continents",
+    "current_skill_id": "maps_continents",
+    "responses": [
+      {
+        "item_id": "ge-04",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-13T12:47:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-13T14:14:00+00:00"
+  },
+  {
+    "id": "att-seed0028",
+    "student_id": "student-05",
+    "skill_id": "sea_explorers",
+    "current_skill_id": "sea_explorers",
+    "responses": [
+      {
+        "item_id": "hi-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T11:47:00+00:00"
+      },
+      {
+        "item_id": "hi-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T14:50:00+00:00"
+      },
+      {
+        "item_id": "hi-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T09:37:00+00:00"
+      },
+      {
+        "item_id": "hi-05",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T11:48:00+00:00"
+      },
+      {
+        "item_id": "hi-06",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-10T11:27:00+00:00"
+      },
+      {
+        "item_id": "hi-03",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-10T12:57:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-10T12:22:00+00:00"
+  },
+  {
+    "id": "att-seed0029",
+    "student_id": "student-06",
+    "skill_id": "fraction_equivalence",
+    "current_skill_id": "fraction_equivalence",
+    "responses": [
+      {
+        "item_id": "fe-10",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-12T11:28:00+00:00"
+      },
+      {
+        "item_id": "fe-09",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-12T14:51:00+00:00"
+      },
+      {
+        "item_id": "fe-03",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T11:44:00+00:00"
+      },
+      {
+        "item_id": "fe-05",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-12T14:06:00+00:00"
+      },
+      {
+        "item_id": "fe-11",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-12T10:12:00+00:00"
+      },
+      {
+        "item_id": "fe-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T12:31:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-12T13:40:00+00:00"
+  },
+  {
+    "id": "att-seed0030",
+    "student_id": "student-06",
+    "skill_id": "main_idea",
+    "current_skill_id": "main_idea",
+    "responses": [
+      {
+        "item_id": "mi-06",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-14T10:07:00+00:00"
+      },
+      {
+        "item_id": "mi-07",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T13:25:00+00:00"
+      },
+      {
+        "item_id": "mi-01",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T10:06:00+00:00"
+      },
+      {
+        "item_id": "mi-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T13:44:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-14T09:07:00+00:00"
+  },
+  {
+    "id": "att-seed0031",
+    "student_id": "student-06",
+    "skill_id": "sea_explorers",
+    "current_skill_id": "sea_explorers",
+    "responses": [
+      {
+        "item_id": "hi-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T14:03:00+00:00"
+      },
+      {
+        "item_id": "hi-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T11:23:00+00:00"
+      },
+      {
+        "item_id": "hi-06",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T11:08:00+00:00"
+      },
+      {
+        "item_id": "hi-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T10:52:00+00:00"
+      },
+      {
+        "item_id": "hi-05",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T10:35:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-12T11:45:00+00:00"
+  },
+  {
+    "id": "att-seed0032",
+    "student_id": "student-07",
+    "skill_id": "animal_adaptations",
+    "current_skill_id": "animal_adaptations",
+    "responses": [
+      {
+        "item_id": "sc-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T09:59:00+00:00"
+      },
+      {
+        "item_id": "sc-05",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T13:46:00+00:00"
+      },
+      {
+        "item_id": "sc-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T11:39:00+00:00"
+      },
+      {
+        "item_id": "sc-06",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T13:30:00+00:00"
+      },
+      {
+        "item_id": "sc-04",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T14:29:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-12T09:35:00+00:00"
+  },
+  {
+    "id": "att-seed0033",
+    "student_id": "student-07",
+    "skill_id": "fraction_equivalence",
+    "current_skill_id": "fraction_equivalence",
+    "responses": [
+      {
+        "item_id": "fe-06",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T12:47:00+00:00"
+      },
+      {
+        "item_id": "fe-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T14:50:00+00:00"
+      },
+      {
+        "item_id": "fe-08",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-10T12:57:00+00:00"
+      },
+      {
+        "item_id": "fe-09",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T11:28:00+00:00"
+      },
+      {
+        "item_id": "fe-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-10T10:57:00+00:00"
+      },
+      {
+        "item_id": "fe-12",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T11:37:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-10T09:22:00+00:00"
+  },
+  {
+    "id": "att-seed0034",
+    "student_id": "student-07",
+    "skill_id": "fraction_equivalence",
+    "current_skill_id": "fraction_equivalence",
+    "responses": [
+      {
+        "item_id": "fe-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-15T13:04:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-15T10:38:00+00:00"
+  },
+  {
+    "id": "att-seed0035",
+    "student_id": "student-07",
+    "skill_id": "main_idea",
+    "current_skill_id": "main_idea",
+    "responses": [
+      {
+        "item_id": "mi-02",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-06T14:55:00+00:00"
+      },
+      {
+        "item_id": "mi-05",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-06T13:01:00+00:00"
+      },
+      {
+        "item_id": "mi-04",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-06T09:51:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-06T09:01:00+00:00"
+  },
+  {
+    "id": "att-seed0036",
+    "student_id": "student-07",
+    "skill_id": "maps_continents",
+    "current_skill_id": "maps_continents",
+    "responses": [
+      {
+        "item_id": "ge-03",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T09:23:00+00:00"
+      },
+      {
+        "item_id": "ge-04",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-14T12:10:00+00:00"
+      },
+      {
+        "item_id": "ge-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T09:55:00+00:00"
+      },
+      {
+        "item_id": "ge-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T13:35:00+00:00"
+      },
+      {
+        "item_id": "ge-06",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-14T11:48:00+00:00"
+      },
+      {
+        "item_id": "ge-05",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-15T11:22:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-14T14:37:00+00:00"
+  },
+  {
+    "id": "att-seed0037",
+    "student_id": "student-07",
+    "skill_id": "sea_explorers",
+    "current_skill_id": "sea_explorers",
+    "responses": [
+      {
+        "item_id": "hi-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-12T11:34:00+00:00"
+      },
+      {
+        "item_id": "hi-02",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T10:16:00+00:00"
+      },
+      {
+        "item_id": "hi-05",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T11:38:00+00:00"
+      },
+      {
+        "item_id": "hi-06",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T10:13:00+00:00"
+      },
+      {
+        "item_id": "hi-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-12T09:34:00+00:00"
+      },
+      {
+        "item_id": "hi-01",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-12T11:19:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-12T12:22:00+00:00"
+  },
+  {
+    "id": "att-seed0038",
+    "student_id": "student-07",
+    "skill_id": "sea_explorers",
+    "current_skill_id": "sea_explorers",
+    "responses": [
+      {
+        "item_id": "hi-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T11:39:00+00:00"
+      },
+      {
+        "item_id": "hi-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T13:26:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-14T12:37:00+00:00"
+  },
+  {
+    "id": "att-seed0039",
+    "student_id": "student-08",
+    "skill_id": "fraction_equivalence",
+    "current_skill_id": "fraction_equivalence",
+    "responses": [
+      {
+        "item_id": "fe-09",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-06T14:47:00+00:00"
+      },
+      {
+        "item_id": "fe-07",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-06T11:03:00+00:00"
+      },
+      {
+        "item_id": "fe-01",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-06T12:42:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-06T10:38:00+00:00"
+  },
+  {
+    "id": "att-seed0040",
+    "student_id": "student-08",
+    "skill_id": "fraction_parts",
+    "current_skill_id": "fraction_parts",
+    "responses": [
+      {
+        "item_id": "fp-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T09:28:00+00:00"
+      },
+      {
+        "item_id": "fp-05",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T11:39:00+00:00"
+      },
+      {
+        "item_id": "fp-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T12:33:00+00:00"
+      },
+      {
+        "item_id": "fp-06",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T14:17:00+00:00"
+      },
+      {
+        "item_id": "fp-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T10:14:00+00:00"
+      },
+      {
+        "item_id": "fp-03",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T14:33:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-11T13:35:00+00:00"
+  },
+  {
+    "id": "att-seed0041",
+    "student_id": "student-08",
+    "skill_id": "fraction_parts",
+    "current_skill_id": "fraction_parts",
+    "responses": [
+      {
+        "item_id": "fp-05",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T11:44:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-14T10:11:00+00:00"
+  },
+  {
+    "id": "att-seed0042",
+    "student_id": "student-08",
+    "skill_id": "main_idea",
+    "current_skill_id": "main_idea",
+    "responses": [
+      {
+        "item_id": "mi-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-08T14:50:00+00:00"
+      },
+      {
+        "item_id": "mi-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-08T10:18:00+00:00"
+      },
+      {
+        "item_id": "mi-08",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-08T13:33:00+00:00"
+      },
+      {
+        "item_id": "mi-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T12:06:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-08T09:39:00+00:00"
+  },
+  {
+    "id": "att-seed0043",
+    "student_id": "student-08",
+    "skill_id": "sea_explorers",
+    "current_skill_id": "sea_explorers",
+    "responses": [
+      {
+        "item_id": "hi-05",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-09T13:36:00+00:00"
+      },
+      {
+        "item_id": "hi-02",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T14:25:00+00:00"
+      },
+      {
+        "item_id": "hi-06",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T11:40:00+00:00"
+      },
+      {
+        "item_id": "hi-01",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T11:54:00+00:00"
+      },
+      {
+        "item_id": "hi-03",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T11:48:00+00:00"
+      },
+      {
+        "item_id": "hi-04",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-09T09:08:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-09T11:45:00+00:00"
+  },
+  {
+    "id": "att-seed0044",
+    "student_id": "student-08",
+    "skill_id": "sea_explorers",
+    "current_skill_id": "sea_explorers",
+    "responses": [
+      {
+        "item_id": "hi-04",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-14T12:54:00+00:00"
+      },
+      {
+        "item_id": "hi-03",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T14:02:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-14T10:10:00+00:00"
+  },
+  {
+    "id": "att-seed0045",
+    "student_id": "student-09",
+    "skill_id": "fraction_equivalence",
+    "current_skill_id": "fraction_equivalence",
+    "responses": [
+      {
+        "item_id": "fe-02",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T14:07:00+00:00"
+      },
+      {
+        "item_id": "fe-11",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-11T10:08:00+00:00"
+      },
+      {
+        "item_id": "fe-10",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T09:41:00+00:00"
+      },
+      {
+        "item_id": "fe-07",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-11T09:52:00+00:00"
+      },
+      {
+        "item_id": "fe-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-11T12:40:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-11T13:05:00+00:00"
+  },
+  {
+    "id": "att-seed0046",
+    "student_id": "student-09",
+    "skill_id": "fraction_parts",
+    "current_skill_id": "fraction_parts",
+    "responses": [
+      {
+        "item_id": "fp-03",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T10:37:00+00:00"
+      },
+      {
+        "item_id": "fp-06",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T09:44:00+00:00"
+      },
+      {
+        "item_id": "fp-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T12:27:00+00:00"
+      },
+      {
+        "item_id": "fp-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T09:11:00+00:00"
+      },
+      {
+        "item_id": "fp-05",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T10:49:00+00:00"
+      },
+      {
+        "item_id": "fp-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T10:23:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-12T09:46:00+00:00"
+  },
+  {
+    "id": "att-seed0047",
+    "student_id": "student-09",
+    "skill_id": "fraction_parts",
+    "current_skill_id": "fraction_parts",
+    "responses": [
+      {
+        "item_id": "fp-05",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T13:31:00+00:00"
+      },
+      {
+        "item_id": "fp-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T11:37:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-14T11:45:00+00:00"
+  },
+  {
+    "id": "att-seed0048",
+    "student_id": "student-09",
+    "skill_id": "maps_continents",
+    "current_skill_id": "maps_continents",
+    "responses": [
+      {
+        "item_id": "ge-03",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-14T09:08:00+00:00"
+      },
+      {
+        "item_id": "ge-02",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T13:59:00+00:00"
+      },
+      {
+        "item_id": "ge-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T14:11:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-14T11:08:00+00:00"
+  },
+  {
+    "id": "att-seed0049",
+    "student_id": "student-09",
+    "skill_id": "sea_explorers",
+    "current_skill_id": "sea_explorers",
+    "responses": [
+      {
+        "item_id": "hi-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-11T09:29:00+00:00"
+      },
+      {
+        "item_id": "hi-06",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T11:31:00+00:00"
+      },
+      {
+        "item_id": "hi-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T11:36:00+00:00"
+      },
+      {
+        "item_id": "hi-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T11:19:00+00:00"
+      },
+      {
+        "item_id": "hi-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-11T12:07:00+00:00"
+      },
+      {
+        "item_id": "hi-05",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-11T14:52:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-11T12:56:00+00:00"
+  },
+  {
+    "id": "att-seed0050",
+    "student_id": "student-10",
+    "skill_id": "fraction_equivalence",
+    "current_skill_id": "fraction_equivalence",
+    "responses": [
+      {
+        "item_id": "fe-09",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-10T11:41:00+00:00"
+      },
+      {
+        "item_id": "fe-08",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T09:34:00+00:00"
+      },
+      {
+        "item_id": "fe-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-10T10:41:00+00:00"
+      },
+      {
+        "item_id": "fe-07",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T10:05:00+00:00"
+      },
+      {
+        "item_id": "fe-12",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T10:56:00+00:00"
+      },
+      {
+        "item_id": "fe-05",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T10:34:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-10T14:45:00+00:00"
+  },
+  {
+    "id": "att-seed0051",
+    "student_id": "student-10",
+    "skill_id": "fraction_parts",
+    "current_skill_id": "fraction_parts",
+    "responses": [
+      {
+        "item_id": "fp-02",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T14:27:00+00:00"
+      },
+      {
+        "item_id": "fp-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T14:20:00+00:00"
+      },
+      {
+        "item_id": "fp-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T10:47:00+00:00"
+      },
+      {
+        "item_id": "fp-05",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T11:02:00+00:00"
+      },
+      {
+        "item_id": "fp-06",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T13:11:00+00:00"
+      },
+      {
+        "item_id": "fp-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-09T10:46:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-09T09:48:00+00:00"
+  },
+  {
+    "id": "att-seed0052",
+    "student_id": "student-10",
+    "skill_id": "fraction_parts",
+    "current_skill_id": "fraction_parts",
+    "responses": [
+      {
+        "item_id": "fp-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T11:20:00+00:00"
+      },
+      {
+        "item_id": "fp-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-14T14:30:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-14T13:38:00+00:00"
+  },
+  {
+    "id": "att-seed0053",
+    "student_id": "student-10",
+    "skill_id": "main_idea",
+    "current_skill_id": "main_idea",
+    "responses": [
+      {
+        "item_id": "mi-08",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-06T09:33:00+00:00"
+      },
+      {
+        "item_id": "mi-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-06T12:50:00+00:00"
+      },
+      {
+        "item_id": "mi-05",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-06T10:34:00+00:00"
+      },
+      {
+        "item_id": "mi-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-06T09:00:00+00:00"
+      },
+      {
+        "item_id": "mi-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-06T11:07:00+00:00"
+      },
+      {
+        "item_id": "mi-06",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-06T13:09:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-06T09:52:00+00:00"
+  },
+  {
+    "id": "att-seed0054",
+    "student_id": "student-10",
+    "skill_id": "main_idea",
+    "current_skill_id": "main_idea",
+    "responses": [
+      {
+        "item_id": "mi-07",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-14T10:52:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-14T10:22:00+00:00"
+  },
+  {
+    "id": "att-seed0055",
+    "student_id": "student-11",
+    "skill_id": "fraction_equivalence",
+    "current_skill_id": "fraction_equivalence",
+    "responses": [
+      {
+        "item_id": "fe-08",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T13:51:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-11T10:05:00+00:00"
+  },
+  {
+    "id": "att-seed0056",
+    "student_id": "student-11",
+    "skill_id": "fraction_parts",
+    "current_skill_id": "fraction_parts",
+    "responses": [
+      {
+        "item_id": "fp-04",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-07T10:23:00+00:00"
+      },
+      {
+        "item_id": "fp-05",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-07T09:50:00+00:00"
+      },
+      {
+        "item_id": "fp-06",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-07T10:56:00+00:00"
+      },
+      {
+        "item_id": "fp-03",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-07T10:56:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-07T12:23:00+00:00"
+  },
+  {
+    "id": "att-seed0057",
+    "student_id": "student-11",
+    "skill_id": "main_idea",
+    "current_skill_id": "main_idea",
+    "responses": [
+      {
+        "item_id": "mi-01",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-11T14:07:00+00:00"
+      },
+      {
+        "item_id": "mi-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T09:16:00+00:00"
+      },
+      {
+        "item_id": "mi-07",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-11T12:32:00+00:00"
+      },
+      {
+        "item_id": "mi-04",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T13:50:00+00:00"
+      },
+      {
+        "item_id": "mi-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T09:33:00+00:00"
+      },
+      {
+        "item_id": "mi-06",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T10:00:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-11T09:00:00+00:00"
+  },
+  {
+    "id": "att-seed0058",
+    "student_id": "student-11",
+    "skill_id": "main_idea",
+    "current_skill_id": "main_idea",
+    "responses": [
+      {
+        "item_id": "mi-05",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-15T11:53:00+00:00"
+      },
+      {
+        "item_id": "mi-08",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-15T10:03:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-15T12:52:00+00:00"
+  },
+  {
+    "id": "att-seed0059",
+    "student_id": "student-11",
+    "skill_id": "maps_continents",
+    "current_skill_id": "maps_continents",
+    "responses": [
+      {
+        "item_id": "ge-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T11:53:00+00:00"
+      },
+      {
+        "item_id": "ge-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T12:49:00+00:00"
+      },
+      {
+        "item_id": "ge-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-12T09:05:00+00:00"
+      },
+      {
+        "item_id": "ge-04",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T10:32:00+00:00"
+      },
+      {
+        "item_id": "ge-06",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T13:19:00+00:00"
+      },
+      {
+        "item_id": "ge-05",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-12T11:55:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-12T13:03:00+00:00"
+  },
+  {
+    "id": "att-seed0060",
+    "student_id": "student-11",
+    "skill_id": "sea_explorers",
+    "current_skill_id": "sea_explorers",
+    "responses": [
+      {
+        "item_id": "hi-02",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T12:09:00+00:00"
+      },
+      {
+        "item_id": "hi-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T09:16:00+00:00"
+      },
+      {
+        "item_id": "hi-05",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T12:44:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-10T13:33:00+00:00"
+  },
+  {
+    "id": "att-seed0061",
+    "student_id": "student-12",
+    "skill_id": "animal_adaptations",
+    "current_skill_id": "animal_adaptations",
+    "responses": [
+      {
+        "item_id": "sc-02",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T10:07:00+00:00"
+      },
+      {
+        "item_id": "sc-04",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T11:46:00+00:00"
+      },
+      {
+        "item_id": "sc-03",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T11:21:00+00:00"
+      },
+      {
+        "item_id": "sc-05",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-09T12:41:00+00:00"
+      },
+      {
+        "item_id": "sc-06",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T09:54:00+00:00"
+      },
+      {
+        "item_id": "sc-01",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T12:46:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-09T13:20:00+00:00"
+  },
+  {
+    "id": "att-seed0062",
+    "student_id": "student-12",
+    "skill_id": "animal_adaptations",
+    "current_skill_id": "animal_adaptations",
+    "responses": [
+      {
+        "item_id": "sc-03",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-13T13:36:00+00:00"
+      },
+      {
+        "item_id": "sc-06",
+        "choice_id": "c",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-13T12:37:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-13T09:52:00+00:00"
+  },
+  {
+    "id": "att-seed0063",
+    "student_id": "student-12",
+    "skill_id": "fraction_equivalence",
+    "current_skill_id": "fraction_equivalence",
+    "responses": [
+      {
+        "item_id": "fe-12",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T12:46:00+00:00"
+      },
+      {
+        "item_id": "fe-08",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T10:37:00+00:00"
+      },
+      {
+        "item_id": "fe-07",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-09T11:11:00+00:00"
+      },
+      {
+        "item_id": "fe-05",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T12:32:00+00:00"
+      },
+      {
+        "item_id": "fe-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T09:23:00+00:00"
+      },
+      {
+        "item_id": "fe-06",
+        "choice_id": "d",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-09T10:24:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-09T10:04:00+00:00"
+  },
+  {
+    "id": "att-seed0064",
+    "student_id": "student-12",
+    "skill_id": "maps_continents",
+    "current_skill_id": "maps_continents",
+    "responses": [
+      {
+        "item_id": "ge-03",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T10:45:00+00:00"
+      },
+      {
+        "item_id": "ge-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-11T10:10:00+00:00"
+      },
+      {
+        "item_id": "ge-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": true,
+        "route_reason": null,
+        "at": "2026-09-11T09:19:00+00:00"
+      },
+      {
+        "item_id": "ge-01",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-11T12:35:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-11T12:16:00+00:00"
+  },
+  {
+    "id": "att-seed0065",
+    "student_id": "student-12",
+    "skill_id": "sea_explorers",
+    "current_skill_id": "sea_explorers",
+    "responses": [
+      {
+        "item_id": "hi-01",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T14:47:00+00:00"
+      },
+      {
+        "item_id": "hi-04",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T09:40:00+00:00"
+      },
+      {
+        "item_id": "hi-03",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T13:08:00+00:00"
+      },
+      {
+        "item_id": "hi-06",
+        "choice_id": "b",
+        "correct": false,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T09:24:00+00:00"
+      },
+      {
+        "item_id": "hi-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T09:39:00+00:00"
+      },
+      {
+        "item_id": "hi-05",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-10T10:43:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": true,
+    "started_at": "2026-09-10T12:15:00+00:00"
+  },
+  {
+    "id": "att-seed0066",
+    "student_id": "student-12",
+    "skill_id": "sea_explorers",
+    "current_skill_id": "sea_explorers",
+    "responses": [
+      {
+        "item_id": "hi-02",
+        "choice_id": "a",
+        "correct": true,
+        "hint_used": false,
+        "route_reason": null,
+        "at": "2026-09-15T12:57:00+00:00"
+      }
+    ],
+    "max_items": 6,
+    "completed": false,
+    "started_at": "2026-09-15T12:17:00+00:00"
+  }
+]

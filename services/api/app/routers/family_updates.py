@@ -114,6 +114,25 @@ def _for_parent(row: dict, actor: Actor) -> dict:
     }
 
 
+@router.get("/teacher/family-updates/recipients")
+def recipients(actor: Actor = Depends(require_role("teacher"))):
+    """Each learner in this class with the guardians a note about them would reach.
+
+    The composer needs this before anything is sent. A teacher picking "Sam" should see that
+    the note goes to Jordan Bell by name — a note home is addressed to a person, and a list
+    that shows only the child leaves the teacher guessing who is on the other end.
+
+    A learner with nobody linked is returned with an empty list rather than hidden, so the
+    gap is visible and fixable instead of the name simply being missing from the menu.
+    """
+    students = [s for s in store.read("students") if s["class_id"] in actor.class_ids]
+    return [{
+        "student_id": s["id"],
+        "student_name": s["display_name"],
+        "guardians": _guardian_names(s["id"]),
+    } for s in sorted(students, key=lambda s: s["display_name"])]
+
+
 @router.get("/teacher/family-updates")
 def teacher_updates(actor: Actor = Depends(require_role("teacher"))):
     mine = [r for r in store.read("family_updates") if r["teacher_id"] == actor.user_id]

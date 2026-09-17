@@ -933,6 +933,43 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .stat-card svg { flex: 0 0 auto; }
 .stat-num { font-size: 1.5em; font-weight: 800; line-height: 1.1; }
 .stat-lbl { font-size: .82em; color: var(--muted); font-weight: 600; }
+.stat-of { font-size: .55em; opacity: .7; margin-left: 4px; font-weight: 700; }
+.stat-note { margin: 12px 0 0; font-size: .9em; }
+
+/* ---------- Daily activity: one bar per day, one series, one hue ---------------- */
+/* Single series, so no legend: the heading names what is being counted. The value sits
+   above its own bar rather than on a hover tooltip, because hover is not a way to reach a
+   number on a touch screen or with a keyboard; the <details> table carries the full set. */
+.actchart { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px;
+  align-items: end; height: 190px; margin: 14px 0 0; padding-top: 18px;
+  border-bottom: 1.5px solid var(--line); }
+.actday { display: grid; grid-template-rows: 1fr auto; gap: 6px; height: 100%; min-width: 0; }
+.actbar-wrap { display: flex; align-items: flex-end; justify-content: center; height: 100%; }
+.actbar { position: relative; width: 74%; max-width: 34px; min-height: 3px;
+  /* Rounded only at the data end; the baseline end stays square and anchored. */
+  border-radius: 4px 4px 0 0; background: var(--brand); }
+.actval { position: absolute; top: -17px; left: 50%; transform: translateX(-50%);
+  font-size: .72em; font-weight: 700; color: var(--muted); }
+.actlbl { font-size: .68em; color: var(--muted); font-weight: 600; text-align: center;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.act-table { margin-top: 14px; font-size: .9em; }
+.act-table summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex;
+  align-items: center; gap: 6px; }
+.act-table table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+.act-table th, .act-table td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); }
+.act-table td { font-variant-numeric: tabular-nums; }
+
+/* ---------- Confidence mix and group-work drift -------------------------------- */
+.conf-bar { display: flex; height: 26px; border-radius: 999px; overflow: hidden;
+  border: 1.5px solid var(--line); margin-top: 12px; }
+.conf-bar i { display: flex; align-items: center; justify-content: center; height: 100%;
+  font-size: .8em; font-weight: 800; color: #fff; font-style: normal; min-width: 0; }
+:root[data-contrast='high'] .conf-bar i { color: #000; }
+
+.collab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px; margin-top: 14px; }
+
 .ach-list { display: grid; gap: 12px; }
 .ach { display: flex; gap: 12px; align-items: flex-start; opacity: .82; }
 .ach.earned { opacity: 1; }

@@ -75,7 +75,6 @@ function Shell() {
             <Route path="activities" element={<TeacherActivities />} />
             <Route path="updates" element={<TeacherUpdates />} />
             <Route path="stats" element={<TeacherStats />} />
-            <Route path="resources" element={<ResourceList />} />
           </Route>
           <Route path="/parent" element={<ParentLayout />}>
             <Route index element={<ParentProgress />} />
