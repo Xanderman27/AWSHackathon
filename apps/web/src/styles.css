@@ -1430,3 +1430,15 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 :root[data-contrast='high'] .checkers-cell.hint { background: var(--brand); }
 :root[data-contrast='high'] .gm-sea { fill: #10202e; }
 :root[data-contrast='high'] .gm-label { fill: #0b121c; stroke: #fff; }
+
+/* The grouping agent's explanation, in place of the canned rationale. */
+.group-explained { display: grid; gap: 6px; }
+.group-explained .why { margin: 0; line-height: 1.5; }
+.group-explained .watch { margin: 0; font-size: .92em; }
+.agent-trace { margin: 2px 0 0; font-size: .78em; font-family: ui-monospace, monospace; }
+
+/* The grouping agent's explanation, shown in place of the canned rationale. */
+.group-explained { display: grid; gap: 6px; }
+.group-explained .why { margin: 0; line-height: 1.5; }
+.group-explained .watch { margin: 0; font-size: .92em; }
+.agent-trace { margin: 2px 0 0; font-size: .78em; font-family: ui-monospace, monospace; }

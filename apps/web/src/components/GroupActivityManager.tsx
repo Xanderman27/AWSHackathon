@@ -36,6 +36,17 @@ interface PublishedActivity {
 
 interface DraftGroup { name: string; member_ids: string[]; rationale: string }
 
+/** What the agent worked out about one group, once it had looked the learners up itself. */
+interface Explanation {
+  name: string
+  why_together: string
+  watch_for: string
+  origin: string
+  inspected: string[]
+  turns: number
+  warning: string
+}
+
 export default function GroupActivityManager() {
   const [catalog, setCatalog] = useState<GameSpec[]>([])
   const [gameId, setGameId] = useState('')
@@ -43,6 +54,8 @@ export default function GroupActivityManager() {
   const [drafts, setDrafts] = useState<DraftGroup[]>([])
   const [published, setPublished] = useState<PublishedActivity[]>([])
   const [saving, setSaving] = useState(false)
+  const [explaining, setExplaining] = useState(false)
+  const [explanations, setExplanations] = useState<Record<string, Explanation>>({})
   const [notice, setNotice] = useState('')
   const [error, setError] = useState('')
 
@@ -96,6 +109,24 @@ export default function GroupActivityManager() {
 
   function renameGroup(index: number, name: string) {
     setDrafts((current) => current.map((group, i) => (i === index ? { ...group, name } : group)))
+  }
+
+  async function explainGroups() {
+    setExplaining(true); setError(''); setNotice('')
+    try {
+      const response = await api<{ groups: Explanation[] }>('/teacher/group-activities/explain', {
+        method: 'POST',
+        body: JSON.stringify({
+          game_id: gameId,
+          groups: withMembers.map(({ name, member_ids }) => ({ name, member_ids })),
+        }),
+      })
+      setExplanations(Object.fromEntries(response.groups.map((group) => [group.name, group])))
+    } catch {
+      setError('The explanation could not be generated. The suggestion itself is unaffected.')
+    } finally {
+      setExplaining(false)
+    }
   }
 
   async function publishGroups() {
@@ -185,7 +216,19 @@ export default function GroupActivityManager() {
                   })}
                   {group.member_ids.length === 0 && <li className="muted">No learners assigned</li>}
                 </ul>
-                <p>{group.rationale}</p>
+                {explanations[group.name] ? (
+                  <div className="group-explained">
+                    <p className="why">{explanations[group.name].why_together}</p>
+                    <p className="watch"><strong>Watch for:</strong> {explanations[group.name].watch_for}</p>
+                    <p className="agent-trace muted">
+                      {explanations[group.name].origin === 'bedrock'
+                        ? `agent checked ${explanations[group.name].inspected.join(', ')} · ${explanations[group.name].turns} steps`
+                        : explanations[group.name].warning || 'standard explanation'}
+                    </p>
+                  </div>
+                ) : (
+                  <p>{group.rationale}</p>
+                )}
                 <span className={`group-size ${group.member_ids.length > 0 && group.member_ids.length < minGroup ? 'warn' : ''}`}>
                   {group.member_ids.length} learner{group.member_ids.length === 1 ? '' : 's'} · {minGroup}–{maxGroup} needed
                 </span>
@@ -255,6 +298,10 @@ export default function GroupActivityManager() {
               {liveForThisGame.length > 0 && (
                 <button type="button" disabled={saving} onClick={unpublish}>Take down</button>
               )}
+              <button type="button" disabled={explaining || withMembers.length === 0}
+                onClick={explainGroups} title="An agent looks up each learner's evidence, then explains the pairing">
+                {explaining ? 'Thinking…' : 'Explain these groups'}
+              </button>
               <button className="btn-primary btn-lg" type="button" disabled={!canPublish || saving} onClick={publishGroups}>
                 {saving ? 'Publishing…' : liveForThisGame.length ? 'Update published groups' : 'Publish to students'}
               </button>

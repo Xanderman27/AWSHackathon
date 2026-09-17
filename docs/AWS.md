@@ -135,6 +135,24 @@ request payload rather than by reading the code.
 | Cognito | header auth today; would rework the sign-up flow |
 | AgentCore | `generate.propose` is the graph, written as functions |
 
+## Two guardrails, because the audiences differ
+
+| | `dori-guardrail` (family) | `dori-guardrail-teacher` |
+|---|---|---|
+| Used by | the activity pipeline | the grouping agent |
+| Denies | diagnosis, eligibility/placement, medication | the same three |
+| Plus | **deficit labels and ranking** | **pejorative labels** |
+
+A grouping explanation cannot avoid comparison — "these two are at a similar point, this one
+is further along" *is* the explanation. The family guardrail forbids exactly that, and rightly:
+a parent reading about their own child has no business being told where other children sit.
+
+Running both audiences through the family policy blocked 2 in 5 legitimate explanations, which
+the pipeline then quietly served from fallback. Splitting them took that to 0 in 6 while still
+blocking diagnosis, placement, medication and pejorative labels on both paths. If the teacher
+guardrail is unset, teacher text falls back to the family one — a missing setting makes the
+product stricter, never looser.
+
 ## The address is fixed
 
 The instance holds an Elastic IP tagged `dori-api`, so its hostname

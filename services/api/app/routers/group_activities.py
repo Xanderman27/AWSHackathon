@@ -14,6 +14,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 
 from .. import games
+from ..ai import grouping
 from ..auth import Actor, require_role
 from ..models import now
 from ..storage import store
@@ -139,6 +140,60 @@ def recommended_groups(
     actor: Actor = Depends(require_role("teacher")),
 ):
     return _recommendation(actor, game_id)
+
+
+class ExplainGroup(BaseModel):
+    name: str = Field(min_length=1, max_length=40)
+    member_ids: list[str] = Field(min_length=1, max_length=6)
+
+
+class ExplainIn(BaseModel):
+    game_id: str
+    groups: list[ExplainGroup] = Field(min_length=1, max_length=6)
+
+
+@router.post("/teacher/group-activities/explain")
+def explain_groups(body: ExplainIn, actor: Actor = Depends(require_role("teacher"))):
+    """Why each group holds together, worked out by an agent that looks the learners up itself.
+
+    Teacher-facing only. The model is given letters and evidence, never names — the mapping
+    back to real learners happens here, after it has finished.
+    """
+    spec = _require_game(body.game_id)
+    skill_id = spec.grouping_skill_id
+    skill_name = next((s["name"] for s in store.read("skills") if s["id"] == skill_id),
+                      "this activity") if skill_id else "this activity"
+    mastery = store.read("mastery")
+    skills = {s["id"]: s for s in store.read("skills")}
+
+    out = []
+    for group in body.groups:
+        if not set(group.member_ids).issubset(actor.student_ids):
+            raise HTTPException(403, "one or more learners are outside this class")
+        result = grouping.explain(group.member_ids, skill_name, mastery, skills)
+        names = {s["id"]: s["display_name"] for s in store.read("students")}
+        tags = {f"L{i + 1}": names.get(sid, f"L{i + 1}")
+                for i, sid in enumerate(group.member_ids)}
+        text = result.explanation.why_together if result.explanation else ""
+        watch = result.explanation.watch_for if result.explanation else ""
+        # Put the real names back, now the model is done. Longest tag first so L10 is not
+        # mangled by the rule for L1, and "Learner L1" collapses to just the name.
+        for ref, name in sorted(tags.items(), key=lambda kv: -len(kv[0])):
+            for pattern in (f"Learner {ref}", f"learner {ref}", ref):
+                text = text.replace(pattern, name)
+                watch = watch.replace(pattern, name)
+        out.append({
+            "name": group.name,
+            "why_together": text,
+            "watch_for": watch,
+            "origin": result.origin,
+            "inspected": [tags.get(ref, ref) for ref in result.inspected],
+            "turns": result.turns,
+            "warning": result.warning,
+        })
+    store.append("audit", {"actor": actor.user_id, "action": "group_activities.explained",
+                           "object_id": spec.id, "at": now()})
+    return {"groups": out}
 
 
 @router.get("/teacher/group-activities")

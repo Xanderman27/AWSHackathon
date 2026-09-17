@@ -31,12 +31,26 @@ class Settings:
     offline: bool
     max_tokens: int = 1400
     temperature: float = 0.2
+    # A second guardrail for teacher-facing analysis. Comparing learners is the point of a
+    # grouping explanation and forbidden in family text, so one policy cannot serve both.
+    # Optional: with none set, teacher text falls back to the stricter family guardrail.
+    teacher_guardrail_id: str | None = None
+    teacher_guardrail_version: str = "DRAFT"
 
     @property
     def guardrail(self) -> dict | None:
         if not self.guardrail_id:
             return None
         return {"guardrailIdentifier": self.guardrail_id, "guardrailVersion": self.guardrail_version}
+
+    @property
+    def teacher_guardrail(self) -> dict | None:
+        """Falls back to the family guardrail rather than to nothing, so a missing setting
+        makes the product stricter, never looser."""
+        if self.teacher_guardrail_id:
+            return {"guardrailIdentifier": self.teacher_guardrail_id,
+                    "guardrailVersion": self.teacher_guardrail_version}
+        return self.guardrail
 
 
 def _credentials_present() -> bool:
@@ -61,6 +75,8 @@ def settings() -> Settings:
         model_id=os.getenv("BEDROCK_MODEL_ID", "us.anthropic.claude-sonnet-4-6"),
         guardrail_id=os.getenv("BEDROCK_GUARDRAIL_ID") or None,
         guardrail_version=os.getenv("BEDROCK_GUARDRAIL_VERSION", "DRAFT"),
+        teacher_guardrail_id=os.getenv("BEDROCK_TEACHER_GUARDRAIL_ID") or None,
+        teacher_guardrail_version=os.getenv("BEDROCK_TEACHER_GUARDRAIL_VERSION", "DRAFT"),
         # No credentials means offline, whatever the flag says: a failed Converse call on
         # stage is worse than an honest cached draft.
         offline=_flag("DEMO_OFFLINE", default=True) or not _credentials_present(),
@@ -75,4 +91,5 @@ def status() -> dict:
         "model_id": None if current.offline else current.model_id,
         "region": None if current.offline else current.region,
         "guardrail": bool(current.guardrail) and not current.offline,
+        "teacher_guardrail": bool(current.teacher_guardrail) and not current.offline,
     }

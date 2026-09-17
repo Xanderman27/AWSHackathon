@@ -60,7 +60,9 @@ Environment=AWS_REGION={region}
 Environment=DEMO_OFFLINE=0
 Environment=BEDROCK_MODEL_ID=us.anthropic.claude-sonnet-4-6
 Environment=BEDROCK_GUARDRAIL_ID=034sglgf5163
-Environment=BEDROCK_GUARDRAIL_VERSION=1
+Environment=BEDROCK_GUARDRAIL_VERSION=3
+Environment=BEDROCK_TEACHER_GUARDRAIL_ID=paln06prd5pz
+Environment=BEDROCK_TEACHER_GUARDRAIL_VERSION=1
 ExecStart=/opt/dori/.venv/bin/python -m uvicorn app.serve:root --host 0.0.0.0 --port {port}
 Restart=always
 RestartSec=3
