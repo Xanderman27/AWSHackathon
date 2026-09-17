@@ -1,7 +1,7 @@
 import { StrictMode, useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
-import { PrefsProvider } from './a11y'
+import { PrefsProvider, QuestTools } from './a11y'
 import { api, getSession, setSession } from './api'
 import { DoriLogo } from './components/Logo'
 import Home from './pages/Home'
@@ -46,6 +46,7 @@ function Shell() {
         <Link to="/" className="brand"><DoriLogo size={34} />Dori</Link>
         {session && (
           <div className="row" style={{ gap: 10 }}>
+            {session.role === 'student' && <span className="topbar-tools"><QuestTools /></span>}
             {session.role === 'student' && stars !== null && (
               <span className="stars-chip stars-mini" aria-label={`${stars} stars earned`}>⭐ {stars}</span>
             )}

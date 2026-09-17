@@ -442,5 +442,138 @@
         ]
       }
     ]
+  },
+  {
+    "id": "iep-vs-504",
+    "category": "Special education",
+    "title": "IEP or 504 plan: what's the difference?",
+    "summary": "Both protect your child. One adds specialized instruction with goals; the other levels the playing field with accommodations.",
+    "source_org": "U.S. Department of Education",
+    "source_name": "Protecting Students With Disabilities (FAQ)",
+    "source_url": "https://www.ed.gov/laws-and-policy/individuals-disabilities/section-504",
+    "citation": "IDEA Part B; Section 504 of the Rehabilitation Act",
+    "reading_minutes": 3,
+    "key_points": [
+      "An IEP (under IDEA) provides specialized instruction and services, with measurable annual goals.",
+      "A 504 plan (under civil-rights law) provides accommodations so the student can access the same instruction.",
+      "A child can qualify for a 504 plan even when they do not qualify for an IEP."
+    ],
+    "sections": [
+      {
+        "heading": "When each one fits",
+        "paragraphs": [
+          "An IEP fits when a disability means the child needs instruction that is specially designed - different teaching, not just different conditions. It comes with goals, services, and progress reporting.",
+          "A 504 plan fits when the child can learn from the same instruction as classmates once barriers are removed: extended time, seating, breaks, technology, or health supports."
+        ]
+      },
+      {
+        "heading": "What they share",
+        "paragraphs": [
+          "Both are free, both are legally binding, both are reviewed with the family, and both protect against discipline for disability-related behavior."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "talk-with-child",
+    "category": "Progress and goals",
+    "title": "Talking with your child about their plan",
+    "summary": "Age-appropriate ways to explain an IEP or 504 so it feels like support, not a label.",
+    "source_org": "Center for Parent Information and Resources",
+    "source_name": "A Day in the Life of an IEP",
+    "source_url": "https://www.parentcenterhub.org/",
+    "citation": "CPIR family resources",
+    "reading_minutes": 2,
+    "key_points": [
+      "Kids do better when they understand their supports and can ask for them.",
+      "Talk about strengths first, then the supports, in concrete classroom terms.",
+      "Self-advocacy grows with age: start with naming supports, build toward joining meetings."
+    ],
+    "sections": [
+      {
+        "heading": "Words that work",
+        "paragraphs": [
+          "Try: 'Everyone's brain learns differently. Your plan is the list of things that help your brain do its best work.' Name each support and when it applies.",
+          "Older students can read parts of the plan and say what is working and what is not - that voice belongs in the annual review."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "teach-measurable-goals",
+    "category": "For teachers",
+    "title": "Writing measurable annual goals",
+    "summary": "A goal you can measure names the condition, the behavior, and the criterion - and Dori's evidence can feed the progress data.",
+    "source_org": "U.S. Department of Education, Office of Special Education Programs",
+    "source_name": "IDEA: Content of IEP",
+    "source_url": "https://sites.ed.gov/idea/regs/b/d/300.320",
+    "citation": "34 CFR \u00a7300.320(a)(2)",
+    "reading_minutes": 3,
+    "key_points": [
+      "Condition + behavior + criterion: 'Given a fourth-grade passage and chunked text, Sam identifies the main idea in 4 of 5 opportunities.'",
+      "If two people could disagree about whether the goal was met, it is not measurable yet.",
+      "Progress reporting to families is required as often as report cards."
+    ],
+    "sections": [
+      {
+        "heading": "A quick self-check",
+        "list": [
+          "Could a substitute measure this goal tomorrow with what is written?",
+          "Does the criterion say how often and how consistently?",
+          "Does the baseline in present levels connect to the goal?"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "teach-progress-monitoring",
+    "category": "For teachers",
+    "title": "Progress monitoring that holds up",
+    "summary": "Short, frequent, comparable measures beat long, rare ones - and the data belongs in the IEP conversation, not a drawer.",
+    "source_org": "National Center on Intensive Intervention",
+    "source_name": "Progress monitoring tools charts",
+    "source_url": "https://intensiveintervention.org/tools-charts/overview",
+    "citation": "NCII technical standards",
+    "reading_minutes": 3,
+    "key_points": [
+      "Measure the same skill the same way on a schedule, so the trend means something.",
+      "Four to six data points are the minimum before judging a trend.",
+      "Share the graph with families in plain language: what we measured, what changed, what we will try next."
+    ],
+    "sections": [
+      {
+        "heading": "Using Dori's evidence",
+        "paragraphs": [
+          "Every quiz answer in Dori is time-stamped, item-level evidence with difficulty attached. It can supplement - never replace - your curriculum-based measures."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "teach-udl",
+    "category": "For teachers",
+    "title": "Universal Design for Learning, in one page",
+    "summary": "Plan the lesson so the supports are built in from the start - multiple ways in, multiple ways through, multiple ways to show it.",
+    "source_org": "CAST",
+    "source_name": "UDL Guidelines",
+    "source_url": "https://udlguidelines.cast.org/",
+    "citation": "CAST UDL Guidelines 3.0",
+    "reading_minutes": 3,
+    "key_points": [
+      "Engagement, representation, and expression: offer options in each.",
+      "A support designed for one learner (read-aloud, chunked text) usually helps many.",
+      "UDL reduces, but does not replace, individualized accommodations."
+    ],
+    "sections": [
+      {
+        "heading": "Small moves that scale",
+        "list": [
+          "Directions spoken AND posted.",
+          "Text available as audio.",
+          "Two ways to answer: write it or say it.",
+          "Breaks that are part of the plan, not a reward."
+        ]
+      }
+    ]
   }
 ]

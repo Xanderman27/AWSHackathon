@@ -77,7 +77,7 @@ export default function ParentProgress() {
   }
   if (!progress) return <p>Loading…</p>
 
-  const { student, next_steps: next, mastery, stats, achievements, group_activities: groups } = progress
+  const { student, mastery, stats, achievements, group_activities: groups } = progress
 
   const STATS = [
     { label: 'Stars on the path', value: stats.stars, Icon: StarIcon },
@@ -213,31 +213,6 @@ export default function ParentProgress() {
       </section>
 
       <FamilySupport studentId={student.id} studentName={student.display_name} />
-
-      <div>
-        <div className="row between" style={{ marginBottom: 12 }}>
-          <h2 style={{ margin: 0 }}>What comes next</h2>
-          <span className="chip mint">Approved by the teacher</span>
-        </div>
-        {next.length === 0 ? (
-          <div className="card"><p className="muted" style={{ margin: 0 }}>Your child's teacher has not added next steps yet.</p></div>
-        ) : (
-          <div className="grid-2">
-            {next.map((n) => (
-              <div className="card next-step" key={n.id}>
-                <h3 style={{ margin: 0 }}>{n.title}</h3>
-                <p className="muted" style={{ margin: 0 }}>{n.why}</p>
-                <div className="meta">
-                  <span className="chip cream">⏱ {n.minutes} minutes</span>
-                  {n.materials.length > 0 && <span className="chip">🧰 {n.materials.join(', ')}</span>}
-                </div>
-                <ol>{n.steps.map((s, i) => <li key={i}>{s}</li>)}</ol>
-                <p className="muted" style={{ margin: 0, fontSize: '0.85em' }}>Approved by {n.approved_by} on {n.approved_on}</p>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
     </div>
   )
 }
