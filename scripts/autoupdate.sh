@@ -32,6 +32,15 @@ WEB_CHANGED=$(grep -cE '^apps/web/' <<<"$CHANGED" || true)
 # is how the guardrail ids on this box went stale.
 install_units() {
   local changed=0
+  # The unit moved its settings into /etc/dori.env. An instance deployed before that has them
+  # as Environment= lines instead, so carry them across rather than installing a unit whose
+  # EnvironmentFile does not exist — which would start the app with no configuration at all.
+  if [ ! -f /etc/dori.env ] && [ -f /etc/systemd/system/dori.service ]; then
+    grep '^Environment=' /etc/systemd/system/dori.service \
+      | sed 's/^Environment=//' | grep -v GUARDRAIL > /etc/dori.env || true
+    chmod 0644 /etc/dori.env
+    echo "migrated settings into /etc/dori.env"
+  fi
   for unit in dori.service dori-update.service dori-update.timer; do
     if ! cmp -s "$REPO/scripts/$unit" "/etc/systemd/system/$unit"; then
       install -m 0644 "$REPO/scripts/$unit" "/etc/systemd/system/$unit"
