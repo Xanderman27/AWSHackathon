@@ -135,6 +135,16 @@ request payload rather than by reading the code.
 | Cognito | header auth today; would rework the sign-up flow |
 | AgentCore | `generate.propose` is the graph, written as functions |
 
+## The address is fixed
+
+The instance holds an Elastic IP tagged `dori-api`, so its hostname
+(`ec2-184-194-151-159.compute-1.amazonaws.com`) survives being replaced. `deploy_ec2.py`
+re-associates it to whatever instance it just launched, which means **redeploying no longer
+requires touching CloudFront**.
+
+Before this, every redeploy gave the instance a new public DNS name and left CloudFront
+pointing at a terminated host — a site that is down with no error until someone loads it.
+
 ## The site updates itself
 
 `dori-update.timer` runs `scripts/autoupdate.sh` on the instance every two minutes. It fetches

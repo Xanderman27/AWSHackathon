@@ -107,6 +107,31 @@ def ensure_security_group(ec2, vpc_id: str) -> str:
     return group_id
 
 
+def ensure_elastic_ip(ec2, instance_id: str) -> str:
+    """Give the instance a fixed address, and hand back its stable hostname.
+
+    Without this, every redeploy hands the instance a new public DNS name and CloudFront is
+    left pointing at a host that no longer exists — a site that is down with no error until
+    someone loads it. The address is tagged and reused, so re-running never leaks addresses.
+    """
+    found = ec2.describe_addresses(Filters=[{"Name": "tag:Name", "Values": [NAME]}])["Addresses"]
+    if found:
+        allocation = found[0]["AllocationId"]
+        say("exists", f"elastic ip {found[0]['PublicIp']}")
+    else:
+        made = ec2.allocate_address(Domain="vpc", TagSpecifications=[
+            {"ResourceType": "elastic-ip", "Tags": [{"Key": "Name", "Value": NAME}]}])
+        allocation = made["AllocationId"]
+        say("made", f"elastic ip {made['PublicIp']}")
+
+    ec2.associate_address(AllocationId=allocation, InstanceId=instance_id, AllowReassociation=True)
+    time.sleep(5)
+    host = ec2.describe_instances(InstanceIds=[instance_id])[
+        "Reservations"][0]["Instances"][0]["PublicDnsName"]
+    say("  ok  ", f"reachable at the fixed name {host}")
+    return host
+
+
 def terminate_old(ec2) -> None:
     found = ec2.describe_instances(Filters=[
         {"Name": "tag:Name", "Values": [NAME]},
@@ -155,9 +180,9 @@ def main() -> int:
     instance_id = instance["InstanceId"]
     say("launched", f"{instance_id} (t3.small)")
     ec2.get_waiter("instance_running").wait(InstanceIds=[instance_id])
-    described = ec2.describe_instances(InstanceIds=[instance_id])["Reservations"][0]["Instances"][0]
-    host = described["PublicDnsName"]
-    say("  ok  ", f"running at {host}")
+    # Move the fixed address across before anything else, so CloudFront's origin keeps
+    # resolving to whatever instance is current and never needs repointing.
+    host = ensure_elastic_ip(ec2, instance_id)
 
     print("\nWaiting for the app to answer (first boot installs Python packages)…")
     import urllib.error
@@ -168,6 +193,7 @@ def main() -> int:
                 if response.status == 200:
                     say("  ok  ", f"healthy after {attempt * 10}s")
                     print(f"\n  http://{host}:{PORT}\n")
+                    print("  CloudFront already points here; no need to run deploy_cloudfront.py.")
                     print(f"  instance: {instance_id}")
                     print("  logs:     aws ssm start-session, or check /var/log/dori-boot.log\n")
                     return 0
