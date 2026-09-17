@@ -2,8 +2,10 @@
 // clue describes. Continents bob gently, waves drift across the sea, wrong picks shake
 // and fade, and the right one glows with confetti and a fun fact.
 
+import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import GameShell from '../../components/GameShell'
+import { playHurray } from '../../components/sound'
 import Capy from '../../components/Capy'
 import Confetti from '../../components/Confetti'
 import { editorName, useActivity, useActivityRoom } from '../../games/room'
@@ -99,15 +101,25 @@ function WorldMap({ state, live, onPick }: {
           >
             <path className="gm-shape" d={region.path} fill={region.fill} />
             <g className="gm-tag">
-              <text className="gm-glyph" x={region.at[0]} y={region.at[1] - (region.label.length > 1 ? 12 : 14)}>
-                {region.glyph}
-              </text>
-              {region.label.map((line, lineIndex) => (
-                <text key={lineIndex} className="gm-label"
-                  x={region.at[0]} y={region.at[1] + 8 + lineIndex * 17}>
-                  {line}
+              {region.at[1] < 64 ? (
+                // A shallow band (the Arctic) has no room to stack glyph over text,
+                // so the whole tag sits on one line.
+                <text className="gm-label" x={region.at[0]} y={region.at[1] + 8}>
+                  {region.glyph} {region.label.join(' ')}
                 </text>
-              ))}
+              ) : (
+                <>
+                  <text className="gm-glyph" x={region.at[0]} y={region.at[1] - (region.label.length > 1 ? 12 : 14)}>
+                    {region.glyph}
+                  </text>
+                  {region.label.map((line, lineIndex) => (
+                    <text key={lineIndex} className="gm-label"
+                      x={region.at[0]} y={region.at[1] + 8 + lineIndex * 17}>
+                      {line}
+                    </text>
+                  ))}
+                </>
+              )}
             </g>
           </g>
         )
@@ -124,6 +136,9 @@ export default function GlobeTrotters() {
   const state = snapshot?.state ?? null
   const people = snapshot?.participants ?? []
   const live = connection === 'live'
+
+  // The whole team hears the hurray the moment anyone finds the answer.
+  useEffect(() => { if (state?.solved) playHurray() }, [state?.solved])
 
   const finderName = state?.solved_by
     ? (state.solved_by === studentId ? 'You' : editorName(people, state.solved_by) || 'A teammate')

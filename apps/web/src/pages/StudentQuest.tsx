@@ -4,6 +4,7 @@ import { api, getSession, type AnswerOut, type NextItem, type Skill } from '../a
 import { QuestTools } from '../a11y'
 import Capy from '../components/Capy'
 import Confetti from '../components/Confetti'
+import { playHurray } from '../components/sound'
 import { buildScript, SpokenText, useNarrator } from '../components/speech'
 import RoleGate from './RoleGate'
 
@@ -80,7 +81,7 @@ export default function StudentQuest() {
       })
       setResult(r)
       setPhase('feedback')
-      if (r.correct) setBurst((b) => b + 1)
+      if (r.correct) { setBurst((b) => b + 1); playHurray() }
     } catch (e) {
       // A finished attempt just means this quest is over; anything else is a real problem.
       if (String(e).includes('409')) setPhase('done')

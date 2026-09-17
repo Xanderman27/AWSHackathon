@@ -24,4 +24,4 @@ export const OCEAN_PATHS: Record<string, string> = {
   'pacific': 'M84.4 75.0L190.6 75.0L177.7 156.8L241.3 215.0L277.9 247.1L308.5 317.9L315.8 408.1L52.0 408.1ZM816.9 118.2L921.5 80.9L948.0 408.1L888.3 408.1L899.0 363.2L859.4 292.1L877.6 218.2L827.1 163.3Z',
 }
 
-export const OCEAN_ANCHORS: Record<string, [number, number]> = {'arctic':[185,33],'southern':[360,442],'atlantic':[403,183],'indian':[711,337],'pacific':[106,254]}
+export const OCEAN_ANCHORS: Record<string, [number, number]> = {'arctic':[520,22],'southern':[360,442],'atlantic':[403,183],'indian':[711,337],'pacific':[106,254]}
