@@ -164,3 +164,35 @@ def test_a_trajectory_reads_as_an_observation(history, expected):
     """A single reversal matters: calling 0.19, 0.38, 0.27, 0.35 simply 'rising' would flatten
     the thing a teacher most needs to notice."""
     assert grouping.trend(history) == expected
+
+
+# --- brevity ------------------------------------------------------------------------------
+
+@pytest.mark.parametrize("text, limit", [
+    ("One sentence. " + "A second that runs on and on and will not fit in the budget. " * 4, 120),
+    ("a " * 200, 60),
+    ("Short enough.", 120),
+    ("x" * 60, 60),
+    ("", 60),
+])
+def test_tighten_never_exceeds_the_limit(text, limit):
+    assert len(grouping.tighten(text, limit)) <= limit
+
+
+def test_tighten_cuts_at_a_sentence_so_nothing_stops_mid_thought():
+    text = "Kai and Leo share a band. Zoe is further along and that changes the pitch a lot."
+    assert grouping.tighten(text, 40) == "Kai and Leo share a band."
+
+
+def test_a_long_explanation_is_trimmed_rather_than_dropped_to_the_fallback(client):
+    """Tightening the schema instead would fail validation and lose the whole explanation,
+    which is a worse outcome than a shorter one."""
+    wordy = {"why_together": "These learners are well matched. " * 20,
+             "watch_for": "Watch the pace. " * 20}
+    client.converse.return_value = tool_use("submit_explanation", wordy)
+    result = grouping.explain(GROUP, "Equivalent fractions", MASTERY, SKILLS)
+
+    assert result.origin == "bedrock", "a wordy answer must not fall back"
+    assert len(result.explanation.why_together) <= 260
+    assert len(result.explanation.watch_for) <= 150
+    assert result.explanation.why_together.endswith(".")

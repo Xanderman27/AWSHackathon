@@ -147,7 +147,11 @@ export default function CheckersCorner() {
           </section>
 
           <section className="card checkers-wrap" aria-label="Checkers board">
-            <div className={`checkers-board ${mySeat === 1 ? 'flipped' : ''}`} role="grid" aria-label="8 by 8 checkers board">
+            {/* Your own checkers belong at the bottom of your screen, moving up it. Seat 0
+                starts on rows 0-2 and moves down the board, so seat 0 is the one that needs
+                turning round; seat 1 already starts at the bottom. Flipping seat 1 instead
+                put both players' pieces at the top, moving away from them. */}
+            <div className={`checkers-board ${mySeat === 0 ? 'flipped' : ''}`} role="grid" aria-label="8 by 8 checkers board">
               {state.board.map((piece, index) => {
                 const isDark = dark(index)
                 const hinted = hints.includes(index)

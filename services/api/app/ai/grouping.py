@@ -19,6 +19,7 @@ mapping back happens here, after the model has finished.
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field
 
 from typing import Any
@@ -45,7 +46,14 @@ SYSTEM = (
     "- Never rank learners against each other or call anyone behind, low or weak.\n"
     "- Refer to each learner by their exact tag, L1, L2 and so on, every time. Write "
     "'L1 and L2', never 'Learners L1 and L2' and never a bare letter.\n"
-    "- Be brief. Two sentences is usually enough."
+    "- Be brief. why_together is at most 35 words, as one plain sentence. Do not pack it "
+    "with semicolons or dashes to fit more in; leave detail out instead. A teacher reads "
+    "three of these at once.\n"
+    "  Good: \"All three are practicing equivalent fractions with similar evidence, so one "
+    "activity pitched at that level suits them.\"\n"
+    "  Good: \"L1 and L2 are building foundations while L3 is a band ahead, so this pairing "
+    "only works if L3 explains rather than races.\"\n"
+    "- watch_for is at most 20 words."
 )
 
 
@@ -53,15 +61,42 @@ class GroupExplanation(BaseModel):
     # Caps sized from what the model actually writes for a three-learner group, with headroom.
     # A constraint that rejects good output is not a safety feature, it is a bug that hides
     # behind a fallback.
+    # The cap stays generous so a long answer is trimmed rather than failing validation and
+    # dropping the whole thing to the canned fallback. Brevity is asked for in the prompt and
+    # then guaranteed by _tighten below.
     why_together: str = Field(
         min_length=40, max_length=900,
-        description="Two sentences for the teacher, under 320 characters, on what these "
-                    "learners share and why working together helps. Cite the evidence you "
-                    "looked up. Say so plainly if the grouping looks weak.")
+        description="At most 35 words, one plain sentence: what these learners share and why "
+                    "working together helps. Say plainly if the grouping is weak.")
     watch_for: str = Field(
-        min_length=15, max_length=300,
-        description="One sentence, under 200 characters: the single thing worth watching "
-                    "while this group works.")
+        # Generous for the same reason as why_together: a wordy answer should be shortened,
+        # never rejected. 300 was tight enough that a chatty run lost the whole explanation.
+        min_length=15, max_length=600,
+        description="At most 20 words: the single thing worth watching while this group works.")
+
+
+def tighten(text: str, limit: int) -> str:
+    """Keep whole sentences up to a limit.
+
+    Asking for brevity mostly works; this makes it true. Cutting at a sentence boundary means
+    a teacher never sees a clause that stops mid-thought, and trimming here rather than
+    tightening the schema means an over-long answer is shortened instead of failing validation
+    and falling back to the canned sentence.
+    """
+    text = " ".join(text.split())
+    if len(text) <= limit:
+        return text
+    kept = ""
+    for piece in re.split(r"(?<=[.!?])\s+", text):
+        candidate = f"{kept} {piece}".strip()
+        if kept and len(candidate) > limit:
+            break
+        kept = candidate
+    # A first sentence longer than the limit still needs cutting, so check rather than
+    # assume the loop produced something short enough.
+    if kept and len(kept) <= limit:
+        return kept
+    return text[:limit].rsplit(" ", 1)[0].rstrip(" ,;:") + "\u2026"
 
 
 def _tools() -> dict:
@@ -160,8 +195,7 @@ def _fallback(roster: Roster, skill_name: str) -> AgentResult:
     return AgentResult(
         explanation=GroupExplanation(
             why_together=(f"These learners have recent evidence on {skill_name} and are in "
-                          f"{where}, so the same activity is pitched right for all of them. "
-                          "Goal links, disability, demographic and behaviour data were not used."),
+                          f"{where}, so one activity suits all of them."),
             watch_for="Whether one learner ends up doing the work while the others watch.",
         ),
         origin="fallback",
@@ -223,8 +257,12 @@ def explain(member_ids: list[str], skill_name: str, mastery: list[dict],
 
             submitted = next((c for c in calls if c["name"] == "submit_explanation"), None)
             if submitted:
-                return AgentResult(GroupExplanation.model_validate(submitted["input"]),
-                                   "bedrock", inspected, turn)
+                note = GroupExplanation.model_validate(submitted["input"])
+                note = note.model_copy(update={
+                    "why_together": tighten(note.why_together, 260),
+                    "watch_for": tighten(note.watch_for, 150),
+                })
+                return AgentResult(note, "bedrock", inspected, turn)
 
             messages.append({"role": "assistant", "content": message["content"]})
             results = []
