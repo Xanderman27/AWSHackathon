@@ -1,0 +1,26 @@
+[
+  {
+    "id": "goal-01",
+    "student_id": "student-01",
+    "title": "Find the main idea without a hint",
+    "why": "Sam's IEP reading goal - practice paths in Dori give extra reps between small-group sessions.",
+    "status": "active",
+    "created_by": "teacher-01",
+    "created_by_name": "Ms. Rivera",
+    "created_by_role": "teacher",
+    "at": "2026-09-10T15:00:00+00:00",
+    "decided_by": null
+  },
+  {
+    "id": "goal-02",
+    "student_id": "student-01",
+    "title": "Read one story out loud at home each week",
+    "why": "We started a bedtime reading routine and would love it to count toward Sam's reading stamina.",
+    "status": "proposed",
+    "created_by": "parent-01",
+    "created_by_name": "Jordan Bell",
+    "created_by_role": "parent",
+    "at": "2026-09-15T22:30:00+00:00",
+    "decided_by": null
+  }
+]

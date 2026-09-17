@@ -14,9 +14,18 @@ interface ResourceDoc extends ResourceCard { sections: Section[] }
 
 const ICON: Record<string, string> = {
   'Special education': '🎓', 'Progress and goals': '📈', 'Privacy and records': '🔒',
-  Discipline: '🛡️', 'Your rights': '⚖️', 'District resources': '🏫',
+  Discipline: '🛡️', 'Your rights': '⚖️', 'District resources': '🏫', 'For teachers': '🧑‍🏫',
 }
 const DISCLAIMER = 'General information from official sources, not legal advice. For your own situation, contact your state parent center.'
+
+// The bodies that actually oversee IEPs and 504 plans. Static, official, external.
+const REGULATORS = [
+  { name: 'Office of Special Education Programs (OSEP)', org: 'U.S. Department of Education', what: 'Administers IDEA - the law behind IEPs.', url: 'https://www.ed.gov/about/offices/list/osers/osep' },
+  { name: 'IDEA statute and regulations', org: 'U.S. Department of Education', what: 'The full text of IDEA, searchable section by section.', url: 'https://sites.ed.gov/idea/' },
+  { name: 'Office for Civil Rights (OCR)', org: 'U.S. Department of Education', what: 'Enforces Section 504 - the law behind 504 plans.', url: 'https://www.ed.gov/about/offices/list/ocr' },
+  { name: 'Center for Parent Information and Resources', org: 'Funded by OSEP', what: 'Finds your state’s free Parent Training and Information Center.', url: 'https://www.parentcenterhub.org/find-your-center/' },
+  { name: 'National Center on Intensive Intervention', org: 'American Institutes for Research', what: 'Vetted progress-monitoring and intervention tools.', url: 'https://intensiveintervention.org/' },
+]
 
 export function ResourceList() {
   const [items, setItems] = useState<ResourceCard[]>([])
@@ -47,6 +56,19 @@ export function ResourceList() {
           </div>
         </section>
       ))}
+
+      <section className="res-section">
+        <h3 className="res-cat"><span aria-hidden="true">🏛️</span> The offices that oversee all of this</h3>
+        <div className="reg-links">
+          {REGULATORS.map((reg) => (
+            <a key={reg.url} className="reg-link" href={reg.url} target="_blank" rel="noreferrer noopener">
+              <strong>{reg.name} ↗</strong>
+              <span className="muted">{reg.org}</span>
+              <span>{reg.what}</span>
+            </a>
+          ))}
+        </div>
+      </section>
 
       <p className="note" style={{ fontSize: '.9em' }}>{DISCLAIMER}</p>
 

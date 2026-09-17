@@ -18,7 +18,12 @@ interface Message {
   id: string; sender_id: string; sender_role: string; sender_name: string; body: string; at: string
 }
 
-type View = { name: 'list' } | { name: 'new' } | { name: 'thread'; id: string }
+type View = { name: 'list' } | { name: 'new'; studentId?: string } | { name: 'thread'; id: string }
+
+/** Anywhere in the app can open the composer addressed to a student's family. */
+export function composeMessageFor(studentId: string) {
+  window.dispatchEvent(new CustomEvent('dori:compose', { detail: { studentId } }))
+}
 
 const POLL_MS = 10000
 
@@ -48,6 +53,17 @@ export default function MessagesWidget() {
   }, [])
 
   useEffect(() => { loadThreads() }, [loadThreads])
+
+  // "Message the family" buttons elsewhere open the composer with the student picked.
+  useEffect(() => {
+    const onCompose = (event: Event) => {
+      const studentId = (event as CustomEvent<{ studentId: string }>).detail?.studentId
+      setOpen(true)
+      setView({ name: 'new', studentId })
+    }
+    window.addEventListener('dori:compose', onCompose)
+    return () => window.removeEventListener('dori:compose', onCompose)
+  }, [])
   useEffect(() => {
     const t = setInterval(loadThreads, POLL_MS)
     return () => clearInterval(t)
@@ -82,7 +98,7 @@ export default function MessagesWidget() {
               onNew={() => setView({ name: 'new' })} onClose={() => setOpen(false)} />
           )}
           {view.name === 'new' && (
-            <NewThread onCancel={() => setView({ name: 'list' })}
+            <NewThread initialStudent={view.studentId} onCancel={() => setView({ name: 'list' })}
               onCreated={async (id) => { await loadThreads(); setView({ name: 'thread', id }) }} />
           )}
           {view.name === 'thread' && (
@@ -138,9 +154,10 @@ function ThreadList({ threads, onOpen, onNew, onClose }:
   )
 }
 
-function NewThread({ onCancel, onCreated }: { onCancel: () => void; onCreated: (id: string) => void }) {
+function NewThread({ initialStudent, onCancel, onCreated }:
+  { initialStudent?: string; onCancel: () => void; onCreated: (id: string) => void }) {
   const [contacts, setContacts] = useState<Contact[]>([])
-  const [pick, setPick] = useState<string>('')
+  const [pick, setPick] = useState<string>(initialStudent ?? '')
   const [subject, setSubject] = useState('')
   const [body, setBody] = useState('')
   const [busy, setBusy] = useState(false)

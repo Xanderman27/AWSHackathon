@@ -14,6 +14,9 @@ export interface ClassPhotoRow {
   taken_on: string
   uploaded_at: string
   uploaded_by_name: string
+  /** Empty for the whole class; a student id when only that learner's family sees it. */
+  audience_student_id?: string
+  audience_name?: string
 }
 
 const MAX_MB = 8
@@ -41,13 +44,21 @@ export default function ClassPhotoManager() {
   const [busy, setBusy] = useState(false)
   const [notice, setNotice] = useState('')
   const [error, setError] = useState('')
+  // '' means every family in the class; a student id targets that one family.
+  const [audience, setAudience] = useState('')
+  const [learners, setLearners] = useState<{ id: string; display_name: string }[]>([])
   const fileInput = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     api<ClassPhotoRow[]>('/teacher/class-photos')
       .then(setPosts)
       .catch(() => setError('The class blog could not load.'))
+    api<{ students: { id: string; display_name: string }[] }>('/teacher/class')
+      .then((d) => setLearners(d.students))
+      .catch(() => setLearners([]))
   }, [])
+
+  const audienceName = audience ? learners.find((s) => s.id === audience)?.display_name : null
 
   // Show the teacher what they picked before it goes out to twelve families.
   useEffect(() => {
@@ -71,6 +82,7 @@ export default function ClassPhotoManager() {
       body.append('title', title)
       body.append('caption', caption)
       body.append('taken_on', takenOn)
+      body.append('audience_student_id', audience)
       const session = getSession()
       const res = await fetch('/api/teacher/class-photos', {
         method: 'POST',
@@ -81,7 +93,10 @@ export default function ClassPhotoManager() {
       const saved = (await res.json()) as ClassPhotoRow
       setPosts((current) => [saved, ...(current ?? [])])
       reset()
-      setNotice('Posted. Every family in your class can see it on their dashboard now.')
+      setNotice(saved.audience_name
+        ? `Posted. Only ${saved.audience_name} can see it.`
+        : 'Posted. Every family in your class can see it on their dashboard now.')
+      setAudience('')
     } catch (problem) {
       setError(
         String(problem).includes('413')
@@ -138,6 +153,15 @@ export default function ClassPhotoManager() {
                 placeholder="The teams built the fraction wall together and found three rows that cover the same amount."
                 onChange={(event) => setCaption(event.target.value)} />
             </label>
+            <label className="msg-field">
+              <span>Send to</span>
+              <select value={audience} onChange={(event) => setAudience(event.target.value)}>
+                <option value="">Every family in the class</option>
+                {learners.map((s) => (
+                  <option key={s.id} value={s.id}>Only {s.display_name}'s family</option>
+                ))}
+              </select>
+            </label>
             <div className="composer-actions">
               <label className="msg-field composer-date">
                 <span>Date</span>
@@ -154,7 +178,9 @@ export default function ClassPhotoManager() {
         </div>
 
         <p className="muted photo-audience">
-          <strong>Who sees this:</strong> every family in your class. Students never see it, and it is
+          <strong>Who sees this:</strong> {audienceName
+            ? `only ${audienceName}'s family.`
+            : 'every family in your class.'} Students never see it, and it is
           not attached to any learner's progress.
         </p>
 
@@ -179,7 +205,10 @@ export default function ClassPhotoManager() {
                 <article className="card blog-post">
                   <ClassPhoto photoId={post.id} alt={post.title || post.caption || 'A moment from class'} />
                   <div className="blog-body">
-                    <p className="blog-date muted">{photoDate(post)}</p>
+                    <p className="blog-date muted">
+                      {photoDate(post)}
+                      {post.audience_name && <span className="chip cream" style={{ marginLeft: 8 }}>Only {post.audience_name}</span>}
+                    </p>
                     {post.title && <h3>{post.title}</h3>}
                     <p className="blog-caption">{post.caption || <span className="muted">No caption</span>}</p>
                     <div className="row between blog-foot">

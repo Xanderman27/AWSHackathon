@@ -1,14 +1,30 @@
 [
   {
     "id": "parent-01",
-    "display_name": "Jordan Bell"
+    "display_name": "Jordan Bell",
+    "email": "jordan.bell@example.com",
+    "phone": "(555) 010-2211",
+    "relation": "Parent"
   },
   {
     "id": "parent-02",
-    "display_name": "Priya Raman"
+    "display_name": "Priya Raman",
+    "email": "priya.raman@example.com",
+    "phone": "(555) 010-3342",
+    "relation": "Parent"
   },
   {
     "id": "parent-03",
-    "display_name": "Marcus Webb"
+    "display_name": "Marcus Webb",
+    "email": "sofia.reyes@example.com",
+    "phone": "(555) 010-4477",
+    "relation": "Guardian"
+  },
+  {
+    "id": "parent-04",
+    "display_name": "Dana Cho",
+    "email": "dana.cho@example.com",
+    "phone": "(555) 010-5588",
+    "relation": "Parent"
   }
 ]

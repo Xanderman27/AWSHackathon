@@ -1,0 +1,59 @@
+[
+  {
+    "id": "plan-sam",
+    "student_id": "student-01",
+    "type": "IEP",
+    "status": "Active",
+    "adopted_on": "2026-01-14",
+    "annual_review": "2027-01-13",
+    "reevaluation_due": "2028-01-14",
+    "case_manager": "Ms. Rivera",
+    "team": ["Jordan Bell (guardian)", "Ms. Rivera (general education)", "Mr. Ortiz (special education)", "Dr. Lane (school psychologist)"],
+    "eligibility": "Specific Learning Disability (reading)",
+    "present_levels": "Sam is a curious, persistent fourth grader who contributes strong ideas aloud. Decoding multisyllabic words and reading stamina are below grade level, which affects independent comprehension tasks. Listening comprehension and math reasoning are at grade level. Sam responds well to read-aloud supports, chunked text, and extra think time.",
+    "plan_goals": [
+      "By the annual review, given a fourth-grade passage and chunked-text supports, Sam will identify the main idea and two supporting details in 4 of 5 opportunities.",
+      "By the annual review, Sam will read a 300-word instructional-level passage with 95% accuracy in 4 of 5 weekly checks."
+    ],
+    "accommodations": [
+      "Text read aloud for directions and non-reading assessments",
+      "Chunked passages with extended time (time and a half)",
+      "Word-level highlighting during read-aloud",
+      "Preferential seating near instruction; movement breaks as needed"
+    ],
+    "services": [
+      "Specialized reading instruction, 30 min, 4x per week, small group",
+      "Consultation between special and general education, 30 min monthly"
+    ],
+    "amendments": [
+      {"text": "Added word-level highlighting after the fall data review showed stronger comprehension with synced highlighting.", "by": "Ms. Rivera", "role": "teacher", "at": "2026-03-02"}
+    ],
+    "note": "Synthetic demo document. Not a real student record."
+  },
+  {
+    "id": "plan-mia",
+    "student_id": "student-04",
+    "type": "504",
+    "status": "Active",
+    "adopted_on": "2026-02-20",
+    "annual_review": "2027-02-19",
+    "reevaluation_due": "2029-02-20",
+    "case_manager": "Ms. Rivera",
+    "team": ["Dana Cho (guardian)", "Ms. Rivera (general education)", "Nurse Patel (school nurse)"],
+    "eligibility": "ADHD (Section 504, substantially limits concentration)",
+    "present_levels": "Mia is a creative fourth grader with strong math and art skills. Sustained attention during long independent tasks is the main barrier: focus fades after about ten minutes, and transitions are hard when directions are only spoken. With visual schedules and short work blocks, Mia completes grade-level work accurately.",
+    "plan_goals": [],
+    "accommodations": [
+      "Directions given orally AND posted visually",
+      "Work broken into 10-minute blocks with brief movement breaks",
+      "Seat away from the door and high-traffic areas",
+      "Timer and visual schedule on the desk",
+      "Extended time (time and a half) on classroom assessments"
+    ],
+    "services": [
+      "Weekly 15-minute check-in with the school counselor"
+    ],
+    "amendments": [],
+    "note": "Synthetic demo document. Not a real student record. A 504 plan lists accommodations; measurable annual goals belong to IEPs."
+  }
+]

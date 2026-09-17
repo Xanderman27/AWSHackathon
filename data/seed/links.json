@@ -1,5 +1,18 @@
 [
-  {"parent_id": "parent-01", "student_id": "student-01"},
-  {"parent_id": "parent-02", "student_id": "student-02"},
-  {"parent_id": "parent-03", "student_id": "student-03"}
+  {
+    "parent_id": "parent-01",
+    "student_id": "student-01"
+  },
+  {
+    "parent_id": "parent-02",
+    "student_id": "student-02"
+  },
+  {
+    "parent_id": "parent-03",
+    "student_id": "student-03"
+  },
+  {
+    "parent_id": "parent-04",
+    "student_id": "student-04"
+  }
 ]

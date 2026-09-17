@@ -37,7 +37,8 @@ def _visible(row: dict, fields: tuple[str, ...]) -> dict:
     return {key: row.get(key) for key in fields}
 
 
-PHOTO_FIELDS = ("id", "class_id", "title", "caption", "taken_on", "uploaded_at", "uploaded_by_name")
+PHOTO_FIELDS = ("id", "class_id", "title", "caption", "taken_on", "uploaded_at", "uploaded_by_name",
+                "audience_student_id", "audience_name")
 
 
 def _parent_class_ids(actor: Actor) -> set[str]:
@@ -63,8 +64,17 @@ async def upload_photo(
     title: str = Form(default=""),
     caption: str = Form(default=""),
     taken_on: str = Form(default=""),
+    # Empty means the whole class; a student id means only that learner's family sees it.
+    audience_student_id: str = Form(default=""),
     actor: Actor = Depends(require_role("teacher")),
 ):
+    audience_student_id = audience_student_id.strip()
+    audience_name = ""
+    if audience_student_id:
+        if audience_student_id not in actor.student_ids:
+            raise HTTPException(403, "that learner is not in your class")
+        student = next((s for s in store.read("students") if s["id"] == audience_student_id), None)
+        audience_name = f"{student['display_name']}'s family" if student else "one family"
     if file.content_type not in ALLOWED:
         raise HTTPException(400, "Please choose a JPEG, PNG, WebP, or HEIC image.")
     payload = await file.read()
@@ -89,6 +99,8 @@ async def upload_photo(
         "uploaded_by": actor.user_id,
         "uploaded_by_name": teacher.get("display_name", "Your teacher"),
         "uploaded_at": now(),
+        "audience_student_id": audience_student_id,
+        "audience_name": audience_name,
     }
     store.append("class_photos", row)
     store.append("audit", {"actor": actor.user_id, "action": "class_photo.upload",
@@ -96,8 +108,14 @@ async def upload_photo(
     return _visible(row, PHOTO_FIELDS)
 
 
-def _for_class(class_ids: set[str]) -> list[dict]:
-    rows = [row for row in store.read("class_photos") if row["class_id"] in class_ids]
+def _parent_may_see(row: dict, actor: Actor) -> bool:
+    """A targeted post reaches only the family it names; everything else is class-wide."""
+    target = row.get("audience_student_id")
+    return not target or target in actor.student_ids
+
+
+def _for_class(class_ids: set[str], keep=lambda row: True) -> list[dict]:
+    rows = [row for row in store.read("class_photos") if row["class_id"] in class_ids and keep(row)]
     rows.sort(key=lambda row: (row.get("taken_on") or "", row["uploaded_at"]), reverse=True)
     return [_visible(row, PHOTO_FIELDS) for row in rows]
 
@@ -110,7 +128,7 @@ def teacher_photos(actor: Actor = Depends(require_role("teacher"))):
 @router.get("/parent/class-photos")
 def parent_photos(actor: Actor = Depends(require_role("parent"))):
     """Photos from the classes this parent's children are in. Nothing else reaches them."""
-    return _for_class(_parent_class_ids(actor))
+    return _for_class(_parent_class_ids(actor), keep=lambda row: _parent_may_see(row, actor))
 
 
 @router.get("/class-photos/{photo_id}/file")
@@ -120,6 +138,8 @@ def photo_file(photo_id: str, actor: Actor = Depends(get_actor)):
     row = next((r for r in store.read("class_photos") if r["id"] == photo_id), None)
     # Same answer whether the photo does not exist or is not this caller's to see.
     if row is None or row["class_id"] not in allowed:
+        raise HTTPException(404, "unknown photo")
+    if actor.role == "parent" and not _parent_may_see(row, actor):
         raise HTTPException(404, "unknown photo")
     data = store.blobs.get(row["filename"])
     if data is None:
