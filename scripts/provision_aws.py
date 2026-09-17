@@ -97,6 +97,15 @@ def ensure_role(iam, account: str, bucket: str) -> str:
          # Guardrail ids live in Parameter Store so rotating one needs no redeploy.
          "Action": ["ssm:GetParameter", "ssm:GetParameters", "ssm:GetParametersByPath"],
          "Resource": f"arn:aws:ssm:{REGION}:{account}:parameter/dori/*"},
+        {"Sid": "Identity", "Effect": "Allow",
+         # Sign-in and sign-up are brokered by the API, so the instance role is what
+         # authorises them. Scoped to the one pool, and deliberately without
+         # AdminDeleteUser or AdminUpdateUserAttributes: this app creates and authenticates
+         # users, and nothing it does should be able to rewrite who someone is.
+         "Action": ["cognito-idp:AdminInitiateAuth", "cognito-idp:AdminCreateUser",
+                    "cognito-idp:AdminSetUserPassword", "cognito-idp:AdminAddUserToGroup",
+                    "cognito-idp:AdminGetUser"],
+         "Resource": f"arn:aws:cognito-idp:{REGION}:{account}:userpool/*"},
         {"Sid": "State", "Effect": "Allow",
          "Action": ["dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:DeleteItem",
                     "dynamodb:Query", "dynamodb:BatchWriteItem", "dynamodb:DescribeTable"],

@@ -170,7 +170,12 @@ export function useActivityRoom<S>(roomId: string): Room<S> {
     let live = true
     opened.current = false
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const params = new URLSearchParams({ student_id: studentId })
+    // The socket is authorised by the same token the REST calls carry. A WebSocket
+    // handshake cannot set headers, so it travels as a query parameter; the server reads
+    // the learner's identity out of the token's claims rather than off the wire.
+    const session = getSession()
+    if (!session?.token) { setError('Sign in to join this activity.'); return }
+    const params = new URLSearchParams({ token: session.token })
     const ws = new WebSocket(`${protocol}//${window.location.host}/api/games/ws/activity/${encodeURIComponent(roomId)}?${params}`)
     socket.current = ws
 

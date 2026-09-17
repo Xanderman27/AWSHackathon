@@ -12,11 +12,12 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 from app.storage import store
+from authhelp import auth
 
-PARENT = {"X-Role": "parent", "X-User-Id": "parent-01"}       # linked to student-01 (Sam)
-OTHER_PARENT = {"X-Role": "parent", "X-User-Id": "parent-02"}  # linked to student-02 (Ava)
-TEACHER = {"X-Role": "teacher", "X-User-Id": "teacher-01"}
-STUDENT = {"X-Role": "student", "X-User-Id": "student-01"}
+PARENT = auth("parent", "parent-01")       # linked to student-01 (Sam)
+OTHER_PARENT = auth("parent", "parent-02")  # linked to student-02 (Ava)
+TEACHER = auth("teacher", "teacher-01")
+STUDENT = auth("student", "student-01")
 
 STUDENTS = [
     {"id": "student-01", "display_name": "Sam", "grade": 4, "class_id": "class-4a",

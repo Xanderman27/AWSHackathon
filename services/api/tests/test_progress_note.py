@@ -16,9 +16,10 @@ from app.ai import progress
 from app.ai.config import Settings
 from app.main import app
 from app.storage import store
+from authhelp import auth
 
-TEACHER = {"X-Role": "teacher", "X-User-Id": "teacher-01"}
-PARENT = {"X-Role": "parent", "X-User-Id": "parent-01"}
+TEACHER = auth("teacher", "teacher-01")
+PARENT = auth("parent", "parent-01")
 
 LIVE = Settings(region="r", model_id="m", guardrail_id="g", guardrail_version="1", offline=False)
 OFFLINE = Settings(region="r", model_id="m", guardrail_id=None, guardrail_version="DRAFT", offline=True)

@@ -1,10 +1,15 @@
-"""Demo sign-in and sign-up with synthetic accounts (PRD FR-01).
+"""Sign-in and sign-up (PRD FR-01, FR-26).
 
-Seeded demo logins keep their plaintext passwords so judges can read them off the screen.
-Anything a real person types at sign-up is salted and hashed with PBKDF2 instead — a password
-someone chose is theirs, not demo data. Amazon Cognito replaces the whole file in production
-(PRD FR-26); nothing else in the API trusts this endpoint, because authorization still
-happens per-request in the data layer.
+Both routes end the same way: the caller gets a signed token, and every later request is
+authorised by that token rather than by headers the caller writes. Where the token comes from
+depends on the deployment — Amazon Cognito when a user pool is configured, the local issuer
+on a laptop with no AWS — but the shape of the exchange, and the fact that there is one, does
+not change between them.
+
+Passwords are never stored by this service when Cognito is configured; the pool holds them.
+The local issuer keeps the seeded demo logins in plaintext so judges can read them off the
+screen, and salts and hashes with PBKDF2 anything a real person types, because a password
+someone chose is theirs, not demo data.
 """
 
 from __future__ import annotations
@@ -17,13 +22,16 @@ from uuid import uuid4
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, EmailStr, Field
 
-from .. import classcode
+from .. import classcode, cognito
+from ..identity import InvalidToken, Principal, issue_local_token, principal_from_token
 from ..models import now
 from ..storage import store
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 PBKDF2_ROUNDS = 240_000
+
+BAD_LOGIN = "That username or password does not match."
 
 
 def hash_password(password: str) -> str:
@@ -55,20 +63,74 @@ class SignUpIn(BaseModel):
     class_code: str = Field(min_length=1, max_length=40)
 
 
-def _session(account: dict) -> dict:
-    return {"role": account["role"], "user_id": account["user_id"],
-            "display_name": account["display_name"]}
+class RefreshIn(BaseModel):
+    refresh_token: str = Field(min_length=1, max_length=4096)
+
+
+def _session(principal: Principal, token: str, expires_in: int,
+             refresh_token: str | None = None) -> dict:
+    body = {
+        "role": principal.role,
+        "user_id": principal.user_id,
+        "display_name": principal.display_name,
+        "token": token,
+        "expires_in": expires_in,
+    }
+    if refresh_token:
+        body["refresh_token"] = refresh_token
+    return body
+
+
+def _local_login(username: str, password: str) -> dict:
+    for acct in store.read("accounts"):
+        if acct["username"] == username and check_password(acct["password"], password):
+            principal = Principal(role=acct["role"], user_id=acct["user_id"],
+                                  display_name=acct["display_name"])
+            token, expires_in = issue_local_token(principal)
+            store.append("audit", {"actor": acct["user_id"], "action": "auth.login",
+                                   "object_id": acct["username"], "at": now()})
+            return _session(principal, token, expires_in)
+    raise HTTPException(401, BAD_LOGIN)
 
 
 @router.post("/login")
 def login(body: LoginIn):
     username = body.username.strip().lower()
-    for acct in store.read("accounts"):
-        if acct["username"] == username and check_password(acct["password"], body.password):
-            store.append("audit", {"actor": acct["user_id"], "action": "auth.login",
-                                   "object_id": acct["username"], "at": now()})
-            return _session(acct)
-    raise HTTPException(401, "That username or password does not match.")
+    if not cognito.configured():
+        return _local_login(username, body.password)
+
+    try:
+        tokens = cognito.authenticate(username, body.password)
+    except cognito.BadCredentials:
+        raise HTTPException(401, BAD_LOGIN) from None
+    except cognito.CognitoError as exc:
+        raise HTTPException(503, f"Sign-in is unavailable right now. {exc}") from None
+
+    try:
+        principal = principal_from_token(tokens["id_token"])
+    except InvalidToken:
+        # We just received this token from Cognito, so failing to verify it means the pool and
+        # our configuration disagree. Refusing is the only safe answer.
+        raise HTTPException(503, "Sign-in is misconfigured.") from None
+
+    store.append("audit", {"actor": principal.user_id, "action": "auth.login",
+                           "object_id": username, "at": now()})
+    return _session(principal, tokens["id_token"], tokens["expires_in"],
+                    tokens.get("refresh_token"))
+
+
+@router.post("/refresh")
+def refresh(body: RefreshIn):
+    """Trade a refresh token for a fresh id token, so a long sitting stays signed in."""
+    if not cognito.configured():
+        # The local issuer has no refresh concept; its tokens simply last the session.
+        raise HTTPException(400, "not available")
+    try:
+        tokens = cognito.refresh(body.refresh_token)
+        principal = principal_from_token(tokens["id_token"])
+    except (cognito.BadCredentials, InvalidToken):
+        raise HTTPException(401, "Please sign in again.") from None
+    return _session(principal, tokens["id_token"], tokens["expires_in"])
 
 
 @router.post("/signup", status_code=201)
@@ -84,26 +146,52 @@ def signup(body: SignUpIn):
         raise HTTPException(404, "We could not find that class code. Check it with your teacher.")
 
     username = str(body.email).strip().lower()
-    if any(acct["username"] == username for acct in store.read("accounts")):
+    taken = any(acct["username"] == username for acct in store.read("accounts")) \
+        or any(p.get("email") == username for p in store.read("parents"))
+    if taken:
         raise HTTPException(409, "There is already an account for that email. Try logging in.")
 
     parent_id = f"parent-{uuid4().hex[:8]}"
+    display_name = body.name.strip()
+
+    if cognito.configured():
+        try:
+            cognito.create_user(username=username, password=body.password, role="parent",
+                                user_id=parent_id, name=display_name)
+        except cognito.UserExists:
+            raise HTTPException(409, "There is already an account for that email. "
+                                     "Try logging in.") from None
+        except cognito.CognitoError as exc:
+            raise HTTPException(503, f"We could not create that account. {exc}") from None
+    else:
+        store.append("accounts", {
+            "username": username,
+            "password": hash_password(body.password),
+            "role": "parent",
+            "user_id": parent_id,
+            "display_name": display_name,
+        })
+
     store.append("parents", {
         "id": parent_id,
-        "display_name": body.name.strip(),
+        "display_name": display_name,
         "email": username,
         # Which classroom they joined. It becomes a child link only once they choose one.
         "pending_class_id": klass["id"],
         "created_at": now(),
     })
-    store.append("accounts", {
-        "username": username,
-        "password": hash_password(body.password),
-        "role": "parent",
-        "user_id": parent_id,
-        "display_name": body.name.strip(),
-    })
     store.append("audit", {"actor": parent_id, "action": "auth.signup",
                            "object_id": klass["id"], "at": now()})
-    return {"role": "parent", "user_id": parent_id, "display_name": body.name.strip(),
-            "class_name": klass["name"], "needs_child": True}
+
+    # Sign them straight in, so the flow continues into choosing their child.
+    if cognito.configured():
+        tokens = cognito.authenticate(username, body.password)
+        principal = principal_from_token(tokens["id_token"])
+        session = _session(principal, tokens["id_token"], tokens["expires_in"],
+                           tokens.get("refresh_token"))
+    else:
+        principal = Principal(role="parent", user_id=parent_id, display_name=display_name)
+        token, expires_in = issue_local_token(principal)
+        session = _session(principal, token, expires_in)
+
+    return {**session, "class_name": klass["name"], "needs_child": True}

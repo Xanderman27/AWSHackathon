@@ -14,8 +14,9 @@ from app import classcode
 from app.main import app
 from app.routers.login import check_password, hash_password
 from app.storage import store
+from authhelp import auth
 
-TEACHER = {"X-Role": "teacher", "X-User-Id": "teacher-01"}
+TEACHER = auth("teacher", "teacher-01")
 CODE = "BRIGHT4"
 
 
@@ -96,7 +97,7 @@ def test_a_short_password_is_refused(world):
 def test_claiming_a_child_outside_the_joined_class_is_refused(world):
     client, data = world
     parent_id = signup(client).json()["user_id"]
-    headers = {"X-Role": "parent", "X-User-Id": parent_id}
+    headers = auth("parent", parent_id)
     assert client.post("/parent/join", headers=headers, json={"student_id": "student-99"}).status_code == 403
     assert client.post("/parent/join", headers=headers, json={"student_id": "nobody"}).status_code == 403
     assert data["links"] == []
@@ -105,7 +106,7 @@ def test_claiming_a_child_outside_the_joined_class_is_refused(world):
 def test_choosing_a_child_links_them_once_and_closes_the_offer(world):
     client, data = world
     parent_id = signup(client).json()["user_id"]
-    headers = {"X-Role": "parent", "X-User-Id": parent_id}
+    headers = auth("parent", parent_id)
 
     assert client.get("/parent/join", headers=headers).json()["needs_child"] is True
     assert client.post("/parent/join", headers=headers, json={"student_id": "student-01"}).status_code == 200
@@ -120,7 +121,7 @@ def test_choosing_a_child_links_them_once_and_closes_the_offer(world):
 def test_a_new_family_still_cannot_read_another_familys_child(world):
     client, _ = world
     parent_id = signup(client).json()["user_id"]
-    headers = {"X-Role": "parent", "X-User-Id": parent_id}
+    headers = auth("parent", parent_id)
     client.post("/parent/join", headers=headers, json={"student_id": "student-01"})
     assert client.get("/parent/children/student-02/progress", headers=headers).status_code == 403
 
@@ -142,7 +143,7 @@ def test_generated_codes_avoid_characters_people_confuse():
 def test_only_a_teacher_sees_or_changes_the_class_code(world):
     client, _ = world
     parent_id = signup(client).json()["user_id"]
-    for headers in ({"X-Role": "parent", "X-User-Id": parent_id},
-                    {"X-Role": "student", "X-User-Id": "student-01"}):
+    for headers in (auth("parent", parent_id),
+                    auth("student", "student-01")):
         assert client.get("/teacher/class-code", headers=headers).status_code == 403
         assert client.post("/teacher/class-code/rotate", headers=headers).status_code == 403

@@ -31,6 +31,14 @@ function Shell() {
   const confirmRef = useRef<HTMLDialogElement>(null)
   const [stars, setStars] = useState<number | null>(null)
 
+  // A token the API has refused leaves the app holding a session it cannot use, so send
+  // them back to the door rather than letting every screen fail on its own.
+  useEffect(() => {
+    const signedOut = () => nav('/')
+    window.addEventListener('dori:signed-out', signedOut)
+    return () => window.removeEventListener('dori:signed-out', signedOut)
+  }, [nav])
+
   // The star count lives beside the student's name and refreshes as they move around,
   // so finishing a quiz shows up without a reload.
   useEffect(() => {

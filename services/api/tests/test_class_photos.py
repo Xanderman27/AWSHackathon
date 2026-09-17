@@ -11,10 +11,11 @@ from fastapi.testclient import TestClient
 from app.blobs import LocalBlobs, check_name
 from app.main import app
 from app.storage import store
+from authhelp import auth
 
-TEACHER = {"X-Role": "teacher", "X-User-Id": "teacher-01"}
-PARENT = {"X-Role": "parent", "X-User-Id": "parent-01"}
-STUDENT = {"X-Role": "student", "X-User-Id": "student-01"}
+TEACHER = auth("teacher", "teacher-01")
+PARENT = auth("parent", "parent-01")
+STUDENT = auth("student", "student-01")
 
 # Smallest thing a PNG decoder will accept.
 PNG = bytes.fromhex(

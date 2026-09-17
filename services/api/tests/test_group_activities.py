@@ -5,6 +5,14 @@ from fastapi.testclient import TestClient
 from app.games.base import rooms
 from app.main import app
 from app.storage import store
+from authhelp import auth
+
+
+def ws_token(student_id: str) -> str:
+    """The socket takes the same signed token; a browser cannot set a header on a
+    handshake, so it rides in the query string."""
+    return auth("student", student_id)["Authorization"].removeprefix("Bearer ")
+
 
 
 def activity(activity_id, members, game_id="beat-together"):
@@ -34,7 +42,7 @@ def test_two_players_share_live_beat_edits():
 
     with patch.object(store, "read", side_effect=reading([activity(activity_id, ["student-01", "student-02"])])):
         with client.websocket_connect(
-            f"/games/ws/activity/{activity_id}?student_id=student-01"
+            f"/games/ws/activity/{activity_id}?token={ws_token('student-01')}"
         ) as first:
             first_state = first.receive_json()
             assert first_state["room_id"] == activity_id
@@ -42,7 +50,7 @@ def test_two_players_share_live_beat_edits():
             assert [person["name"] for person in first_state["participants"]] == ["Sam"]
 
             with client.websocket_connect(
-                f"/games/ws/activity/{activity_id}?student_id=student-02"
+                f"/games/ws/activity/{activity_id}?token={ws_token('student-02')}"
             ) as second:
                 joined_for_first = first.receive_json()
                 joined_for_second = second.receive_json()
@@ -66,7 +74,7 @@ def test_a_learner_outside_the_group_is_refused_the_room():
 
     with patch.object(store, "read", side_effect=reading([activity(activity_id, ["student-01", "student-02"])])):
         with client.websocket_connect(
-            f"/games/ws/activity/{activity_id}?student_id=student-03"
+            f"/games/ws/activity/{activity_id}?token={ws_token('student-03')}"
         ) as intruder:
             message = intruder.receive_json()
             assert message["type"] == "error"
@@ -83,7 +91,7 @@ def test_every_registered_game_shares_live_state():
         rooms.pop(activity_id, None)
         rows = [activity(activity_id, ["student-01", "student-02"], game_id=game_id)]
         with patch.object(store, "read", side_effect=reading(rows)):
-            with client.websocket_connect(f"/games/ws/activity/{activity_id}?student_id=student-01") as socket:
+            with client.websocket_connect(f"/games/ws/activity/{activity_id}?token={ws_token('student-01')}") as socket:
                 state = socket.receive_json()
                 assert state["game_id"] == game_id, game_id
                 assert state["state"], game_id
@@ -92,13 +100,13 @@ def test_every_registered_game_shares_live_state():
 
 def test_solo_rooms_are_private_and_only_for_solo_games():
     client = TestClient(app)
-    with client.websocket_connect("/games/ws/activity/solo:memory-meadow?student_id=student-01") as socket:
+    with client.websocket_connect(f"/games/ws/activity/solo:memory-meadow?token={ws_token('student-01')}") as socket:
         state = socket.receive_json()
         assert state["room_id"] == "solo:memory-meadow:student-01"
         assert len(state["state"]["cards"]) == 12
 
     # Beat Together is a group game; there is no solo door into it.
-    with client.websocket_connect("/games/ws/activity/solo:beat-together?student_id=student-01") as socket:
+    with client.websocket_connect(f"/games/ws/activity/solo:beat-together?token={ws_token('student-01')}") as socket:
         assert socket.receive_json()["type"] == "error"
 
 
@@ -111,7 +119,7 @@ def test_student_sees_only_their_published_group_activity():
     with patch.object(store, "read", side_effect=reading(activities)):
         response = client.get(
             "/student/group-activities",
-            headers={"X-Role": "student", "X-User-Id": "student-01"},
+            headers=auth("student", "student-01"),
         )
         assert response.status_code == 200
         assert [row["id"] for row in response.json()] == ["assigned"]
@@ -128,7 +136,7 @@ def test_the_grouping_rationale_never_reaches_a_student():
     with patch.object(store, "read", side_effect=reading([activity("assigned", ["student-01", "student-02"])])):
         row = client.get(
             "/student/group-activities",
-            headers={"X-Role": "student", "X-User-Id": "student-01"},
+            headers=auth("student", "student-01"),
         ).json()[0]
     assert "rationale" not in row
 
@@ -145,7 +153,7 @@ def test_teacher_publishes_groups_before_students_can_join():
     ):
         response = client.post(
             "/teacher/group-activities/publish",
-            headers={"X-Role": "teacher", "X-User-Id": "teacher-01"},
+            headers=auth("teacher", "teacher-01"),
             json={"game_id": "fraction-strips", "groups": [{
                 "name": "Rhythm Crew",
                 "member_ids": ["student-01", "student-02"],
@@ -159,7 +167,7 @@ def test_teacher_publishes_groups_before_students_can_join():
 
         student_response = client.get(
             "/student/group-activities",
-            headers={"X-Role": "student", "X-User-Id": "student-01"},
+            headers=auth("student", "student-01"),
         )
         assert student_response.status_code == 200
         assert student_response.json()[0]["group_name"] == "Rhythm Crew"
@@ -177,7 +185,7 @@ def test_publishing_one_game_leaves_another_games_groups_alone():
     ):
         client.post(
             "/teacher/group-activities/publish",
-            headers={"X-Role": "teacher", "X-User-Id": "teacher-01"},
+            headers=auth("teacher", "teacher-01"),
             json={"game_id": "shape-shift", "groups": [{
                 "name": "Shape Crew",
                 "member_ids": ["student-01", "student-02"],
@@ -192,7 +200,7 @@ def test_a_teacher_cannot_group_learners_from_another_class():
     client = TestClient(app)
     response = client.post(
         "/teacher/group-activities/publish",
-        headers={"X-Role": "teacher", "X-User-Id": "teacher-01"},
+        headers=auth("teacher", "teacher-01"),
         json={"game_id": "memory-meadow", "groups": [{
             "name": "Outsiders",
             "member_ids": ["student-01", "student-99"],
@@ -206,13 +214,13 @@ def test_mixed_group_recommendation_holds_nobody_back_for_evidence():
     client = TestClient(app)
     fractions = client.get(
         "/teacher/group-activities/recommendation?game_id=fraction-strips",
-        headers={"X-Role": "teacher", "X-User-Id": "teacher-01"},
+        headers=auth("teacher", "teacher-01"),
     ).json()
     assert fractions["uses_evidence"] is True
 
     memory_game = client.get(
         "/teacher/group-activities/recommendation?game_id=memory-meadow",
-        headers={"X-Role": "teacher", "X-User-Id": "teacher-01"},
+        headers=auth("teacher", "teacher-01"),
     ).json()
     assert memory_game["uses_evidence"] is False
     assert memory_game["needs_more_evidence"] == []

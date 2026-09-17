@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Query, WebSocket, WebSocketDisconnect
 
+from ..identity import InvalidToken, principal_from_token
+
 from .. import games
 from ..games.base import PLAYER_COLORS, Participant, Room, broadcast, rooms, rooms_lock, schedule_wake
 from ..storage import store
@@ -68,8 +70,20 @@ async def _reject(websocket: WebSocket, message: str, code: int) -> None:
 async def activity_socket(
     websocket: WebSocket,
     activity_id: str,
-    student_id: str = Query(..., min_length=1, max_length=60),
+    # A browser cannot set headers on a WebSocket handshake, so the token travels as a query
+    # parameter. It is the same signed token the REST routes take, verified the same way —
+    # the socket used to accept a bare student_id, which let any learner sit down as anyone.
+    token: str = Query(..., min_length=1, max_length=4096),
 ) -> None:
+    try:
+        principal = principal_from_token(token)
+    except InvalidToken:
+        await _reject(websocket, "Sign in to join this activity.", 4401)
+        return
+    if principal.role != "student":
+        await _reject(websocket, "Only learners join activities.", 4403)
+        return
+    student_id = principal.user_id
     student = _student(student_id)
     room_key, game_id, capacity, error = _resolve(activity_id, student_id)
     if student is None or error:

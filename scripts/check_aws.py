@@ -138,6 +138,24 @@ def main() -> int:
         except ClientError as problem:
             line(MEH, f"Could not test the guardrail: {problem.response['Error']['Code']}")
 
+    # Which issuer signs the tokens this API will accept. Getting this wrong on the
+    # instance means sign-in silently checks the seeded accounts file instead of Cognito.
+    from app.identity import auth_settings
+
+    auth = auth_settings()
+    if auth.configured:
+        try:
+            pool = boto3.client("cognito-idp", region_name=region).describe_user_pool(
+                UserPoolId=auth.user_pool_id)["UserPool"]
+            line(OK, f"Cognito pool {pool['Name']} ({auth.user_pool_id}) signs the tokens")
+        except (ClientError, BotoCoreError) as problem:
+            line(BAD, f"Pool {auth.user_pool_id} is configured but unreachable: "
+                      f"{type(problem).__name__}")
+    else:
+        line(MEH, "No Cognito pool configured - the LOCAL token issuer is in use. "
+                  "Correct on a laptop, wrong on the instance: "
+                  "run scripts/provision_cognito.py")
+
     print("\nLive path verified. Set DEMO_OFFLINE=0 and drafts will come from Bedrock.\n")
     return 0
 

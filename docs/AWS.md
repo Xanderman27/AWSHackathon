@@ -80,7 +80,29 @@ connected* to *Live · &lt;model id&gt;*, and the pipeline path on each draft ch
 If Bedrock throttles, denies, or times out, the pipeline falls back to a cached draft, says
 so on screen, and records `bedrock_error` in the path. Nothing on stage breaks.
 
-## Step 4 — Guardrail
+## Step 4 — Cognito
+
+```bash
+services/api/.venv/bin/python scripts/provision_cognito.py
+```
+
+Creates the `dori-users` pool, the `dori-web` app client, the three role groups, and the
+seeded demo logins with the passwords printed on the landing page — so the demo signs in
+exactly as it did before. Both ids are written to Parameter Store under `/dori/cognito/`,
+which is where the API reads them at startup; nothing needs exporting.
+
+This is what the API authenticates against. Without it the API falls back to a local token
+issuer, which is correct on a laptop and wrong on the instance — with no pool configured,
+sign-in is checked against the seeded accounts file rather than Cognito. The pre-flight
+reports which one is in use.
+
+Note that `provision_aws.py` must be re-run after this if the instance role predates it:
+the role needs the `Identity` statement to call Cognito on a user's behalf.
+
+See SECURITY.md for what the token buys, what the pool is configured to refuse, and the
+gaps that remain.
+
+## Step 5 — Guardrail
 
 ```bash
 services/api/.venv/bin/python scripts/provision_guardrail.py

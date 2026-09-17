@@ -16,8 +16,9 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 from app.storage import store
+from authhelp import auth
 
-TEACHER = {"X-Role": "teacher", "X-User-Id": "teacher-01"}
+TEACHER = auth("teacher", "teacher-01")
 
 STUDENTS = [{"id": "student-01", "display_name": "Sam", "grade": 4, "class_id": "class-4a"}]
 SKILLS = [

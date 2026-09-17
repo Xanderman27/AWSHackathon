@@ -17,9 +17,10 @@ from app.ai.config import Settings
 from app.ai.schema import ActivityDraft
 from app.main import app
 from app.storage import store
+from authhelp import auth
 
-TEACHER = {"X-Role": "teacher", "X-User-Id": "teacher-01"}
-PARENT = {"X-Role": "parent", "X-User-Id": "parent-01"}
+TEACHER = auth("teacher", "teacher-01")
+PARENT = auth("parent", "parent-01")
 
 LIVE = Settings(region="us-east-1", model_id="test-model", guardrail_id="gr-1",
                 guardrail_version="1", offline=False)
@@ -273,7 +274,7 @@ def test_a_decision_cannot_be_made_twice(recs):
 
 def test_only_a_teacher_can_draft_or_decide(recs):
     client, _ = recs
-    for headers in (PARENT, {"X-Role": "student", "X-User-Id": "student-01"}):
+    for headers in (PARENT, auth("student", "student-01")):
         assert client.post("/teacher/recommendations/draft", headers=headers,
                            json={"student_id": "student-01", "skill_id": "fraction_equivalence"}).status_code == 403
         assert client.get("/teacher/ai/status", headers=headers).status_code == 403
