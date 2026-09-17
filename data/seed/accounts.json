@@ -40,5 +40,33 @@
     "role": "parent",
     "user_id": "parent-02",
     "display_name": "Priya Raman"
+  },
+  {
+    "username": "judge1",
+    "password": "judge123",
+    "role": "student",
+    "user_id": "student-13",
+    "display_name": "Judge 1"
+  },
+  {
+    "username": "judge2",
+    "password": "judge123",
+    "role": "student",
+    "user_id": "student-14",
+    "display_name": "Judge 2"
+  },
+  {
+    "username": "judge3",
+    "password": "judge123",
+    "role": "student",
+    "user_id": "student-15",
+    "display_name": "Judge 3"
+  },
+  {
+    "username": "judge4",
+    "password": "judge123",
+    "role": "student",
+    "user_id": "student-16",
+    "display_name": "Judge 4"
   }
 ]

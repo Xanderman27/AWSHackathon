@@ -201,14 +201,17 @@ def build_benchmarks(students, mastery, skills):
             for sid, subject in pairs if sid in ids]
 
 
+# (game id, title, group-name stem, players per group). The size is not decoration: the
+# publish endpoint rejects a group outside a game's min/max, and Checkers Corner seats
+# exactly two, so dealing it a foursome produces data the product itself would refuse.
 GAMES = [
-    ("beat-together", "Beat Together", "Blue Note Crew"),
-    ("globe-trotters", "Globe Trotters", "Compass Club"),
-    ("checkers", "Checkers Corner", "Otter Table"),
-    ("memory-meadow", "Memory Meadow", "Maple Group"),
-    ("sort-it-out", "Sort It Out", "Harbour Crew"),
-    ("story-detectives", "Story Detectives", "Lantern Group"),
-    ("shape-shift", "Shape Shift", "Kite Table"),
+    ("beat-together", "Beat Together", "Blue Note Crew", 4),
+    ("globe-trotters", "Globe Trotters", "Compass Club", 3),
+    ("checkers", "Checkers Corner", "Otter Table", 2),
+    ("memory-meadow", "Memory Meadow", "Maple Group", 3),
+    ("sort-it-out", "Sort It Out", "Harbour Crew", 3),
+    ("story-detectives", "Story Detectives", "Lantern Group", 4),
+    ("shape-shift", "Shape Shift", "Kite Table", 3),
 ]
 
 
@@ -225,19 +228,29 @@ def build_group_activities(students, existing):
     rows = [r for r in existing if not r.get("generated")]
     seen = {r["id"] for r in rows}
 
-    for round_no, (game_id, title, group_name) in enumerate(GAMES):
-        # A different stride per round means the trios reshuffle rather than rotate rigidly.
+    # Never deal the same people the same game twice; the rotation can land on a repeat.
+    dealt = {(r["game_id"], frozenset(r.get("member_ids", []))) for r in rows}
+
+    for round_no, (game_id, title, group_name, size) in enumerate(GAMES):
+        # A different stride per round means the groups reshuffle rather than rotate rigidly.
         stride = 1 + round_no * 5
         order = [ids[(i * stride + round_no) % len(ids)] for i in range(len(ids))]
-        # Deal trios; a trailing pair is fine, a trailing single is folded back in.
-        trios = [order[i:i + 3] for i in range(0, len(order), 3)]
-        if len(trios[-1]) == 1:
-            trios[-2] += trios.pop()
+        groups = [order[i:i + size] for i in range(0, len(order), size)]
+        # A trailing group too small to play folds back into the one before it.
+        while len(groups) > 1 and len(groups[-1]) < size:
+            spare = groups.pop()
+            if len(groups[-1]) + len(spare) <= size:
+                groups[-1] += spare
+            else:
+                groups.append(spare)
+                break
 
-        for seat, members in enumerate(trios):
+        for seat, members in enumerate(groups):
             row_id = f"group-activity-{game_id}-{round_no}{seat}"
-            if row_id in seen:
+            signature = (game_id, frozenset(members))
+            if row_id in seen or len(members) != size or signature in dealt:
                 continue
+            dealt.add(signature)
             rows.append({
                 "id": row_id,
                 "class_id": students[0]["class_id"],

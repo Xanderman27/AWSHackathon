@@ -27,6 +27,10 @@ npm install
 npm run dev
 ```
 
+The four judge logins are students in Ms. Rivera's class and sit in one activity group,
+**Judges' Table**, so four people can open Beat Together on four devices and land in the
+same room. They show up on the teacher side like any other team.
+
 Open http://localhost:5173. The API runs on port 8010. Sign in with a demo account (synthetic data, demo-only plaintext credentials; Cognito is the production plan):
 
 | Role | Username | Password |
@@ -34,6 +38,7 @@ Open http://localhost:5173. The API runs on port 8010. Sign in with a demo accou
 | Student (Sam) | `sam` | `otter123` |
 | Teacher (Ms. Rivera) | `rivera` | `teach123` |
 | Parent (Jordan, linked to Sam) | `jordan` | `family123` |
+| Judges 1-4 (one team, for playing a game together) | `judge1` … `judge4` | `judge123` |
 
 - `python scripts/build_items.py` regenerates the item bank from the authored list.
 - `POST http://localhost:8010/demo/reset` restores the seeded state.

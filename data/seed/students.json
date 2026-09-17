@@ -170,5 +170,61 @@
       "hair_color": 1,
       "shirt": 3
     }
+  },
+  {
+    "id": "student-13",
+    "display_name": "Judge 1",
+    "grade": 4,
+    "class_id": "class-4a",
+    "has_goal_link": false,
+    "photo": null,
+    "avatar": {
+      "skin": 1,
+      "hair": "short",
+      "hair_color": 1,
+      "shirt": 0
+    }
+  },
+  {
+    "id": "student-14",
+    "display_name": "Judge 2",
+    "grade": 4,
+    "class_id": "class-4a",
+    "has_goal_link": false,
+    "photo": null,
+    "avatar": {
+      "skin": 3,
+      "hair": "coily",
+      "hair_color": 0,
+      "shirt": 1
+    }
+  },
+  {
+    "id": "student-15",
+    "display_name": "Judge 3",
+    "grade": 4,
+    "class_id": "class-4a",
+    "has_goal_link": false,
+    "photo": null,
+    "avatar": {
+      "skin": 0,
+      "hair": "bob",
+      "hair_color": 4,
+      "shirt": 2
+    }
+  },
+  {
+    "id": "student-16",
+    "display_name": "Judge 4",
+    "grade": 4,
+    "class_id": "class-4a",
+    "has_goal_link": false,
+    "photo": null,
+    "avatar": {
+      "skin": 4,
+      "hair": "braids",
+      "hair_color": 0,
+      "shirt": 3
+    }
   }
 ]
