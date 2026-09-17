@@ -111,7 +111,8 @@ button[aria-pressed='true'] { background: var(--ink); color: var(--surface); bor
 .card.tinted-cream { background: var(--cream); color: var(--cream-ink); border-color: transparent; }
 .card.tinted-brand { background: var(--brand); color: var(--brand-ink); border-color: transparent; }
 .muted { color: var(--muted); }
-.stack { display: grid; gap: 16px; }
+.stack { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }  /* minmax(0,…) not 1fr: a bare 1fr floors at the widest child's min-content, so the
+     answers table on a learner made the whole column 492px on a 375px phone. */
 .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 .between { justify-content: space-between; }
 .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
@@ -357,7 +358,7 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .group-size.warn { color: var(--rose-ink); }
 .cohort-roster { display: grid; gap: 8px; }
 .cohort-roster h3 { margin: 0; }
-.table-scroll { overflow-x: auto; }
+.table-scroll { overflow-x: auto; min-width: 0; }
 .cohort-roster select { min-height: 42px; min-width: 170px; padding: 6px 34px 6px 11px; border: 1.5px solid var(--line);
   border-radius: 11px; background: var(--surface); color: var(--ink); font: inherit; }
 .draft-group input:focus, .cohort-roster select:focus { outline: 3px solid var(--focus); outline-offset: 2px; }
@@ -1456,6 +1457,10 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .checkers-board.flipped { transform: rotate(180deg); }
 .checkers-board.flipped .crown { display: inline-block; transform: rotate(180deg); }
 .checkers-cell { position: relative; border: 0; border-radius: 0; padding: 0; min-height: 0;
+  /* min-width too, not just min-height: the base button floor is 48px, and eight of those
+     need 384px. Below that the tracks stopped shrinking and the pieces spilled off the
+     board — which on a 375px phone is every time. */
+  min-width: 0;
   display: grid; place-items: center; box-shadow: none; cursor: pointer; }
 .checkers-cell.light { background: #f6e3c5; }
 .checkers-cell.dark { background: #b98a5a; }
@@ -1732,4 +1737,42 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
      text column right beside them there is nowhere for them to go without landing on it. */
   .land-drift { display: none; }
   .land-pills, .land-foot { display: none; }
+}
+
+/* A second pass over the phone layout, on the screens a teacher reaches rather than the
+   landing page. Same rule as above: everything here is inside a max-width query.          */
+
+@media (max-width: 760px) {
+  /* The floating Messages pill is fixed to the bottom-right corner, so it sits on top of
+     whatever the page ends with. On a learner that was the "Message" button in the family
+     card — covered by the very control it duplicates. Reserve the pill's height plus its
+     offset so the end of every page stays reachable. */
+  .page { padding-bottom: 76px; }
+
+  /* Back links read as body text but behave as navigation, and 20px of it is a hard thing
+     to hit while holding a phone one-handed. Widened downwards only, so the gap above the
+     card it sits on does not change. */
+  .back-link { min-height: 48px; display: inline-flex; align-items: center; }
+
+  /* A guardian's email and phone are the point of the family card on a phone: it is where a
+     teacher taps to call or write. As bare inline text they were 15px tall. */
+  .guardian-row a { display: inline-block; padding: 8px 0; }
+
+  /* iOS Safari zooms the whole page whenever it focuses a field whose text is under 16px,
+     and it does not zoom back out. The base size here is already dropped to 14px (13px under
+     400px), so a field at .88em computed to 11.44px — every input in the app tripped it,
+     including the four on the sign-up form, which is the first thing anyone touches.
+
+     16px flat, not an em: the point is to clear Safari's threshold, so it must not scale back
+     down with the root size that caused the problem. The fields are 44px tall and were built
+     for a larger face than they were getting, so nothing needs to be re-fitted around this.
+     Checkboxes, radios, ranges and file pickers have no text to zoom toward and keep theirs. */
+  input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']),
+  select, textarea { font-size: 16px; }
+
+  /* The checkers board takes whatever width its card leaves it, and a card spending 28px a
+     side means 29px squares on a 320px phone — smaller than the fingertip meant to move a
+     checker. The padding is worth more as board: this buys roughly 5px on every square, and
+     the board stays centred with a margin still around it. */
+  .checkers-wrap { padding-left: 10px; padding-right: 10px; }
 }
