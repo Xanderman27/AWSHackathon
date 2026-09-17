@@ -80,17 +80,40 @@ connected* to *Live · &lt;model id&gt;*, and the pipeline path on each draft ch
 If Bedrock throttles, denies, or times out, the pipeline falls back to a cached draft, says
 so on screen, and records `bedrock_error` in the path. Nothing on stage breaks.
 
-## Step 4 — Guardrails (optional, ~10 minutes)
-
-Create a guardrail with denied topics for diagnosis, eligibility, placement and medication,
-plus the PII filter, then:
+## Step 4 — Guardrail
 
 ```bash
-export BEDROCK_GUARDRAIL_ID=...
-export BEDROCK_GUARDRAIL_VERSION=1
+services/api/.venv/bin/python scripts/provision_guardrail.py
 ```
 
-It is attached to every Converse call automatically and shown in the status badge.
+Creates `dori-guardrail` and prints the id and version to export. It is attached to every
+Converse call automatically, shown in the status badge, and the pre-flight proves it both
+blocks and permits rather than only checking it is attached.
+
+The prompt already forbids these things; the guardrail is the version that does not depend on
+the model choosing to comply, and it runs on the way in as well as the way out — so a prompt
+injection hidden in a corpus document is filtered too.
+
+| Denied topic | Why |
+|---|---|
+| Diagnosis | The product must not identify or suggest a disability (PRD §4 non-goals) |
+| Eligibility and placement | Not its decision to make, ever |
+| Medication and clinical advice | Out of scope, and dangerous to get wrong |
+| Ranking children | "No child is compared publicly with classmates" (PRD §4) |
+
+Plus content filters at HIGH for sexual, violence, hate, insults and misconduct, prompt-attack
+detection on input, and PII rules that block contact details and anonymise addresses. `NAME` is
+deliberately left alone: the drafts say "your child", and blocking names trips on ordinary words.
+
+Verified behaviour (`apply_guardrail`, INPUT):
+
+```
+diagnosis   GUARDRAIL_INTERVENED  ['Eligibility and placement', 'Diagnosis']
+placement   GUARDRAIL_INTERVENED  ['Eligibility and placement', 'Diagnosis']
+medication  GUARDRAIL_INTERVENED  ['Medication and clinical advice', 'Diagnosis']
+ranking     GUARDRAIL_INTERVENED  ['Ranking children', ...]
+legitimate  NONE                  []
+```
 
 ## What we send, and what we never send
 

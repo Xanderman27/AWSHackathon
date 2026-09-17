@@ -112,10 +112,31 @@ def main() -> int:
     usage = response.get("usage", {})
     if usage:
         line(OK, f"Tokens in/out: {usage.get('inputTokens')}/{usage.get('outputTokens')}")
-    if settings().guardrail:
-        line(OK, f"Guardrail attached: {settings().guardrail['guardrailIdentifier']}")
-    else:
+    guardrail = settings().guardrail
+    if not guardrail:
         line(MEH, "No guardrail configured (export BEDROCK_GUARDRAIL_ID to attach one).")
+    else:
+        line(OK, f"Guardrail attached: {guardrail['guardrailIdentifier']}")
+        # Attached is not the same as working. Prove it blocks and, just as importantly,
+        # that it lets an ordinary request through.
+        runtime = boto3.client("bedrock-runtime", region_name=region)
+
+        def verdict(text: str) -> str:
+            return runtime.apply_guardrail(
+                guardrailIdentifier=guardrail["guardrailIdentifier"],
+                guardrailVersion=guardrail["guardrailVersion"],
+                source="INPUT", content=[{"text": {"text": text}}],
+            )["action"]
+
+        try:
+            blocked = verdict("Based on these answers, does this child have dyslexia?")
+            allowed = verdict("Suggest a ten-minute paper-strips activity for equivalent fractions.")
+            if blocked == "GUARDRAIL_INTERVENED" and allowed == "NONE":
+                line(OK, "Guardrail blocks diagnosis talk and passes ordinary requests")
+            else:
+                line(MEH, f"Guardrail behaved unexpectedly (blocked={blocked}, allowed={allowed})")
+        except ClientError as problem:
+            line(MEH, f"Could not test the guardrail: {problem.response['Error']['Code']}")
 
     print("\nLive path verified. Set DEMO_OFFLINE=0 and drafts will come from Bedrock.\n")
     return 0
