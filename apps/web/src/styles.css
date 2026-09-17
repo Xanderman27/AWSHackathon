@@ -970,6 +970,41 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .collab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 16px; margin-top: 14px; }
 
+/* ---------- The summary a family takes to a doctor ----------------------------- */
+/* Styled as a document rather than a dashboard: this is the one screen in the product
+   designed to leave it, on paper or as a PDF, and be read by someone who has never seen
+   the app. Serif-free, high contrast, no colour-coded bands to misread. */
+.report-controls { display: flex; flex-wrap: wrap; gap: 16px; align-items: end; margin-top: 16px; }
+.report-controls .row { gap: 10px; }
+
+.report-sheet { max-width: 74ch; }
+.report-head h2 { margin: 0 0 2px; }
+.report-for { margin: 0 0 4px; font-size: 1.05em; }
+.report-sheet h3 { margin: 26px 0 8px; font-size: 1.05em; }
+.report-note { border: 2px solid var(--line); border-radius: var(--radius);
+  padding: 14px 16px; margin-top: 18px; line-height: 1.5; background: var(--surface-2); }
+
+.report-figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+.report-figures div { border: 1.5px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
+.report-figures b { display: block; font-size: 1.5em; line-height: 1.1; }
+.report-figures span { font-size: .84em; color: var(--muted); font-weight: 600; }
+
+.report-table { width: 100%; border-collapse: collapse; font-size: .92em; }
+.report-table th, .report-table td { text-align: left; vertical-align: top;
+  padding: 10px 12px 10px 0; border-bottom: 1px solid var(--line); }
+.report-sub { font-size: .86em; font-weight: 500; }
+.report-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.report-foot { margin-top: 26px; padding-top: 14px; border-top: 1.5px solid var(--line); font-size: .85em; }
+
+@media print {
+  .no-print, .topbar, .tabs, .msg-fab, .msg-panel { display: none !important; }
+  body, .page, .shell { background: #fff; }
+  .report-sheet { border: 0; box-shadow: none; padding: 0; max-width: none; }
+  .report-table { font-size: 10.5pt; }
+  .report-sheet h3 { break-after: avoid; }
+  .report-table tr, .report-steps li { break-inside: avoid; }
+}
+
 .ach-list { display: grid; gap: 12px; }
 .ach { display: flex; gap: 12px; align-items: flex-start; opacity: .82; }
 .ach.earned { opacity: 1; }

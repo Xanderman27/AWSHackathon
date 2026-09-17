@@ -17,6 +17,7 @@ export default function ParentLayout() {
           <NavLink to="/parent" end>📈 My child's progress</NavLink>
           <NavLink to="/parent/updates">✉️ Updates from school</NavLink>
           <NavLink to="/parent/resources">📚 Resources</NavLink>
+          <NavLink to="/parent/report">🩺 For your doctor</NavLink>
         </nav>
       </div>
       <Outlet />

@@ -20,6 +20,7 @@ import TeacherStats from './pages/TeacherStats'
 import ParentLayout from './pages/ParentLayout'
 import ParentProgress from './pages/ParentProgress'
 import ParentUpdates from './pages/ParentUpdates'
+import ParentReport from './pages/ParentReport'
 import { ResourceList } from './pages/Resources'
 import './styles.css'
 
@@ -80,6 +81,7 @@ function Shell() {
             <Route index element={<ParentProgress />} />
             <Route path="updates" element={<ParentUpdates />} />
             <Route path="resources" element={<ResourceList />} />
+            <Route path="report" element={<ParentReport />} />
           </Route>
         </Routes>
       </main>

@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .routers import (attempts, class_photos, conferences, family_updates, games,
-                      group_activities, login, messages, parent, recommendations, resources,
+                      group_activities, login, messages, parent, recommendations, reports, resources,
                       student, support, teacher)
 from .storage import store
 
@@ -28,6 +28,7 @@ app.include_router(games.router)
 app.include_router(group_activities.router)
 app.include_router(class_photos.router)
 app.include_router(family_updates.router)
+app.include_router(reports.router)
 app.include_router(recommendations.router)
 app.include_router(student.router)
 app.include_router(login.router)
