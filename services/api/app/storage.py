@@ -47,6 +47,21 @@ def _read_seed_file(name: str) -> list[dict[str, Any]]:
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else []
 
 
+# Why both stores seed at startup rather than only at creation:
+#
+# The stores used to take their seed exactly once, when state was first created — the local
+# one wrote a file per collection if the file was missing, the DynamoDB one never seeded at
+# all. Add a *new* collection to the seed afterwards, as `attempts` and `benchmarks` were,
+# and every environment already initialised kept an empty one forever. The teacher dashboard
+# read that empty attempt log and reported a class that had answered nothing: no stars, no
+# quests, an empty fortnight of activity, on the one screen whose argument is "look at the
+# evidence". Filling empty collections at startup makes that self-healing.
+#
+# Only *empty* collections are filled, so runtime state is never overwritten. The trade-off
+# is that a collection deliberately emptied during a demo comes back on the next restart;
+# for a store whose reset button is a documented feature, that is the better failure.
+
+
 class LocalStore:
     """JSON files under data/state/. The demo default."""
 
@@ -56,6 +71,16 @@ class LocalStore:
         for name in COLLECTIONS:
             if not (STATE / f"{name}.json").exists():
                 self._write(name, _read_seed_file(name))
+
+    def seed_missing(self) -> list[str]:
+        """Fill collections that are empty here but have rows in the repository seed."""
+        filled = []
+        for name in COLLECTIONS:
+            seed = _read_seed_file(name)
+            if seed and not self.read(name):
+                self._write(name, seed)
+                filled.append(f"{name}={len(seed)}")
+        return filled
 
     def _path(self, name: str) -> Path:
         return STATE / f"{name}.json"
@@ -153,6 +178,24 @@ class DynamoStore:
 
     def read_seed(self, name: str) -> list[dict[str, Any]]:
         return _read_seed_file(name)
+
+    def seed_missing(self) -> list[str]:
+        """Fill collections that are empty in the table but have rows in the seed."""
+        from boto3.dynamodb.conditions import Key
+
+        filled = []
+        for name in COLLECTIONS:
+            seed = _read_seed_file(name)
+            if not seed:
+                continue
+            # One cheap probe per collection rather than reading it all back.
+            page = self.table.query(KeyConditionExpression=Key("pk").eq(name), Limit=1)
+            if page.get("Items"):
+                continue
+            for row in seed:
+                self._put(name, row)
+            filled.append(f"{name}={len(seed)}")
+        return filled
 
     def _put(self, name: str, row: dict[str, Any], seq: str | None = None) -> None:
         self.table.put_item(Item=_floats_to_decimal({

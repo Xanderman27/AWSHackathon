@@ -35,6 +35,14 @@ app.include_router(login.router)
 app.include_router(support.router)
 
 
+@app.on_event("startup")
+def seed_new_collections() -> None:
+    """Top up anything the seed gained since this environment was first created."""
+    filled = store.seed_missing()
+    if filled:
+        print("seeded empty collections: " + ", ".join(filled))
+
+
 @app.get("/health")
 def health():
     return {"ok": True}

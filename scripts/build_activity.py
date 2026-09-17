@@ -33,6 +33,7 @@ RNG = random.Random(4207)
 NL = chr(10)
 
 MAX_ITEMS = 6
+WINDOW_DAYS = 14         # matches the teacher dashboard's activity chart
 HINT_BASE = 0.14          # chance a learner opens a hint on any item
 HINT_STRUGGLE = 0.34      # ... and when the skill is still building
 
@@ -78,16 +79,27 @@ def build_attempts(students, mastery, items, skills):
 
         history = row.get("history") or [row["estimate"]]
         total = max(row.get("evidence_count", len(history)), 1)
-        # Each (learner, skill) gets its own stretch of the fortnight rather than all of them
-        # starting on day 13, which piled every answer into the oldest column of the chart.
-        last_day = RNG.uniform(0.15, 2.6)
-        first_day = last_day + RNG.uniform(2.5, 9.5)
         unseen = pool[:]
         RNG.shuffle(unseen)
 
+        # Split the evidence into attempt-sized chunks, then give each chunk its own day.
+        #
+        # Two earlier versions of this got the shape wrong in opposite directions. Walking
+        # each learner from an old endpoint to a recent one left the last days of the chart
+        # empty, because only a row whose final chunk happened to land on its endpoint
+        # reached them. Pinning every final chunk to the recent end instead put a third of
+        # the fortnight's answers on one day. Drawing a day per attempt from a distribution
+        # that leans recent, then sorting oldest-first so a learner's own evidence stays in
+        # order, gives a classroom rhythm rather than a ramp or a spike.
+        sizes: list[int] = []
+        remaining = total
+        while remaining > 0:
+            sizes.append(min(MAX_ITEMS, remaining))
+            remaining -= sizes[-1]
+        days = sorted((RNG.triangular(0.2, WINDOW_DAYS - 0.6, 2.5) for _ in sizes), reverse=True)
+
         answered = 0
-        while answered < total:
-            size = min(MAX_ITEMS, total - answered)
+        for size, started in zip(sizes, days):
             # A trailing stub of one or two answers reads as an attempt still in progress.
             completed = size >= 4
             if not unseen:
@@ -95,9 +107,6 @@ def build_attempts(students, mastery, items, skills):
                 RNG.shuffle(unseen)
 
             counter += 1
-            # Walk from the oldest end to the newest across this row's attempts.
-            progress = answered / total if total > size else RNG.random()
-            started = first_day - (first_day - last_day) * progress
             responses = []
             for step in range(size):
                 item = unseen.pop() if unseen else RNG.choice(pool)
@@ -152,11 +161,11 @@ def fill_mastery(students, mastery, skills):
     for student in students:
         missing = [s["id"] for s in skills if (student["id"], s["id"]) not in have]
         RNG.shuffle(missing)
-        # Two to four extra subjects each: enough to fill the chart, not so much that the
-        # "needs more evidence" count collapses to zero.
-        for skill_id in missing[:RNG.randrange(2, 5)]:
+        # Three to five extra subjects each: enough that a fortnight of the class reads as
+        # busy, not so much that the "needs more evidence" count collapses to zero.
+        for skill_id in missing[:RNG.randrange(3, 6)]:
             estimate = round(min(0.94, max(0.12, RNG.gauss(0.58, 0.21))), 2)
-            evidence = RNG.randrange(3, 9)
+            evidence = RNG.randrange(4, 12)
             # A history that walks from a cold start up to the estimate, with a wobble.
             history = []
             value = round(max(0.1, estimate - RNG.uniform(0.18, 0.34)), 2)
