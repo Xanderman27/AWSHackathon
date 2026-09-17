@@ -40,9 +40,18 @@ class Settings:
 
 
 def _credentials_present() -> bool:
-    if os.getenv("AWS_ACCESS_KEY_ID") or os.getenv("AWS_PROFILE") or os.getenv("AWS_ROLE_ARN"):
-        return True
-    return os.path.exists(os.path.expanduser("~/.aws/credentials"))
+    """Ask boto3 rather than guessing.
+
+    Checking for AWS_ACCESS_KEY_ID or ~/.aws misses the case that matters most in production:
+    an EC2 instance profile or ECS task role, where credentials arrive over the instance
+    metadata service and no key or file exists anywhere. boto3's own resolver covers every
+    source, including those.
+    """
+    try:
+        import boto3
+        return boto3.Session().get_credentials() is not None
+    except Exception:
+        return False
 
 
 @lru_cache(maxsize=1)
