@@ -137,7 +137,7 @@ def propose(plan: dict, mastery_rows: list[dict], skills: dict[str, dict]) -> Pl
             "system": [{"text": SYSTEM}],
             "messages": [{"role": "user", "content": [{"text": f"{summary}\n\nApproved sources:\n{blocks}\n\nPropose one plan update."}]}],
             "toolConfig": _tool_config(),
-            "inferenceConfig": {"maxTokens": 700, "temperature": 0.2},
+            "inferenceConfig": {"maxTokens": 1400, "temperature": 0.2},
         }
         # The FAMILY guardrail denies exactly this topic (recommending accommodations /
         # IEP content), so attaching it here can only ever block the draft. This pipeline
@@ -147,6 +147,8 @@ def propose(plan: dict, mastery_rows: list[dict], skills: dict[str, dict]) -> Pl
             request["guardrailConfig"] = current.teacher_guardrail
         path.append("bedrock")
         response = client.converse(**request)
+        stop_reason = response.get("stopReason", "?")
+        path.append(f"stop:{stop_reason}")
         payload = None
         for block in response.get("output", {}).get("message", {}).get("content", []):
             use = block.get("toolUse")
@@ -168,8 +170,10 @@ def propose(plan: dict, mastery_rows: list[dict], skills: dict[str, dict]) -> Pl
     except (ValidationError, Exception) as problem:  # noqa: BLE001 - demo must not 500
         path.append("rules_fallback")
         draft = _rules_draft(plan, mastery_rows, skills)
+        detail = str(problem).replace("\n", " ")[:180]
         return PlanUpdateResult(draft=draft, citations=_cite(draft, sources), origin="rules",
-                                path=path, warning=f"live draft unavailable ({type(problem).__name__})")
+                                path=path,
+                                warning=f"live draft unavailable ({type(problem).__name__}: {detail})")
 
     # Grounding check: invented citations are dropped; a draft left with none is flagged.
     allowed = {s.id for s in sources}
