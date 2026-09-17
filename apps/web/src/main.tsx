@@ -57,7 +57,8 @@ function Shell() {
           </div>
         )}
       </header>
-      <main id="main">
+      {/* Zoom magnifies the student's content, never the top bar or other roles' pages. */}
+      <main id="main" className={session?.role === 'student' ? 'student-zoom' : undefined}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/student" element={<StudentLayout />}>

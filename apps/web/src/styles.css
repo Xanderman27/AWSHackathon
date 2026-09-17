@@ -59,9 +59,9 @@ html { height: 100%; }
 html, body { margin: 0; background: var(--bg); color: var(--ink); line-height: 1.55; }
 /* Zoom lives inside the quiz only; the rest of the app never changes size. The slow
    transition makes each zoom level glide instead of jump. */
-.quest-zoom { font-size: var(--step); transition: font-size .9s ease; }
-@media (prefers-reduced-motion: reduce) { .quest-zoom { transition: none; } }
-:root[data-motion='reduced'] .quest-zoom { transition: none; }
+.quest-zoom, .student-zoom { font-size: var(--step); transition: font-size .9s ease; }
+@media (prefers-reduced-motion: reduce) { .quest-zoom, .student-zoom { transition: none; } }
+:root[data-motion='reduced'] .quest-zoom, :root[data-motion='reduced'] .student-zoom { transition: none; }
 body { min-height: 100%; -webkit-font-smoothing: antialiased; }
 #root { min-height: 100vh; display: flex; flex-direction: column; }
 a { color: var(--brand); }
