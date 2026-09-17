@@ -7,6 +7,7 @@ import { Link, useParams } from 'react-router-dom'
 import { api } from '../api'
 import Avatar, { type AvatarSpec } from '../components/Avatar'
 import RecommendationPanel from '../components/RecommendationPanel'
+import { TeacherSupport } from '../components/Support'
 
 interface Skill {
   skill_id: string; skill_name: string; subject: string; standard_id: string
@@ -87,6 +88,8 @@ export default function TeacherLearner() {
           ))}
         </dl>
       </section>
+
+      <TeacherSupport studentId={student.id} studentName={student.display_name} />
 
       <section aria-labelledby="skills-title">
         <h3 id="skills-title" style={{ marginBottom: 10 }}>Where {student.display_name} is right now</h3>

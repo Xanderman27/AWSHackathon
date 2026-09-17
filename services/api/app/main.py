@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .routers import (attempts, class_photos, conferences, games, group_activities, login,
-                      messages, parent, recommendations, resources, student, teacher)
+                      messages, parent, recommendations, resources, student, support, teacher)
 from .storage import store
 
 app = FastAPI(title="Adaptive Learning Platform API", version="0.1.0")
@@ -29,6 +29,7 @@ app.include_router(class_photos.router)
 app.include_router(recommendations.router)
 app.include_router(student.router)
 app.include_router(login.router)
+app.include_router(support.router)
 
 
 @app.get("/health")

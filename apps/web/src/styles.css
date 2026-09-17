@@ -1408,6 +1408,27 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 @keyframes gm-found-water { 0%, 100% { fill: rgba(88,204,2,.18); } 50% { fill: rgba(88,204,2,.32); } }
 @keyframes gm-right { 0% { transform: scale(.92); } 55% { transform: scale(1.08) rotate(1.5deg); } 100% { transform: none; } }
 
+/* ============ The teacher-family loop: plan, goals, guardians ============ */
+.guardian-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.plan-doc { display: grid; gap: 10px; }
+.plan-facts { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: .92em; }
+.plan-team { margin: 0; font-size: .88em; }
+.plan-doc details { border: 2px solid var(--line); border-radius: 12px; padding: 10px 14px; }
+.plan-doc summary { font-weight: 800; cursor: pointer; }
+.plan-doc details p, .plan-doc details ul { margin: 8px 0 2px; }
+.plan-doc details ul { padding-left: 1.2em; display: grid; gap: 4px; }
+.plan-requests { display: grid; gap: 10px; margin-bottom: 14px; }
+.plan-request { display: grid; gap: 10px; }
+.goal-list { display: grid; gap: 12px; margin-bottom: 14px; }
+.goal { border: 2px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.goal.met { border-color: var(--duo-green); background: color-mix(in srgb, var(--duo-green) 8%, var(--surface)); }
+.goal.declined { opacity: .6; }
+.goal-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: start; }
+.goal-form input, .goal-form textarea { width: 100%; box-sizing: border-box; }
+.goal-form textarea { margin-top: 6px; resize: vertical; font-family: inherit; }
+.plan-suggest { grid-template-columns: 1fr auto; margin-top: 14px; align-items: end; }
+@media (max-width: 700px) { .goal-form { grid-template-columns: 1fr; } }
+
 /* Live teammate cursors over the play area. */
 .cursor-field { position: relative; display: grid; gap: 16px; }
 .peer-cursor { position: absolute; z-index: 30; pointer-events: none; transform: translate(-2px, -2px);

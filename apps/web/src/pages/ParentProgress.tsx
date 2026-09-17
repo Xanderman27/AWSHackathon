@@ -3,7 +3,8 @@
 
 import { useEffect, useState, type ComponentType } from 'react'
 import { api } from '../api'
-import { MasteryGauge, OutcomeTrack } from '../components/MasteryGauge'
+import { OutcomeTrack } from '../components/MasteryGauge'
+import { FamilySupport } from '../components/Support'
 import Avatar, { type AvatarSpec } from '../components/Avatar'
 import ClassPhoto from '../components/ClassPhoto'
 import JoinClass from '../components/JoinClass'
@@ -76,7 +77,7 @@ export default function ParentProgress() {
   }
   if (!progress) return <p>Loading…</p>
 
-  const { student, next_steps: next, mastery, average_score: avg, stats, achievements, group_activities: groups } = progress
+  const { student, next_steps: next, mastery, stats, achievements, group_activities: groups } = progress
 
   const STATS = [
     { label: 'Stars on the path', value: stats.stars, Icon: StarIcon },
@@ -192,37 +193,26 @@ export default function ParentProgress() {
             ))}
           </section>
 
-          <section className="card">
-            <h3 className="profile-sub" style={{ marginTop: 0 }}>Mastery <span className="muted" style={{ fontWeight: 500, fontSize: '.8em' }}>(0 to 4)</span></h3>
-            <MasteryGauge score={avg} label="Average mastery score" />
-            <div className="legend" aria-hidden="true">
-              <span><i style={{ background: 'var(--zone-red)' }} />Building</span>
-              <span><i style={{ background: 'var(--zone-yellow)' }} />Practicing</span>
-              <span><i style={{ background: 'var(--zone-green)' }} />Ready</span>
-              <span><i style={{ background: 'var(--zone-blue)' }} />Stretching</span>
-            </div>
-          </section>
         </div>
       </div>
 
       <section className="card">
-        <h3 className="profile-sub" style={{ marginTop: 0 }}>Outcomes</h3>
+        <h3 className="profile-sub" style={{ marginTop: 0 }}>Primary outcomes</h3>
         {mastery.length === 0 ? (
           <p className="muted">{student.display_name} has not started a quest yet, so there is nothing to show.</p>
         ) : mastery.map((m) => (
           <div className="outcome" key={m.skill_id}>
             <div className="outcome-head">
               <strong>{student.display_name} can work on {m.child_name}</strong>
-              <span className="row" style={{ gap: 8 }}>
-                <span className={`chip ${BAND_TONE[m.band]}`}>{m.band_label}</span>
-                <span className="chip">{m.score.toFixed(1)} / 4</span>
-              </span>
+              <span className={`chip ${BAND_TONE[m.band]}`}>{m.band_label}</span>
             </div>
             <OutcomeTrack score={m.score} band={m.band_label} evidence={m.evidence_count} />
             <span className="muted" style={{ fontSize: '.85em' }}>Based on {m.evidence_count} check-in{m.evidence_count === 1 ? '' : 's'}</span>
           </div>
         ))}
       </section>
+
+      <FamilySupport studentId={student.id} studentName={student.display_name} />
 
       <div>
         <div className="row between" style={{ marginBottom: 12 }}>
