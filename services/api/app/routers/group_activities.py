@@ -8,6 +8,7 @@ student or a parent.
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -166,12 +167,14 @@ def explain_groups(body: ExplainIn, actor: Actor = Depends(require_role("teacher
     mastery = store.read("mastery")
     skills = {s["id"]: s for s in store.read("skills")}
 
-    out = []
     for group in body.groups:
         if not set(group.member_ids).issubset(actor.student_ids):
             raise HTTPException(403, "one or more learners are outside this class")
+
+    names = {s["id"]: s["display_name"] for s in store.read("students")}
+
+    def explain_one(group: ExplainGroup) -> dict:
         result = grouping.explain(group.member_ids, skill_name, mastery, skills)
-        names = {s["id"]: s["display_name"] for s in store.read("students")}
         tags = {f"L{i + 1}": names.get(sid, f"L{i + 1}")
                 for i, sid in enumerate(group.member_ids)}
         text = result.explanation.why_together if result.explanation else ""
@@ -182,7 +185,7 @@ def explain_groups(body: ExplainIn, actor: Actor = Depends(require_role("teacher
             for pattern in (f"Learner {ref}", f"learner {ref}", ref):
                 text = text.replace(pattern, name)
                 watch = watch.replace(pattern, name)
-        out.append({
+        return {
             "name": group.name,
             "why_together": text,
             "watch_for": watch,
@@ -190,7 +193,13 @@ def explain_groups(body: ExplainIn, actor: Actor = Depends(require_role("teacher
             "inspected": [tags.get(ref, ref) for ref in result.inspected],
             "turns": result.turns,
             "warning": result.warning,
-        })
+        }
+
+    # Each group is an independent multi-turn conversation, and three of them in sequence is
+    # half a minute of a teacher watching a spinner. boto3 is synchronous, so a small pool.
+    with ThreadPoolExecutor(max_workers=min(4, len(body.groups))) as pool:
+        out = list(pool.map(explain_one, body.groups))
+
     store.append("audit", {"actor": actor.user_id, "action": "group_activities.explained",
                            "object_id": spec.id, "at": now()})
     return {"groups": out}

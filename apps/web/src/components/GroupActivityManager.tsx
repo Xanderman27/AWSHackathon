@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { api } from '../api'
 import Avatar, { type AvatarSpec } from './Avatar'
 import type { GameSpec } from '../games/room'
@@ -56,6 +56,8 @@ export default function GroupActivityManager() {
   const [saving, setSaving] = useState(false)
   const [explaining, setExplaining] = useState(false)
   const [explanations, setExplanations] = useState<Record<string, Explanation>>({})
+  // Which arrangement the explanations describe. Move a learner and they are stale.
+  const [explainedFor, setExplainedFor] = useState('')
   const [notice, setNotice] = useState('')
   const [error, setError] = useState('')
 
@@ -89,6 +91,14 @@ export default function GroupActivityManager() {
     return result
   }, [drafts])
 
+  // A signature of the current arrangement, so we can tell when an explanation stops matching.
+  const arrangement = useMemo(
+    () => drafts.filter((g) => g.member_ids.length > 0)
+      .map((g) => `${g.name}:${[...g.member_ids].sort().join(',')}`).join('|'),
+    [drafts],
+  )
+  const stale = explainedFor !== '' && explainedFor !== arrangement
+
   const spec = catalog.find((game) => game.id === gameId)
   const minGroup = spec?.min_group ?? 2
   const maxGroup = spec?.max_group ?? 4
@@ -111,8 +121,8 @@ export default function GroupActivityManager() {
     setDrafts((current) => current.map((group, i) => (i === index ? { ...group, name } : group)))
   }
 
-  async function explainGroups() {
-    setExplaining(true); setError(''); setNotice('')
+  const explainGroups = useCallback(async () => {
+    setExplaining(true); setError('')
     try {
       const response = await api<{ groups: Explanation[] }>('/teacher/group-activities/explain', {
         method: 'POST',
@@ -122,12 +132,25 @@ export default function GroupActivityManager() {
         }),
       })
       setExplanations(Object.fromEntries(response.groups.map((group) => [group.name, group])))
+      setExplainedFor(arrangement)
     } catch {
-      setError('The explanation could not be generated. The suggestion itself is unaffected.')
+      // The suggestion itself still stands; only the prose is missing.
+      setError('The explanation could not be generated. The grouping itself is unaffected.')
     } finally {
       setExplaining(false)
     }
-  }
+  }, [gameId, arrangement])
+
+  // Explain as soon as there is something to explain. A teacher should not have to know to
+  // ask: before this, the canned sentence read like the whole rationale.
+  useEffect(() => {
+    if (!gameId || !arrangement || explaining) return
+    if (explainedFor === arrangement) return
+    if (explainedFor === '') void explainGroups()
+  }, [gameId, arrangement, explainedFor, explaining, explainGroups])
+
+  // Switching activity throws away the previous activity's explanations.
+  useEffect(() => { setExplanations({}); setExplainedFor('') }, [gameId])
 
   async function publishGroups() {
     setSaving(true); setError(''); setNotice('')
@@ -216,14 +239,17 @@ export default function GroupActivityManager() {
                   })}
                   {group.member_ids.length === 0 && <li className="muted">No learners assigned</li>}
                 </ul>
-                {explanations[group.name] ? (
+                {explaining && !explanations[group.name] ? (
+                  <p className="muted agent-thinking">Working out why these three fit together…</p>
+                ) : explanations[group.name] ? (
                   <div className="group-explained">
                     <p className="why">{explanations[group.name].why_together}</p>
                     <p className="watch"><strong>Watch for:</strong> {explanations[group.name].watch_for}</p>
                     <p className="agent-trace muted">
-                      {explanations[group.name].origin === 'bedrock'
-                        ? `agent checked ${explanations[group.name].inspected.join(', ')} · ${explanations[group.name].turns} steps`
-                        : explanations[group.name].warning || 'standard explanation'}
+                      {stale ? 'groups have changed since this was written' :
+                        explanations[group.name].origin === 'bedrock'
+                          ? `agent checked ${explanations[group.name].inspected.join(', ')} · ${explanations[group.name].turns} steps`
+                          : explanations[group.name].warning || 'standard explanation'}
                     </p>
                   </div>
                 ) : (
@@ -299,8 +325,9 @@ export default function GroupActivityManager() {
                 <button type="button" disabled={saving} onClick={unpublish}>Take down</button>
               )}
               <button type="button" disabled={explaining || withMembers.length === 0}
-                onClick={explainGroups} title="An agent looks up each learner's evidence, then explains the pairing">
-                {explaining ? 'Thinking…' : 'Explain these groups'}
+                onClick={explainGroups}
+                title="An agent looks up each learner's evidence, then explains the pairing">
+                {explaining ? 'Thinking…' : stale ? 'Update explanations' : 'Explain again'}
               </button>
               <button className="btn-primary btn-lg" type="button" disabled={!canPublish || saving} onClick={publishGroups}>
                 {saving ? 'Publishing…' : liveForThisGame.length ? 'Update published groups' : 'Publish to students'}

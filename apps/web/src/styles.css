@@ -1487,3 +1487,4 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .group-explained .why { margin: 0; line-height: 1.5; }
 .group-explained .watch { margin: 0; font-size: .92em; }
 .agent-trace { margin: 2px 0 0; font-size: .78em; font-family: ui-monospace, monospace; }
+.agent-thinking { margin: 0; font-size: .9em; font-style: italic; }
