@@ -17,6 +17,7 @@ import uuid
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
+from ..ai import planupdate
 from ..auth import Actor, get_actor, require_role, require_student_access
 from ..models import now
 from ..storage import store
@@ -177,6 +178,56 @@ def decide_goal(goal_id: str, body: DecideIn, actor: Actor = Depends(require_rol
     store.append("audit", {"actor": actor.user_id, "action": f"goal.{body.action}",
                            "object_id": goal_id, "at": now()})
     return row
+
+
+class AdoptIn(BaseModel):
+    change: str = Field(min_length=12, max_length=300)
+    citations: list[str] = Field(default_factory=list)
+
+
+@router.post("/students/{student_id}/plan-suggestion")
+def plan_suggestion(student_id: str, actor: Actor = Depends(require_role("teacher"))):
+    """An AI-drafted plan update for the team to consider.
+
+    The model sees the plan's supports and pseudonymous evidence bands - never a name, id
+    or eligibility label. The draft changes nothing until the teacher adopts it.
+    """
+    require_student_access(actor, student_id)
+    plan = _plan(student_id)
+    if plan is None:
+        raise HTTPException(404, "no plan on file")
+    mastery = [m for m in store.read("mastery") if m["student_id"] == student_id]
+    skills = {s["id"]: s for s in store.read("skills")}
+    result = planupdate.propose(plan, mastery, skills)
+    store.append("audit", {"actor": actor.user_id, "action": "plan_suggestion.draft",
+                           "object_id": student_id, "at": now()})
+    if result.draft is None:
+        return {"draft": None, "origin": result.origin, "warning": result.warning}
+    return {"draft": result.draft.model_dump(), "citations": result.citations,
+            "origin": result.origin, "warning": result.warning, "path": result.path}
+
+
+@router.post("/students/{student_id}/plan-suggestion/adopt")
+def adopt_plan_suggestion(student_id: str, body: AdoptIn,
+                          actor: Actor = Depends(require_role("teacher"))):
+    """The teacher agrees: the drafted change lands in the plan's amendment history,
+    credited to the drafting pipeline AND the human who adopted it."""
+    require_student_access(actor, student_id)
+    plan = _plan(student_id)
+    if plan is None:
+        raise HTTPException(404, "no plan on file")
+    teachers = {t["id"]: t.get("display_name", "") for t in store.read("teachers")}
+    plan.setdefault("amendments", []).append({
+        "text": body.change,
+        "by": f"Drafted by Dori from recent evidence; adopted by {teachers.get(actor.user_id, 'the teacher')}",
+        "role": "ai-assisted",
+        "at": now()[:10],
+        "citations": body.citations,
+    })
+    store.upsert("plans", plan)
+    store.append("audit", {"actor": actor.user_id, "action": "plan_suggestion.adopt",
+                           "object_id": student_id, "at": now()})
+    return {"ok": True, "plan": plan}
 
 
 @router.post("/students/{student_id}/plan-requests", status_code=201)

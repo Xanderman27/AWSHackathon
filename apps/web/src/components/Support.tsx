@@ -280,6 +280,72 @@ export function GoalForm({ studentId, role, onSaved }: {
 
 /* ---------------- Teacher side ---------------- */
 
+interface PlanSuggestion {
+  draft: { section: string; change: string; rationale: string; citations: string[] } | null
+  citations: { id: string; title: string; source_org: string; doc_type: string }[]
+  origin: string
+  warning: string
+}
+
+/** The AI proposes; the teacher and the team dispose. */
+function PlanSuggestionPanel({ studentId, onAdopted }: { studentId: string; onAdopted: () => void }) {
+  const [busy, setBusy] = useState(false)
+  const [suggestion, setSuggestion] = useState<PlanSuggestion | null>(null)
+
+  async function draft() {
+    setBusy(true)
+    try { setSuggestion(await api<PlanSuggestion>(`/support/students/${studentId}/plan-suggestion`, { method: 'POST' })) }
+    catch { setSuggestion(null) }
+    finally { setBusy(false) }
+  }
+
+  async function adopt() {
+    if (!suggestion?.draft) return
+    setBusy(true)
+    try {
+      await api(`/support/students/${studentId}/plan-suggestion/adopt`, {
+        method: 'POST',
+        body: JSON.stringify({ change: suggestion.draft.change, citations: suggestion.draft.citations }),
+      })
+      setSuggestion(null)
+      onAdopted()
+    } finally { setBusy(false) }
+  }
+
+  return (
+    <div className="plan-ai">
+      {!suggestion && (
+        <button type="button" className="btn-ghost" disabled={busy} onClick={draft}>
+          {busy ? 'Reading the evidence…' : '✨ Ask Dori for a plan update idea'}
+        </button>
+      )}
+      {suggestion?.draft && (
+        <div className="card tinted-sky plan-ai-draft" role="region" aria-label="AI-drafted plan update">
+          <span className="chip">✨ Drafted from recent evidence · {suggestion.origin === 'bedrock' ? 'Claude on Bedrock' : 'offline rules'}</span>
+          <p className="plan-ai-change"><strong>{suggestion.draft.change}</strong></p>
+          <p style={{ margin: 0 }}>{suggestion.draft.rationale}</p>
+          {suggestion.citations.length > 0 && (
+            <p className="muted" style={{ margin: 0, fontSize: '.85em' }}>
+              Grounded in: {suggestion.citations.map((c) => `${c.title} (${c.source_org})`).join(' · ')}
+            </p>
+          )}
+          {suggestion.warning && <p className="feedback try" style={{ padding: '8px 12px' }}>{suggestion.warning}</p>}
+          <div className="row" style={{ gap: 8 }}>
+            <button type="button" className="btn-primary" disabled={busy} onClick={adopt}>
+              Agree &amp; add to the plan
+            </button>
+            <button type="button" disabled={busy} onClick={() => setSuggestion(null)}>Not now</button>
+          </div>
+          <p className="muted" style={{ margin: 0, fontSize: '.82em' }}>
+            A proposal for the team - nothing changes unless you adopt it, and the amendment
+            names both Dori and you.
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export function TeacherSupport({ studentId, studentName }: { studentId: string; studentName: string }) {
   const { data, reload } = useSupport(studentId)
   if (!data) return null
@@ -340,6 +406,7 @@ export function TeacherSupport({ studentId, studentName }: { studentId: string; 
               </div>
             )}
             <PlanDoc plan={data.plan} />
+            <PlanSuggestionPanel studentId={studentId} onAdopted={reload} />
             {decidedRequests.length > 0 && (
               <p className="muted" style={{ fontSize: '.85em' }}>
                 Past family requests: {decidedRequests.map((r) => `"${r.text.slice(0, 40)}…" (${r.status})`).join(' · ')}

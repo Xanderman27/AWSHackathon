@@ -1589,6 +1589,9 @@ textarea { font: inherit; width: 100%; min-height: 96px; padding: 14px 16px; bor
 .plan-doc details ul { padding-left: 1.2em; display: grid; gap: 4px; }
 .plan-requests { display: grid; gap: 10px; margin-bottom: 14px; }
 .plan-request { display: grid; gap: 10px; }
+.plan-ai { margin-top: 12px; }
+.plan-ai-draft { display: grid; gap: 10px; padding: 16px 18px; }
+.plan-ai-change { margin: 0; font-size: 1.05em; }
 .goal-list { display: grid; gap: 12px; margin-bottom: 14px; }
 .goal { border: 2px solid var(--line); border-radius: 12px; padding: 12px 14px; }
 .goal.met { border-color: var(--duo-green); background: color-mix(in srgb, var(--duo-green) 8%, var(--surface)); }
