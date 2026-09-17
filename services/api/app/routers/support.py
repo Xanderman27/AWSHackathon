@@ -186,13 +186,14 @@ class AdoptIn(BaseModel):
 
 
 @router.post("/students/{student_id}/plan-suggestion")
-def plan_suggestion(student_id: str, actor: Actor = Depends(require_role("teacher"))):
-    """An AI-drafted plan update for the team to consider.
+def plan_suggestion(student_id: str, actor: Actor = Depends(get_actor)):
+    """An AI-drafted plan update for the team to consider - for the teacher OR the family.
 
     The model sees the plan's supports and pseudonymous evidence bands - never a name, id
-    or eligibility label. The draft changes nothing until the teacher adopts it.
+    or eligibility label. The draft changes nothing on its own: a teacher can adopt it into
+    the amendment history, and a family can only send it to the teacher as a suggestion.
     """
-    require_student_access(actor, student_id)
+    _require_parent_or_teacher(actor, student_id)
     plan = _plan(student_id)
     if plan is None:
         raise HTTPException(404, "no plan on file")

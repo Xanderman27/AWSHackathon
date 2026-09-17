@@ -287,8 +287,11 @@ interface PlanSuggestion {
   warning: string
 }
 
-/** The AI proposes; the teacher and the team dispose. */
-function PlanSuggestionPanel({ studentId, onAdopted }: { studentId: string; onAdopted: () => void }) {
+/** The AI proposes; people dispose. A teacher can adopt the draft into the plan's
+ *  amendment history; a family can only send it onward to the teacher as a suggestion. */
+function PlanSuggestionPanel({ studentId, role, onAdopted }: {
+  studentId: string; role: 'teacher' | 'parent'; onAdopted: () => void
+}) {
   const [busy, setBusy] = useState(false)
   const [suggestion, setSuggestion] = useState<PlanSuggestion | null>(null)
 
@@ -303,10 +306,17 @@ function PlanSuggestionPanel({ studentId, onAdopted }: { studentId: string; onAd
     if (!suggestion?.draft) return
     setBusy(true)
     try {
-      await api(`/support/students/${studentId}/plan-suggestion/adopt`, {
-        method: 'POST',
-        body: JSON.stringify({ change: suggestion.draft.change, citations: suggestion.draft.citations }),
-      })
+      if (role === 'teacher') {
+        await api(`/support/students/${studentId}/plan-suggestion/adopt`, {
+          method: 'POST',
+          body: JSON.stringify({ change: suggestion.draft.change, citations: suggestion.draft.citations }),
+        })
+      } else {
+        await api(`/support/students/${studentId}/plan-requests`, {
+          method: 'POST',
+          body: JSON.stringify({ text: `${suggestion.draft.change} (drafted with Dori from recent practice)` }),
+        })
+      }
       setSuggestion(null)
       onAdopted()
     } finally { setBusy(false) }
@@ -332,13 +342,14 @@ function PlanSuggestionPanel({ studentId, onAdopted }: { studentId: string; onAd
           {suggestion.warning && <p className="feedback try" style={{ padding: '8px 12px' }}>{suggestion.warning}</p>}
           <div className="row" style={{ gap: 8 }}>
             <button type="button" className="btn-primary" disabled={busy} onClick={adopt}>
-              Agree &amp; add to the plan
+              {role === 'teacher' ? 'Agree & add to the plan' : 'Send this idea to the teacher'}
             </button>
             <button type="button" disabled={busy} onClick={() => setSuggestion(null)}>Not now</button>
           </div>
           <p className="muted" style={{ margin: 0, fontSize: '.82em' }}>
-            A proposal for the team - nothing changes unless you adopt it, and the amendment
-            names both Dori and you.
+            {role === 'teacher'
+              ? 'A proposal for the team - nothing changes unless you adopt it, and the amendment names both Dori and you.'
+              : 'A starting point for the conversation - it goes to the teacher to bring to the team, never straight into the plan.'}
           </p>
         </div>
       )}
@@ -406,7 +417,7 @@ export function TeacherSupport({ studentId, studentName }: { studentId: string; 
               </div>
             )}
             <PlanDoc plan={data.plan} />
-            <PlanSuggestionPanel studentId={studentId} onAdopted={reload} />
+            <PlanSuggestionPanel studentId={studentId} role="teacher" onAdopted={reload} />
             {decidedRequests.length > 0 && (
               <p className="muted" style={{ fontSize: '.85em' }}>
                 Past family requests: {decidedRequests.map((r) => `"${r.text.slice(0, 40)}…" (${r.status})`).join(' · ')}
@@ -458,6 +469,7 @@ export function FamilySupport({ studentId, studentName }: { studentId: string; s
         <section className="card" aria-labelledby="fam-plan-title">
           <h3 id="fam-plan-title" style={{ marginTop: 0 }}>{studentName}'s {data.plan.type === 'IEP' ? 'IEP' : '504 plan'}</h3>
           <PlanDoc plan={data.plan} />
+          <PlanSuggestionPanel studentId={studentId} role="parent" onAdopted={reload} />
 
           <form className="goal-form plan-suggest" onSubmit={suggest}>
             <label style={{ gridColumn: '1 / -1', fontWeight: 700 }}>
