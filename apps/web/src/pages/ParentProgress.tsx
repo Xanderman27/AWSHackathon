@@ -114,7 +114,10 @@ export default function ParentProgress() {
               <figure className="feed-item" key={row.id}>
                 <ClassPhoto photoId={row.id} alt={row.caption || 'A moment from class'} />
                 <figcaption>
-                  <span className="feed-date muted">{photoDate(row)}</span>
+                  <span className="feed-date muted">
+                    {photoDate(row)}
+                    {row.audience_student_id && <span className="chip cream" style={{ marginLeft: 8 }}>Just for your family 💛</span>}
+                  </span>
                   {row.title && <strong>{row.title}</strong>}
                   <span>{row.caption}</span>
                 </figcaption>
