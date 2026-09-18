@@ -192,3 +192,33 @@ def test_local_and_cognito_tokens_cannot_be_swapped():
             principal_from_token(local)
     finally:
         identity.auth_settings = settings
+
+
+# --------------------------------------------------------------------------- forced sign-out
+
+def test_a_token_issued_before_the_signout_epoch_is_refused():
+    """Raising SIGNED_OUT_BEFORE signs everyone out. A token minted a second earlier is
+    refused even though its signature is good and it has not expired."""
+    stale = jwt.encode(
+        {"iss": identity.LOCAL_ISSUER, "sub": "teacher-01", "custom:user_id": "teacher-01",
+         "cognito:groups": ["teacher"], "token_use": "id",
+         "iat": identity.SIGNED_OUT_BEFORE - 1, "exp": int(time.time()) + 3600},
+        identity._local_secret(), algorithm="HS256",
+    )
+    assert client.get(PLAN, headers={"Authorization": f"Bearer {stale}"}).status_code == 401
+
+
+def test_a_token_with_no_issued_at_is_refused():
+    """Fail closed: a token that cannot say when it was issued cannot be shown to postdate
+    the last sign-out."""
+    undated = jwt.encode(
+        {"iss": identity.LOCAL_ISSUER, "sub": "teacher-01", "custom:user_id": "teacher-01",
+         "cognito:groups": ["teacher"], "token_use": "id", "exp": int(time.time()) + 3600},
+        identity._local_secret(), algorithm="HS256",
+    )
+    assert client.get(PLAN, headers={"Authorization": f"Bearer {undated}"}).status_code == 401
+
+
+def test_a_token_issued_after_the_epoch_still_works():
+    """The counterpart, so the epoch cannot be set to something that locks everyone out."""
+    assert client.get(PLAN, headers=auth("teacher", "teacher-01")).status_code == 200

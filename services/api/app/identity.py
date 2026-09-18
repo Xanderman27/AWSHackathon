@@ -34,6 +34,20 @@ from jwt import PyJWKClient
 # How long a locally issued token lasts. Cognito controls its own lifetimes.
 LOCAL_TTL_SECONDS = 12 * 60 * 60
 
+# Every token issued before this instant is refused, whoever signed it. Raising it signs
+# everyone out at once: the next request each of them makes returns 401, the browser drops
+# the session it is holding and sends them back to the door.
+#
+# A deliberate epoch rather than a side effect. Restarting the process does invalidate local
+# tokens, because the local issuer's secret is random per process — but that is an accident of
+# how the laptop path works, it is not repeatable, and it does nothing at all to a Cognito
+# token, which is signed by the pool and outlives any restart of ours. This line works for
+# both issuers and leaves a record in the history of when it was done.
+#
+# To sign everyone out: set this to the current epoch seconds and deploy.
+#   2026-09-18T15:55:07Z - forced sign-out of all accounts, on request.
+SIGNED_OUT_BEFORE = 1789746907
+
 ROLES = ("student", "teacher", "parent")
 
 PARAM_PREFIX = "/dori/cognito"
@@ -206,6 +220,11 @@ def principal_from_token(token: str) -> Principal:
         claims = _verify_cognito(token) if auth_settings().configured else _verify_local(token)
     except Exception as exc:  # noqa: BLE001 - every verification failure is the same answer
         raise InvalidToken() from exc
+
+    # Fail closed: a token that cannot say when it was issued cannot be shown to postdate
+    # the last sign-out, so it is refused rather than given the benefit of the doubt.
+    if int(claims.get("iat") or 0) < SIGNED_OUT_BEFORE:
+        raise InvalidToken()
 
     groups = claims.get("cognito:groups") or []
     role = next((g for g in groups if g in ROLES), None)

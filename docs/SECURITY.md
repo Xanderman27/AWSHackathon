@@ -110,6 +110,32 @@ own scope.
 matters: real accounts, no published credentials, and MFA for staff. The policy lives in
 `ensure_pool` in `scripts/provision_cognito.py`.
 
+## Signing everyone out
+
+`SIGNED_OUT_BEFORE` in `app/identity.py` is an epoch in seconds. Every token issued before it
+is refused, whoever signed it. To force a global sign-out, set it to the current time and
+deploy:
+
+```bash
+date -u +%s
+```
+
+The next request each signed-in person makes returns 401, the browser drops the session it is
+holding, and they land back on the sign-in screen. Nothing else is affected: accounts,
+passwords and data are untouched, and anyone can sign straight back in.
+
+It is a deliberate epoch rather than a side effect. Restarting the process *does* invalidate
+local-issuer tokens, because that secret is random per process — but that is an accident of
+how the laptop path works, it is not repeatable, and it does nothing to a Cognito token, which
+is signed by the pool and outlives any restart of ours. The epoch covers both issuers and
+leaves a record in the history of when it was done and why.
+
+A token with no `iat` is refused, because it cannot be shown to postdate the last sign-out.
+
+Under Cognito there is also a per-user equivalent, `AdminUserGlobalSignOut`, which revokes one
+person's refresh tokens. That is the right tool for a single compromised account; the epoch is
+the right tool for everyone at once.
+
 ## Known gaps
 
 Honest list, so none of this reads as more finished than it is.
